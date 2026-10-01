@@ -12,6 +12,7 @@
     "typecheck": "pnpm -r --filter \"./packages/*\" run typecheck",
     "lint": "eslint . && prettier --check .",
     "format": "prettier --write .",
+    "gen": "pnpm --filter @neu-ui/elements build && pnpm --filter @neu-ui/gen run gen",
     "size": "node scripts/check-size.mjs"
   },
   "devDependencies": {

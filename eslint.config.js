@@ -14,6 +14,7 @@ export default defineConfig([
     '.superpowers/**',
     'docs/**',
     'packages/tokens/neu.css',
+    'packages/elements/custom-elements.json',
     'packages/react/src/generated/**',
   ]),
   js.configs.recommended,

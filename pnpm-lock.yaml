@@ -73,6 +73,12 @@ importers:
         specifier: 0.28.2
         version: 0.28.2
 
+  tools/gen:
+    dependencies:
+      '@neu-ui/elements':
+        specifier: workspace:*
+        version: link:../../packages/elements
+
 packages:
 
   '@blazediff/core@1.10.0':

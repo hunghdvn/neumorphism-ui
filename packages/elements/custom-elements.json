@@ -1,0 +1,844 @@
+{
+  "schemaVersion": "2.1.0",
+  "readme": "",
+  "modules": [
+    {
+      "kind": "javascript-module",
+      "path": "dist/button.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "NeuButton",
+          "tagName": "neu-button",
+          "customElement": true,
+          "description": "A raised button. Use variant=\"primary\" for the main action of a view.",
+          "attributes": [
+            {
+              "name": "variant",
+              "fieldName": "variant",
+              "type": {
+                "text": "'default' | 'primary' | 'flat'"
+              },
+              "default": "'default'"
+            },
+            {
+              "name": "size",
+              "fieldName": "size",
+              "type": {
+                "text": "'sm' | 'md' | 'lg'"
+              },
+              "default": "'md'"
+            },
+            {
+              "name": "disabled",
+              "fieldName": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false"
+            },
+            {
+              "name": "loading",
+              "fieldName": "loading",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false"
+            },
+            {
+              "name": "type",
+              "fieldName": "type",
+              "type": {
+                "text": "'button' | 'submit' | 'reset'"
+              },
+              "default": "'button'"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "variant",
+              "type": {
+                "text": "'default' | 'primary' | 'flat'"
+              },
+              "default": "'default'",
+              "attribute": "variant",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "size",
+              "type": {
+                "text": "'sm' | 'md' | 'lg'"
+              },
+              "default": "'md'",
+              "attribute": "size",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "disabled",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "loading",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "loading",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "type",
+              "type": {
+                "text": "'button' | 'submit' | 'reset'"
+              },
+              "default": "'button'",
+              "attribute": "type",
+              "reflects": true
+            }
+          ],
+          "events": [
+            {
+              "name": "click",
+              "type": {
+                "text": "Event"
+              },
+              "description": "Fired on activation; never while disabled or loading."
+            }
+          ],
+          "slots": [
+            {
+              "name": "",
+              "description": "Button label."
+            },
+            {
+              "name": "prefix",
+              "description": "Content before the label, such as an icon."
+            },
+            {
+              "name": "suffix",
+              "description": "Content after the label."
+            }
+          ],
+          "cssParts": [
+            {
+              "name": "base",
+              "description": "The raised surface."
+            },
+            {
+              "name": "label",
+              "description": "Wrapper around the default slot."
+            },
+            {
+              "name": "prefix",
+              "description": "Wrapper around the prefix slot."
+            },
+            {
+              "name": "suffix",
+              "description": "Wrapper around the suffix slot."
+            },
+            {
+              "name": "spinner",
+              "description": "Spinner shown while loading."
+            }
+          ],
+          "cssProperties": [
+            {
+              "name": "--neu-bg",
+              "description": "Surface colour; shadows and text are derived from it."
+            },
+            {
+              "name": "--neu-accent",
+              "description": "Accent colour."
+            },
+            {
+              "name": "--neu-distance",
+              "description": "Shadow distance for the md size."
+            },
+            {
+              "name": "--neu-intensity",
+              "description": "Shadow strength multiplier."
+            },
+            {
+              "name": "--neu-radius",
+              "description": "Corner radius for the md size."
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "NeuButton",
+          "declaration": {
+            "name": "NeuButton",
+            "module": "dist/button.js"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "neu-button",
+          "declaration": {
+            "name": "NeuButton",
+            "module": "dist/button.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/switch.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "NeuSwitch",
+          "tagName": "neu-switch",
+          "customElement": true,
+          "description": "An on/off switch. The checked attribute is the default state.",
+          "attributes": [
+            {
+              "name": "checked",
+              "fieldName": "defaultChecked",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false"
+            },
+            {
+              "name": "name",
+              "fieldName": "name",
+              "type": {
+                "text": "string"
+              },
+              "default": "''"
+            },
+            {
+              "name": "value",
+              "fieldName": "value",
+              "type": {
+                "text": "string"
+              },
+              "default": "'on'"
+            },
+            {
+              "name": "disabled",
+              "fieldName": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false"
+            },
+            {
+              "name": "required",
+              "fieldName": "required",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false"
+            },
+            {
+              "name": "size",
+              "fieldName": "size",
+              "type": {
+                "text": "'sm' | 'md' | 'lg'"
+              },
+              "default": "'md'"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "checked",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Current checked. The checked attribute holds the default."
+            },
+            {
+              "kind": "field",
+              "name": "name",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "name",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "value",
+              "type": {
+                "text": "string"
+              },
+              "default": "'on'",
+              "attribute": "value",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "disabled",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "required",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "required",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "size",
+              "type": {
+                "text": "'sm' | 'md' | 'lg'"
+              },
+              "default": "'md'",
+              "attribute": "size",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "defaultChecked",
+              "type": {
+                "text": "boolean"
+              },
+              "attribute": "checked",
+              "reflects": true
+            }
+          ],
+          "events": [
+            {
+              "name": "input",
+              "type": {
+                "text": "Event"
+              },
+              "description": "Fired when the user toggles the switch."
+            },
+            {
+              "name": "change",
+              "type": {
+                "text": "Event"
+              },
+              "description": "Fired after input when the user toggles the switch."
+            }
+          ],
+          "slots": [
+            {
+              "name": "",
+              "description": "Label; also the accessible name."
+            }
+          ],
+          "cssParts": [
+            {
+              "name": "base",
+              "description": "Wrapper around track and label."
+            },
+            {
+              "name": "track",
+              "description": "The inset track."
+            },
+            {
+              "name": "thumb",
+              "description": "The raised thumb."
+            },
+            {
+              "name": "label",
+              "description": "Wrapper around the default slot."
+            }
+          ],
+          "cssProperties": [
+            {
+              "name": "--neu-bg",
+              "description": "Surface colour; shadows and text are derived from it."
+            },
+            {
+              "name": "--neu-accent",
+              "description": "Accent colour."
+            },
+            {
+              "name": "--neu-distance",
+              "description": "Shadow distance for the md size."
+            },
+            {
+              "name": "--neu-intensity",
+              "description": "Shadow strength multiplier."
+            },
+            {
+              "name": "--neu-radius",
+              "description": "Corner radius for the md size."
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "NeuSwitch",
+          "declaration": {
+            "name": "NeuSwitch",
+            "module": "dist/switch.js"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "neu-switch",
+          "declaration": {
+            "name": "NeuSwitch",
+            "module": "dist/switch.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/text-field.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "NeuTextField",
+          "tagName": "neu-text-field",
+          "customElement": true,
+          "description": "A single-line text input with an inset field. The value attribute is the default value.",
+          "attributes": [
+            {
+              "name": "type",
+              "fieldName": "type",
+              "type": {
+                "text": "'text' | 'email' | 'password' | 'search' | 'tel' | 'url'"
+              },
+              "default": "'text'"
+            },
+            {
+              "name": "value",
+              "fieldName": "defaultValue",
+              "type": {
+                "text": "string"
+              },
+              "default": "''"
+            },
+            {
+              "name": "name",
+              "fieldName": "name",
+              "type": {
+                "text": "string"
+              },
+              "default": "''"
+            },
+            {
+              "name": "label",
+              "fieldName": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "''"
+            },
+            {
+              "name": "placeholder",
+              "fieldName": "placeholder",
+              "type": {
+                "text": "string"
+              },
+              "default": "''"
+            },
+            {
+              "name": "help-text",
+              "fieldName": "helpText",
+              "type": {
+                "text": "string"
+              },
+              "default": "''"
+            },
+            {
+              "name": "error-text",
+              "fieldName": "errorText",
+              "type": {
+                "text": "string"
+              },
+              "default": "''"
+            },
+            {
+              "name": "required",
+              "fieldName": "required",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false"
+            },
+            {
+              "name": "disabled",
+              "fieldName": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false"
+            },
+            {
+              "name": "readonly",
+              "fieldName": "readOnly",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false"
+            },
+            {
+              "name": "minlength",
+              "fieldName": "minLength",
+              "type": {
+                "text": "number"
+              },
+              "default": "-1"
+            },
+            {
+              "name": "maxlength",
+              "fieldName": "maxLength",
+              "type": {
+                "text": "number"
+              },
+              "default": "-1"
+            },
+            {
+              "name": "pattern",
+              "fieldName": "pattern",
+              "type": {
+                "text": "string"
+              },
+              "default": "''"
+            },
+            {
+              "name": "autocomplete",
+              "fieldName": "autocomplete",
+              "type": {
+                "text": "string"
+              },
+              "default": "''"
+            },
+            {
+              "name": "inputmode",
+              "fieldName": "inputMode",
+              "type": {
+                "text": "string"
+              },
+              "default": "''"
+            },
+            {
+              "name": "enterkeyhint",
+              "fieldName": "enterKeyHint",
+              "type": {
+                "text": "string"
+              },
+              "default": "''"
+            },
+            {
+              "name": "size",
+              "fieldName": "size",
+              "type": {
+                "text": "'sm' | 'md' | 'lg'"
+              },
+              "default": "'md'"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "type",
+              "type": {
+                "text": "'text' | 'email' | 'password' | 'search' | 'tel' | 'url'"
+              },
+              "default": "'text'",
+              "attribute": "type",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "value",
+              "type": {
+                "text": "string"
+              },
+              "description": "Current value. The value attribute holds the default."
+            },
+            {
+              "kind": "field",
+              "name": "name",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "name",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "label",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "placeholder",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "placeholder",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "helpText",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "help-text",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "errorText",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "error-text",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "required",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "required",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "disabled",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "readOnly",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "readonly",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "minLength",
+              "type": {
+                "text": "number"
+              },
+              "default": "-1",
+              "attribute": "minlength",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "maxLength",
+              "type": {
+                "text": "number"
+              },
+              "default": "-1",
+              "attribute": "maxlength",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "pattern",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "pattern",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "autocomplete",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "autocomplete",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "inputMode",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "inputmode",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "enterKeyHint",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "enterkeyhint",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "size",
+              "type": {
+                "text": "'sm' | 'md' | 'lg'"
+              },
+              "default": "'md'",
+              "attribute": "size",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "defaultValue",
+              "type": {
+                "text": "string"
+              },
+              "attribute": "value",
+              "reflects": true
+            }
+          ],
+          "events": [
+            {
+              "name": "input",
+              "type": {
+                "text": "Event"
+              },
+              "description": "Fired on every edit (the native input event, composed)."
+            },
+            {
+              "name": "change",
+              "type": {
+                "text": "Event"
+              },
+              "description": "Fired when an edit is committed, usually on blur."
+            }
+          ],
+          "slots": [
+            {
+              "name": "label",
+              "description": "Rich label; replaces the label attribute."
+            },
+            {
+              "name": "prefix",
+              "description": "Content before the input, such as an icon."
+            },
+            {
+              "name": "suffix",
+              "description": "Content after the input."
+            },
+            {
+              "name": "help-text",
+              "description": "Rich help text; replaces the help-text attribute."
+            }
+          ],
+          "cssParts": [
+            {
+              "name": "base",
+              "description": "Outer wrapper."
+            },
+            {
+              "name": "label",
+              "description": "The <label> element."
+            },
+            {
+              "name": "control",
+              "description": "The inset field around the input."
+            },
+            {
+              "name": "input",
+              "description": "The native <input>."
+            },
+            {
+              "name": "prefix",
+              "description": "Wrapper around the prefix slot."
+            },
+            {
+              "name": "suffix",
+              "description": "Wrapper around the suffix slot."
+            },
+            {
+              "name": "help-text",
+              "description": "Help or error text area."
+            }
+          ],
+          "cssProperties": [
+            {
+              "name": "--neu-bg",
+              "description": "Surface colour; shadows and text are derived from it."
+            },
+            {
+              "name": "--neu-accent",
+              "description": "Accent colour."
+            },
+            {
+              "name": "--neu-distance",
+              "description": "Shadow distance for the md size."
+            },
+            {
+              "name": "--neu-intensity",
+              "description": "Shadow strength multiplier."
+            },
+            {
+              "name": "--neu-radius",
+              "description": "Corner radius for the md size."
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "NeuTextField",
+          "declaration": {
+            "name": "NeuTextField",
+            "module": "dist/text-field.js"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "neu-text-field",
+          "declaration": {
+            "name": "NeuTextField",
+            "module": "dist/text-field.js"
+          }
+        }
+      ]
+    }
+  ]
+}
