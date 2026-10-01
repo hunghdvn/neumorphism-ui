@@ -52,6 +52,7 @@ describe('neu-switch', () => {
     el.addEventListener('input', () => events.push('input'));
     el.addEventListener('change', () => events.push('change'));
     await userEvent.click(el);
+    await tick();
     expect(events).toEqual(['click:true', 'input', 'change']);
   });
 
@@ -112,6 +113,7 @@ describe('neu-switch', () => {
     expect(el.matches(':state(user-invalid)')).toBe(false);
     await userEvent.click(el);
     await userEvent.click(el);
+    await tick();
     expect(el.matches(':state(user-invalid)')).toBe(true);
   });
 
