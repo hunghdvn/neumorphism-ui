@@ -114,6 +114,15 @@ test('controlled text field transforms what the user types', async () => {
   expect(el.value).toBe('AB');
 });
 
+test('dropping defaultValue removes the default attribute instead of writing "undefined"', async () => {
+  await render(h(NeuTextField, { label: 'L', defaultValue: 'a' }));
+  const el = container.querySelector('neu-text-field') as NeuTextFieldElement;
+  expect(el.value).toBe('a');
+  await render(h(NeuTextField, { label: 'L' }));
+  expect(el.hasAttribute('value')).toBe(false);
+  expect(el.value).toBe('');
+});
+
 test('button: React onClick works and type=submit submits the form', async () => {
   let clicks = 0;
   let submits = 0;

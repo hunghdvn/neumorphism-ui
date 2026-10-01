@@ -75,8 +75,18 @@ export function createComponent<P extends object, E extends HTMLElement>(
     useIsomorphicLayoutEffect(() => {
       const node = elementRef.current as unknown as Record<string, unknown> | null;
       if (!node) return;
+      const absent = (key: string) =>
+        element[key] === undefined || (key === defaultProp && element[key] === null);
       for (const key of applied.current) {
-        if (element[key] === undefined) node[key] = undefined;
+        if (!absent(key)) continue;
+        if (key === defaultProp && valueProp) {
+          // The element's default setter would stringify undefined; drop the attribute instead.
+          (node as unknown as Element).removeAttribute(
+            attributeName(valueProp, def.props[valueProp]!),
+          );
+        } else {
+          node[key] = undefined;
+        }
       }
       const next = new Set<string>();
       const keys = Object.keys(element).sort(
@@ -84,7 +94,7 @@ export function createComponent<P extends object, E extends HTMLElement>(
       );
       for (const key of keys) {
         const value = element[key];
-        if (value === undefined) continue;
+        if (absent(key)) continue;
         next.add(key);
         if (node[key] !== value) node[key] = value;
       }
