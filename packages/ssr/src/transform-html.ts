@@ -108,6 +108,12 @@ export function transformHtml(html: string): string {
       continue;
     }
     const tag = readStartTag(html, lt);
+    if (!tag && isAsciiAlpha(html[lt + 1])) {
+      // A start tag that never closes runs to the end of input, as in the browser. Stopping here
+      // keeps the scan linear: retrying at every later '<' would rescan the rest each time.
+      out += html.slice(lt);
+      break;
+    }
     if (!tag) {
       out += '<';
       i = lt + 1;

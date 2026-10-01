@@ -62,6 +62,17 @@ describe('transformHtml', () => {
     }
   });
 
+  test.each([
+    ['20 000 unterminated quoted attributes', "<a b='".repeat(20_000)],
+    ['200 000 unterminated <neu-button tags', '<neu-button'.repeat(200_000)],
+  ])('stays linear on %s', (_label, html) => {
+    const started = performance.now();
+    const out = transformHtml(html);
+    const elapsed = performance.now() - started;
+    expect(out).toBe(html);
+    expect(elapsed).toBeLessThan(500);
+  });
+
   test('uses shadowrootdelegatesfocus for text fields', () => {
     expect(transformHtml('<neu-text-field></neu-text-field>')).toContain(
       'shadowrootdelegatesfocus',
