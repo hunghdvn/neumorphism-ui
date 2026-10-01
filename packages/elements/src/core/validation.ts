@@ -10,3 +10,19 @@ export function requiredCheckboxMessage(): string {
   }
   return checkboxMessage;
 }
+
+/** Copies a native input's validity so the host can report the same errors. */
+export function copyValidity(validity: ValidityState): ValidityStateFlags {
+  return {
+    badInput: validity.badInput,
+    customError: validity.customError,
+    patternMismatch: validity.patternMismatch,
+    rangeOverflow: validity.rangeOverflow,
+    rangeUnderflow: validity.rangeUnderflow,
+    stepMismatch: validity.stepMismatch,
+    tooLong: validity.tooLong,
+    tooShort: validity.tooShort,
+    typeMismatch: validity.typeMismatch,
+    valueMissing: validity.valueMissing,
+  };
+}
