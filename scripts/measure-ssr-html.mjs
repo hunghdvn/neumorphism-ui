@@ -5,7 +5,9 @@ const DSD = /<template shadowrootmode="open"[^>]*>[\s\S]*?<\/template>/g;
 const gz = (text) => gzipSync(text).length;
 
 for (const url of process.argv.slice(2)) {
-  const html = await (await fetch(url)).text();
+  const res = await fetch(url);
+  if (!res.ok) throw new Error(`${url} responded ${res.status} ${res.statusText}`);
+  const html = await res.text();
   const stripped = html.replace(DSD, '');
   const instances = html.match(DSD)?.length ?? 0;
   console.log(url);

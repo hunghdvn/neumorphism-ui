@@ -22,6 +22,7 @@ async function waitForHydration(page: Page) {
   await page.waitForLoadState('networkidle');
 }
 
+// Vue logs hydration mismatches only in dev builds, so for Nuxt criterion 1 is proven by the dev run.
 test('1. no hydration errors or warnings', async ({ page }) => {
   const problems: string[] = [];
   page.on('console', (message) => {
@@ -35,14 +36,15 @@ test('1. no hydration errors or warnings', async ({ page }) => {
   await page.goto('/');
   await waitForHydration(page);
   if (target() === 'next') await expect(page.getByTestId('late')).toBeAttached();
+  if (target() === 'next') await page.waitForTimeout(300);
   expect(problems).toEqual([]);
 });
 
 test('2. server HTML renders the components without JavaScript, with the same layout', async ({
   browser,
 }) => {
-  const baseURL = test.info().project.use.baseURL;
-  const noJs = await browser.newContext({ baseURL, javaScriptEnabled: false });
+  const { baseURL, ...device } = test.info().project.use;
+  const noJs = await browser.newContext({ ...device, baseURL, javaScriptEnabled: false });
   const page = await noJs.newPage();
   await page.goto('/');
   const state = await page.evaluate(
@@ -50,7 +52,7 @@ test('2. server HTML renders the components without JavaScript, with the same la
       const sw = document.querySelector('form neu-switch')!;
       return {
         defined: tags.some((tag) => customElements.get(tag) !== undefined),
-        shadow: tags.map((tag) => document.querySelector(`form ${tag}`)?.shadowRoot !== null),
+        shadow: tags.map((tag) => !!document.querySelector(`form ${tag}`)?.shadowRoot),
         trackOn: sw.shadowRoot?.querySelector('.track')?.classList.contains('on') ?? false,
         trackShadow: getComputedStyle(sw.shadowRoot!.querySelector('.track')!).boxShadow,
         buttonVisibility: getComputedStyle(document.querySelector('form neu-button')!).visibility,
@@ -66,7 +68,7 @@ test('2. server HTML renders the components without JavaScript, with the same la
   const withoutJs = await boxes(page);
   await noJs.close();
 
-  const withJs = await browser.newContext({ baseURL });
+  const withJs = await browser.newContext({ ...device, baseURL });
   const hydrated = await withJs.newPage();
   await hydrated.goto('/');
   await waitForHydration(hydrated);
@@ -134,6 +136,18 @@ test('roles from ElementInternals reach the accessibility tree (Chromium)', asyn
 
 test('streamed Suspense content keeps its declarative shadow root (Next)', async ({ page }) => {
   test.skip(target() !== 'next', 'only the Next example streams');
+  // An element created by the parser while its definition exists is already :defined, so this
+  // records whether the streamed switch was parsed after neu-switch was defined.
+  await page.addInitScript(() => {
+    const observer = new MutationObserver(() => {
+      const el = document.querySelector('[data-testid="late"]');
+      if (!el) return;
+      (window as unknown as { __lateDefinedAtParse: boolean }).__lateDefinedAtParse =
+        el.matches(':defined');
+      observer.disconnect();
+    });
+    observer.observe(document, { childList: true, subtree: true });
+  });
   await page.goto('/');
   await waitForHydration(page);
   const late = page.getByTestId('late');
@@ -145,4 +159,9 @@ test('streamed Suspense content keeps its declarative shadow root (Next)', async
   expect(info).toEqual({ tracks: 1, templateChild: false });
   await late.click();
   expect(await late.evaluate((el) => (el as unknown as { checked: boolean }).checked)).toBe(true);
+  expect(
+    await page.evaluate(
+      () => (window as unknown as { __lateDefinedAtParse?: boolean }).__lateDefinedAtParse,
+    ),
+  ).toBe(true);
 });

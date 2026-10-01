@@ -37,3 +37,7 @@ e2e/__screenshots__/win32/
 e2e/__screenshots__/darwin/
 
 ssr-react18.tmp.mjs
+
+# Next regenerates these agent-instruction files
+apps/examples/next/AGENTS.md
+apps/examples/next/CLAUDE.md
