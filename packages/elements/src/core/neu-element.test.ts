@@ -178,4 +178,55 @@ describe('declarative shadow DOM', () => {
     }
     expect(document.readyState).toBe('complete');
   });
+
+  /** Runs fn with document.readyState reporting 'loading', as while a page still streams. */
+  async function whileLoading(fn: () => void | Promise<void>): Promise<void> {
+    Object.defineProperty(document, 'readyState', { configurable: true, get: () => 'loading' });
+    try {
+      await fn();
+    } finally {
+      delete (document as { readyState?: unknown }).readyState;
+    }
+  }
+
+  test('while loading, an element inserted before an existing node renders at once', async () => {
+    await whileLoading(() => {
+      const sibling = document.createElement('p');
+      document.body.append(sibling);
+      const el = document.createElement('neu-probe') as NeuProbe;
+      document.body.insertBefore(el, sibling);
+      expect(el.shadowRoot?.querySelector('[part=label]')?.textContent).toBe('hi');
+      expect(el.renders).toBe(1);
+    });
+  });
+
+  test('while loading, the last element without children waits until a node follows it', async () => {
+    await whileLoading(async () => {
+      const el = document.createElement('neu-probe') as NeuProbe;
+      document.body.append(el);
+      expect(el.shadowRoot).toBeNull();
+      await Promise.resolve();
+      expect(el.shadowRoot).toBeNull();
+      document.body.append(document.createElement('p'));
+      await Promise.resolve();
+      expect(el.shadowRoot?.querySelector('[part=label]')?.textContent).toBe('hi');
+      expect(el.renders).toBe(1);
+      // Later mutations and DOMContentLoaded do not render it again.
+      document.body.append(document.createElement('p'));
+      document.dispatchEvent(new Event('DOMContentLoaded'));
+      await Promise.resolve();
+      expect(el.renders).toBe(1);
+    });
+  });
+
+  test('while loading, a waiting element resumes when it gains a child', async () => {
+    await whileLoading(async () => {
+      const el = document.createElement('neu-probe') as NeuProbe;
+      document.body.append(el);
+      expect(el.shadowRoot).toBeNull();
+      el.append('light');
+      await Promise.resolve();
+      expect(el.renders).toBe(1);
+    });
+  });
 });

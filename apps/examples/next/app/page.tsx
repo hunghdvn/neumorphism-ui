@@ -1,4 +1,5 @@
 import { Suspense } from 'react';
+import { ClientMounted } from './client-mounted';
 import { DemoForm } from './demo-form';
 import { SlowSwitch } from './slow-switch';
 
@@ -10,6 +11,7 @@ export default function Page() {
     <main>
       <h1>SSR gate</h1>
       <DemoForm />
+      <ClientMounted />
       <Suspense fallback={<p data-testid="fallback">Loading…</p>}>
         <SlowSwitch />
       </Suspense>

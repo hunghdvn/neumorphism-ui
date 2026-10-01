@@ -198,9 +198,8 @@ export abstract class NeuElement extends ServerSafeHTMLElement {
       this.adoptRoot(existing);
       return;
     }
-    if (document.readyState === 'loading') {
-      // The parser may not have reached this element's declarative shadow root yet (spec §8.1).
-      document.addEventListener('DOMContentLoaded', () => this.ensureRoot(), { once: true });
+    if (document.readyState === 'loading' && this.parserMayAttachRoot()) {
+      this.waitForParser();
       return;
     }
     const root = this.attachShadow({
@@ -209,6 +208,37 @@ export abstract class NeuElement extends ServerSafeHTMLElement {
     });
     root.innerHTML = this.def.template(this.props).value;
     this.adoptRoot(root);
+  }
+
+  /**
+   * While the document loads, the parser may not have reached this element's declarative shadow
+   * root yet (spec §8.1). That is only possible while nothing has been parsed inside or after the
+   * element; one created by script in the middle of the page renders at once.
+   */
+  private parserMayAttachRoot(): boolean {
+    if (this.firstChild !== null || this.nextSibling !== null) return false;
+    for (let node = this.parentNode; node !== null; node = node.parentNode) {
+      if (node.nextSibling !== null) return false;
+    }
+    return true;
+  }
+
+  /**
+   * Resumes as soon as a child or a following node shows the parser has moved past the element,
+   * with DOMContentLoaded as the fallback. A shadow root alone is not enough: its contents may
+   * still be streaming in.
+   */
+  private waitForParser(): void {
+    const resume = () => {
+      observer.disconnect();
+      document.removeEventListener('DOMContentLoaded', resume);
+      this.ensureRoot();
+    };
+    const observer = new MutationObserver(() => {
+      if (!this.parserMayAttachRoot()) resume();
+    });
+    observer.observe(document, { childList: true, subtree: true });
+    document.addEventListener('DOMContentLoaded', resume);
   }
 
   private adoptRoot(root: ShadowRoot): void {

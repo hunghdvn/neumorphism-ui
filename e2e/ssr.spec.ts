@@ -176,3 +176,42 @@ test('streamed Suspense content keeps its declarative shadow root (Next)', async
     expect(definedAtParse).toBe(true);
   }
 });
+
+test('an element mounted by a client effect renders while the stream is still open (Next)', async ({
+  page,
+  browserName,
+}) => {
+  test.skip(target() !== 'next', 'only the Next example streams');
+  // Records the field's state right after React inserts it, while the Suspense stream may be open.
+  await page.addInitScript(() => {
+    const observer = new MutationObserver(() => {
+      const el = document.querySelector('[data-testid="client-mounted"]');
+      if (!el) return;
+      observer.disconnect();
+      (window as unknown as { __clientMounted: unknown }).__clientMounted = {
+        readyState: document.readyState,
+        input: el.shadowRoot?.querySelector('input') != null,
+      };
+    });
+    observer.observe(document, { childList: true, subtree: true });
+  });
+  await page.goto('/');
+  await waitForHydration(page);
+  const field = page.getByTestId('client-mounted');
+  await expect(field).toBeAttached();
+  expect(await field.evaluate((el) => el.shadowRoot?.querySelector('input') != null)).toBe(true);
+  const atMount = await page.evaluate(
+    () =>
+      (window as unknown as { __clientMounted: { readyState: string; input: boolean } })
+        .__clientMounted,
+  );
+  if (atMount.readyState === 'loading') expect(atMount.input).toBe(true);
+  if (browserName === 'webkit') {
+    test.info().annotations.push({
+      type: 'note',
+      description: `WebKit hydrates only after the stream ends, so the loading-state mount may not occur (at mount: readyState ${atMount.readyState}, shadow input ${atMount.input})`,
+    });
+  } else {
+    expect(atMount.readyState).toBe('loading');
+  }
+});
