@@ -18,6 +18,8 @@ const ServerSafeHTMLElement: typeof HTMLElement =
   (class {} as unknown as typeof HTMLElement);
 
 const sheets = new WeakMap<ComponentDef, CSSStyleSheet>();
+/** Getters that define() installed, as opposed to accessors an author wrote. */
+const installedGetters = new WeakSet<() => unknown>();
 
 function sheetFor(def: ComponentDef): CSSStyleSheet {
   let sheet = sheets.get(def);
@@ -42,13 +44,15 @@ export abstract class NeuElement extends ServerSafeHTMLElement {
   static define(): void {
     const def = this.def;
     for (const [key, decl] of Object.entries(def.props)) {
-      if (Object.prototype.hasOwnProperty.call(this.prototype, key)) continue;
+      if (this.definesAccessor(key)) continue;
+      const get = function (this: NeuElement) {
+        return this.props[key];
+      };
+      installedGetters.add(get);
       Object.defineProperty(this.prototype, key, {
         configurable: true,
         enumerable: true,
-        get(this: NeuElement) {
-          return this.props[key];
-        },
+        get,
         set(this: NeuElement, value: unknown) {
           this.setProp(key, coerceProperty(decl, value));
         },
@@ -60,6 +64,21 @@ export abstract class NeuElement extends ServerSafeHTMLElement {
     }
   }
 
+  /**
+   * True when this class defines `key`, or a class between it and NeuElement wrote its own
+   * accessor for it. Accessors that define() installed on a parent do not count: they coerce with
+   * the parent's declarations, and this class may declare the prop differently.
+   */
+  private static definesAccessor(key: string): boolean {
+    if (Object.prototype.hasOwnProperty.call(this.prototype, key)) return true;
+    let proto = Object.getPrototypeOf(this.prototype) as object | null;
+    for (; proto !== null && proto !== NeuElement.prototype; proto = Object.getPrototypeOf(proto)) {
+      const descriptor = Object.getOwnPropertyDescriptor(proto, key);
+      if (descriptor) return !(descriptor.get && installedGetters.has(descriptor.get));
+    }
+    return false;
+  }
+
   protected readonly internals: ElementInternals;
   protected readonly props: Record<string, PropValue>;
   private root: ShadowRoot | null = null;
@@ -67,6 +86,8 @@ export abstract class NeuElement extends ServerSafeHTMLElement {
   private reflecting = false;
   private hasConnected = false;
   private formDisabled = false;
+  /** The author's tabindex, read at the first syncFocusable (null when none was set). */
+  private authorTabIndex: string | null | undefined;
 
   constructor() {
     super();
@@ -150,9 +171,12 @@ export abstract class NeuElement extends ServerSafeHTMLElement {
     else this.internals.states.delete(name);
   }
 
+  /** Focusable: the author's tabindex, or 0. Not focusable: no tabindex at all. */
   protected syncFocusable(focusable: boolean): void {
-    if (!focusable) this.removeAttribute('tabindex');
-    else if (this.getAttribute('tabindex') !== '0') this.setAttribute('tabindex', '0');
+    if (this.authorTabIndex === undefined) this.authorTabIndex = this.getAttribute('tabindex');
+    const wanted = focusable ? (this.authorTabIndex ?? '0') : null;
+    if (wanted === null) this.removeAttribute('tabindex');
+    else if (this.getAttribute('tabindex') !== wanted) this.setAttribute('tabindex', wanted);
   }
 
   /** Runs on every prop change, connected or not. Keep it free of DOM work. */

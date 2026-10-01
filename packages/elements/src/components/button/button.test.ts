@@ -60,6 +60,15 @@ describe('neu-button', () => {
     expect(internalsOf(el).ariaDisabled).toBeNull();
   });
 
+  test('keeps an author tabindex, drops it while disabled and restores it afterwards', () => {
+    const el = mount<NeuButton>('<neu-button tabindex="-1">Save</neu-button>');
+    expect(el.getAttribute('tabindex')).toBe('-1');
+    el.disabled = true;
+    expect(el.hasAttribute('tabindex')).toBe(false);
+    el.disabled = false;
+    expect(el.getAttribute('tabindex')).toBe('-1');
+  });
+
   test('loading: no click event, still focusable, aria-busy', () => {
     const el = mount<NeuButton>('<neu-button loading>Save</neu-button>');
     const clicks = countClicks(el);

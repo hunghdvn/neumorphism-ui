@@ -21,6 +21,16 @@ describe('neu-text-field', () => {
     expect(el.shadowRoot!.activeElement).toBe(inputOf(el));
   });
 
+  test('focus() puts the caret in the input without selecting the whole value', () => {
+    const el = mount<NeuTextField>('<neu-text-field label="A"></neu-text-field>');
+    el.value = 'abc';
+    el.focus();
+    const input = inputOf(el);
+    expect(el.shadowRoot!.activeElement).toBe(input);
+    expect([input.selectionStart, input.selectionEnd]).not.toEqual([0, 3]);
+    expect(input.selectionStart).toBe(input.selectionEnd);
+  });
+
   test('label and help text can come from slots', () => {
     const el = mount<NeuTextField>(
       '<neu-text-field><span slot="label">Name</span><span slot="help-text">Full name</span></neu-text-field>',

@@ -1,10 +1,18 @@
+import { renderShadowContents } from '@neu-ui/elements/ssr.js';
 import { NeuSwitch as NeuSwitchElement } from '@neu-ui/elements/switch.js';
 import type { NeuTextField as NeuTextFieldElement } from '@neu-ui/elements/text-field.js';
 import * as React from 'react';
-import { createRoot, type Root } from 'react-dom/client';
-import { afterEach, beforeEach, expect, test } from 'vitest';
+import { createRoot, hydrateRoot, type Root } from 'react-dom/client';
+import { afterEach, beforeEach, expect, inject, test, vi } from 'vitest';
 import { userEvent } from 'vitest/browser';
 import { NeuButton, NeuSwitch, NeuTextField } from './index.js';
+
+declare module 'vitest' {
+  export interface ProvidedContext {
+    /** The React major each browser project runs against (vitest.config.ts). */
+    reactMajor: number;
+  }
+}
 
 (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
 const act = (React as unknown as { act: (fn: () => void | Promise<void>) => Promise<void> }).act;
@@ -26,6 +34,46 @@ afterEach(async () => {
 });
 
 const render = (node: React.ReactNode) => act(() => root.render(node));
+
+test('runs against the React major its project targets', () => {
+  expect(Number.parseInt(React.version, 10)).toBe(inject('reactMajor'));
+});
+
+test('hydrates server markup without errors and keeps the server-rendered shadow root', async () => {
+  // What the wrapper renders on the server for <NeuSwitch name="n" defaultChecked>Notify</NeuSwitch>.
+  const markup =
+    '<neu-switch checked="" name="n"><template shadowrootmode="open">' +
+    renderShadowContents(NeuSwitchElement.def, { checked: '', name: 'n' }) +
+    '</template>Notify</neu-switch>';
+  const server = document.createElement('div');
+  document.body.append(server);
+  server.setHTMLUnsafe(markup);
+  const el = server.querySelector('neu-switch') as NeuSwitchElement;
+  const track = el.shadowRoot!.querySelector('.track');
+  expect(track).not.toBeNull();
+  const recoverable: unknown[] = [];
+  const errors: unknown[][] = [];
+  const spy = vi.spyOn(console, 'error').mockImplementation((...args: unknown[]) => {
+    errors.push(args);
+  });
+  let hydrated: Root | undefined;
+  try {
+    await act(async () => {
+      hydrated = hydrateRoot(server, h(NeuSwitch, { name: 'n', defaultChecked: true }, 'Notify'), {
+        onRecoverableError: (error: unknown) => recoverable.push(error),
+      });
+    });
+  } finally {
+    spy.mockRestore();
+  }
+  expect(recoverable).toEqual([]);
+  expect(errors).toEqual([]);
+  expect(server.querySelector('neu-switch')).toBe(el);
+  expect(el.shadowRoot!.querySelector('.track')).toBe(track);
+  expect(el.checked).toBe(true);
+  await act(() => hydrated!.unmount());
+  server.remove();
+});
 
 test('renders the element with children, host props and a forwarded ref', async () => {
   const ref = React.createRef<NeuSwitchElement>();
@@ -106,7 +154,7 @@ test('controlled text field transforms what the user types', async () => {
   expect(el.value).toBe('A');
   await act(async () => {
     el.focus();
-    // Chromium selects the whole value on focus, which typing would replace; put the caret at the end.
+    // Put the caret at the end so typing appends wherever an engine placed it.
     el.setSelectionRange(1, 1);
     await userEvent.keyboard('b');
     await tick();
@@ -127,7 +175,7 @@ test('controlled text field: onChange fires on every keystroke, like React <inpu
   const el = container.querySelector('neu-text-field') as NeuTextFieldElement;
   await act(async () => {
     el.focus();
-    // Put the caret at the end so typing appends (Chromium may select the value on focus).
+    // Put the caret at the end so typing appends wherever an engine placed it.
     el.setSelectionRange(1, 1);
     await userEvent.keyboard('b');
     await tick();

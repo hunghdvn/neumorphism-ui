@@ -21,11 +21,14 @@ const browser = () => browserTest({ exclude: ['src/**/*.node.test.ts'] });
 export default defineConfig({
   test: {
     projects: [
-      { optimizeDeps: { include: reactEntries }, test: { ...browser(), name: 'browser-react19' } },
+      {
+        optimizeDeps: { include: reactEntries },
+        test: { ...browser(), name: 'browser-react19', provide: { reactMajor: 19 } },
+      },
       {
         resolve: { alias: react18 },
         optimizeDeps: { include: reactEntries },
-        test: { ...browser(), name: 'browser-react18' },
+        test: { ...browser(), name: 'browser-react18', provide: { reactMajor: 18 } },
       },
       { test: { name: 'node-react19', include: ['src/**/*.node.test.ts'], environment: 'node' } },
     ],

@@ -45,6 +45,13 @@ export class NeuTextField extends FormControlElement {
     this.setAttribute('value', String(next));
   }
 
+  /** Focuses the inner input directly, so the caret stays where it was (no select-all). */
+  override focus(options?: FocusOptions): void {
+    const input = this.input;
+    if (input) input.focus(options);
+    else super.focus(options);
+  }
+
   select(): void {
     this.input?.select();
   }

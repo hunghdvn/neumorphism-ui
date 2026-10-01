@@ -3,8 +3,10 @@
   "compilerOptions": {
     "noEmit": false,
     "outDir": "dist",
-    "rootDir": "src"
+    "rootDir": "src",
+    "sourceMap": false,
+    "declarationMap": false
   },
   "include": ["src"],
-  "exclude": ["src/**/*.test.ts", "src/test-utils", "src/core/env.d.ts"]
+  "exclude": ["src/**/*.test.ts", "src/test-utils", "src/core/env.d.ts", "src/cdn.ts"]
 }

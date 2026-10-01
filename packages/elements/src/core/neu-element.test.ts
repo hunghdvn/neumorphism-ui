@@ -114,6 +114,43 @@ describe('attributes and properties', () => {
   });
 });
 
+describe('define()', () => {
+  test('keeps an accessor that a class between the element and NeuElement defines', () => {
+    class LabelledBase extends NeuElement {
+      static override def = { ...probeDef, tag: 'neu-probe-accessor' };
+      get label(): string {
+        return 'from the base class';
+      }
+    }
+    class Leaf extends LabelledBase {}
+    Leaf.define();
+    const el = document.createElement('neu-probe-accessor') as Leaf;
+    expect(el.label).toBe('from the base class');
+    expect(Object.prototype.hasOwnProperty.call(Leaf.prototype, 'label')).toBe(false);
+  });
+
+  test('a subclass that redeclares a prop gets its own accessor, not the parent one', () => {
+    const wideDef = defineComponent({
+      tag: 'neu-probe-wide',
+      props: {
+        ...probeDef.props,
+        size: { type: 'string', default: 'md', values: ['sm', 'md', 'lg', 'xl'], reflect: true },
+      },
+      styles: probeDef.styles,
+      template: (p) => html`<span data-ref="label" part="label">${p.label}</span>`,
+      docs,
+    });
+    class NeuProbeWide extends NeuProbe {
+      // TypeScript cannot express a subclass that redeclares one of its parent's props.
+      static override def = wideDef as unknown as typeof probeDef;
+    }
+    NeuProbeWide.define();
+    const el = document.createElement('neu-probe-wide') as NeuProbeWide;
+    el.size = 'xl' as never;
+    expect(el.size).toBe('xl');
+  });
+});
+
 describe('lifecycle', () => {
   test('re-connecting does not re-render', () => {
     const el = mount<NeuProbe>('<neu-probe></neu-probe>');

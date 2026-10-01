@@ -1,5 +1,6 @@
 import { expect, test } from 'vitest';
 import tokens from '../../../tokens/src/neu.css?inline';
+import { definitions } from '../ssr.js';
 import { hostTheme } from './styles.js';
 
 /** Standalone fallbacks in components must equal the light defaults shipped in tokens. */
@@ -41,3 +42,11 @@ test('an element that already has its shadow root ignores the undefined-placehol
     document.body.innerHTML = '';
   }
 });
+
+test.each([...definitions.values()].map((def) => [def.tag, def.styles]))(
+  '%s styles name every private variable --_neu-*',
+  (_tag, styles) => {
+    const names = new Set(styles.match(/--_[\w-]+/g) ?? []);
+    expect([...names].filter((name) => !name.startsWith('--_neu-'))).toEqual([]);
+  },
+);
