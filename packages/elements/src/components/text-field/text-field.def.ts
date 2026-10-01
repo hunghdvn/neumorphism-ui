@@ -43,7 +43,7 @@ export const textFieldDef = defineComponent({
   form: { valueProp: 'value' },
   styles: textFieldStyles,
   template: (p) =>
-    html`<div part="base" class="base"><label part="label" class="label" for="input"><slot name="label"><span class="label-text" data-ref="label-text">${p.label}</span></slot></label><div part="control" class="control"><span part="prefix" class="prefix"><slot name="prefix"></slot></span><input part="input" class="input" id="input" data-ref="input" type="${p.type}" value="${p.value}" aria-describedby="help"${inputAttributes(p)}><span part="suffix" class="suffix"><slot name="suffix"></slot></span></div><div part="help-text" class="help" id="help"><slot name="help-text"><span class="help-text" data-ref="help-text">${p.helpText}</span></slot><span class="error-text" data-ref="error-text"></span></div></div>`,
+    html`<div part="base" class="base"><label part="label" class="label" for="input"><slot name="label"><span class="label-text" data-ref="label-text">${p.label}</span></slot></label><div part="control" class="control"><span part="prefix" class="prefix"><slot name="prefix"></slot></span><input part="input" class="input" id="input" data-ref="input" type="${p.type}" value="${p.value}" aria-describedby="help"${inputAttributes(p)}><span part="suffix" class="suffix"><slot name="suffix"></slot></span></div><div part="help-text" class="help" id="help"><slot name="help-text"><span class="help-text" data-ref="help-text">${p.helpText}</span></slot><span class="error-text" data-ref="error-text">${p.errorText}</span></div></div>`,
   docs: {
     summary:
       'A single-line text input with an inset field. The value attribute is the default value.',

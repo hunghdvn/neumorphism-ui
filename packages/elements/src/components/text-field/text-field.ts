@@ -88,7 +88,7 @@ export class NeuTextField extends FormControlElement {
     if (input) {
       if (changed.has('type') && input.type !== p.type) input.type = p.type;
       if (changed.has('value')) {
-        input.defaultValue = p.value;
+        if (input.defaultValue !== p.value) input.defaultValue = p.value;
         if (!this.dirty) input.value = p.value;
       }
       if (changed.has('placeholder')) setOptionalAttribute(input, 'placeholder', p.placeholder);

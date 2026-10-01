@@ -90,6 +90,13 @@ describe('neu-text-field', () => {
     expect(getComputedStyle(error).display).toBe('block');
   });
 
+  test('error-text from the attribute is in the initial template', () => {
+    const el = mount<NeuTextField>('<neu-text-field label="A" error-text="Oops"></neu-text-field>');
+    const error = el.shadowRoot!.querySelector('.error-text')!;
+    expect(error.textContent).toBe('Oops');
+    expect(getComputedStyle(error).display).toBe('none');
+  });
+
   test('Enter submits the form when it has a submit button', async () => {
     const form = mountForm(
       '<neu-text-field name="q" label="Search"></neu-text-field><neu-text-field name="r" label="Other"></neu-text-field>' +
