@@ -28,7 +28,7 @@ export const hostTheme = `
   color: var(--_neu-fg);
   -webkit-tap-highlight-color: transparent;
 }
-:host(:not(:defined)) { visibility: inherit !important; }
+:host(:not(:defined)) { visibility: inherit !important; min-block-size: auto !important; }
 :host([hidden]) { display: none !important; }
 :host(:focus) { outline: none; }
 *, *::before, *::after { box-sizing: border-box; }
