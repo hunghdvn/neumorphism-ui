@@ -1,0 +1,23 @@
+{
+  "name": "next-example",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "next dev --port 3101",
+    "build": "next build",
+    "start": "next start --port 3100"
+  },
+  "dependencies": {
+    "@neu-ui/elements": "workspace:*",
+    "@neu-ui/react": "workspace:*",
+    "@neu-ui/tokens": "workspace:*",
+    "next": "16.3.8",
+    "react": "19.3.0",
+    "react-dom": "19.3.0"
+  },
+  "devDependencies": {
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0",
+    "typescript": "6.0.3"
+  }
+}

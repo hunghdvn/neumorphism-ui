@@ -13,10 +13,15 @@
     "lint": "eslint . && prettier --check .",
     "format": "prettier --write .",
     "gen": "pnpm --filter @neu-ui/elements build && pnpm --filter @neu-ui/gen run gen",
-    "size": "node scripts/check-size.mjs"
+    "size": "node scripts/check-size.mjs",
+    "examples:build": "pnpm --filter next-example build && pnpm --filter nuxt-example build",
+    "test:ssr:prod": "playwright test -c playwright.ssr-prod.config.ts",
+    "test:ssr:dev": "playwright test -c playwright.ssr-dev.config.ts",
+    "measure:ssr": "node scripts/measure-ssr-html.mjs"
   },
   "devDependencies": {
     "@eslint/js": "10.0.1",
+    "@playwright/test": "1.63.0",
     "@types/node": "24.19.0",
     "@vitest/browser": "5.0.3",
     "@vitest/browser-playwright": "5.0.3",
