@@ -135,6 +135,20 @@ describe('neu-button', () => {
     expect(button.hasAttribute('tabindex')).toBe(false);
   });
 
+  test('a disabled fieldset styles it like the disabled attribute', () => {
+    const form = mountForm(
+      '<fieldset disabled><neu-button>A</neu-button></fieldset><neu-button disabled>B</neu-button>',
+    );
+    const looks = [...form.querySelectorAll('neu-button')].map((el) => [
+      getComputedStyle(el).cursor,
+      getComputedStyle(el.shadowRoot!.querySelector('.base')!).boxShadow,
+    ]);
+    expect(looks).toEqual([
+      ['not-allowed', 'none'],
+      ['not-allowed', 'none'],
+    ]);
+  });
+
   test('has no axe violations', async () => {
     const el = mount<NeuButton>('<neu-button>Save</neu-button>');
     expect(await axeViolations(el.parentElement!)).toEqual([]);

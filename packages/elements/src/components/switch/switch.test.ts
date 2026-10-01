@@ -165,6 +165,20 @@ describe('neu-switch', () => {
     expect(el.checked).toBe(true);
   });
 
+  test('a disabled fieldset styles it like the disabled attribute', () => {
+    const form = mountForm(
+      '<fieldset disabled><neu-switch>A</neu-switch></fieldset><neu-switch disabled>B</neu-switch>',
+    );
+    const looks = [...form.querySelectorAll('neu-switch')].map((el) => [
+      getComputedStyle(el).cursor,
+      getComputedStyle(el.shadowRoot!.querySelector('.base')!).opacity,
+    ]);
+    expect(looks).toEqual([
+      ['not-allowed', '0.55'],
+      ['not-allowed', '0.55'],
+    ]);
+  });
+
   test('submits its value when checked and nothing when unchecked', () => {
     const form = mountForm('<neu-switch name="notify" value="yes" checked>N</neu-switch>');
     expect(new FormData(form).get('notify')).toBe('yes');

@@ -72,6 +72,27 @@ describe('SSR parity', () => {
     expect(field.value).toBe('typed early');
   });
 
+  test('server-rendered disabled controls look disabled before their definitions run', () => {
+    // The same server markup under tag names that are never defined, so nothing upgrades.
+    const looks = cases.map((c) => {
+      const markup = ssrMarkup({ ...c, attrs: { ...c.attrs, disabled: '' } });
+      const probe = `${c.tag}-not-defined`;
+      document.body.setHTMLUnsafe(markup.replaceAll(c.tag, probe));
+      const el = document.body.querySelector(probe)!;
+      const part = (selector: string) => getComputedStyle(el.shadowRoot!.querySelector(selector)!);
+      const look =
+        c.tag === 'neu-button'
+          ? part('.base').boxShadow
+          : part(c.tag === 'neu-switch' ? '.base' : '.control').opacity;
+      return [c.tag, getComputedStyle(el).cursor, look];
+    });
+    expect(looks).toEqual([
+      ['neu-button', 'not-allowed', 'none'],
+      ['neu-switch', 'not-allowed', '0.55'],
+      ['neu-text-field', 'not-allowed', '0.6'],
+    ]);
+  });
+
   test('only the text field delegates focus', () => {
     expect(renderDSD('neu-text-field', {})).toContain('shadowrootdelegatesfocus');
     expect(renderDSD('neu-button', {})).not.toContain('shadowrootdelegatesfocus');

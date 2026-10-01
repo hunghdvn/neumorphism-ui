@@ -179,6 +179,21 @@ describe('neu-text-field', () => {
     expect(new FormData(form).has('a')).toBe(false);
   });
 
+  test('a disabled fieldset styles it like the disabled attribute', () => {
+    const form = mountForm(
+      '<fieldset disabled><neu-text-field label="A"></neu-text-field></fieldset>' +
+        '<neu-text-field label="B" disabled></neu-text-field>',
+    );
+    const looks = [...form.querySelectorAll('neu-text-field')].map((el) => [
+      getComputedStyle(el).cursor,
+      getComputedStyle(el.shadowRoot!.querySelector('.control')!).opacity,
+    ]);
+    expect(looks).toEqual([
+      ['not-allowed', '0.6'],
+      ['not-allowed', '0.6'],
+    ]);
+  });
+
   test('passes attribute changes through to the inner input', () => {
     const el = mount<NeuTextField>('<neu-text-field label="A"></neu-text-field>');
     el.setAttribute('maxlength', '3');

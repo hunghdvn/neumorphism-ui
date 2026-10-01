@@ -2,7 +2,7 @@ import { hostTheme } from '../../core/styles.js';
 
 export const textFieldStyles = `${hostTheme}
 :host { display: block; }
-:host([disabled]) { cursor: not-allowed; }
+:host(:disabled), :host([disabled]) { cursor: not-allowed; }
 .base { display: flex; flex-direction: column; }
 .label-text, ::slotted([slot='label']) {
   display: block; margin-block-end: 0.375rem;
@@ -22,7 +22,7 @@ export const textFieldStyles = `${hostTheme}
     inset var(--_neu-d) var(--_neu-d) calc(var(--_neu-d) * 2) color-mix(in oklab, var(--_neu-danger) 35%, var(--_neu-sd)),
     inset calc(var(--_neu-d) * -1) calc(var(--_neu-d) * -1) calc(var(--_neu-d) * 2) var(--_neu-sl);
 }
-:host([disabled]) .control { box-shadow: var(--_neu-inset-sm); opacity: 0.6; }
+:host(:disabled) .control, :host([disabled]) .control { box-shadow: var(--_neu-inset-sm); opacity: 0.6; }
 .input {
   flex: 1; min-inline-size: 0; align-self: stretch; padding: 0; border: none; outline: none;
   background: transparent; color: inherit; font: inherit; font-size: 0.9375rem;
