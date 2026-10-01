@@ -14,10 +14,10 @@ export const hostTheme = `
   --_neu-r: var(--neu-radius, 12px);
   --_neu-danger: var(--neu-danger, #e5484d);
   --_neu-dur: var(--neu-duration, 150ms);
-  --_neu-sd: var(--neu-shadow-dark, color-mix(in oklab, var(--_neu-bg), black min(100%, calc(var(--_neu-shade, 22%) * var(--_neu-k)))));
-  --_neu-sl: var(--neu-shadow-light, color-mix(in oklab, var(--_neu-bg), white min(100%, calc(var(--_neu-light, 70%) * var(--_neu-k)))));
-  --_neu-fg: var(--neu-fg, color-mix(in oklab, var(--_neu-bg), var(--_neu-ink, black) 50%));
-  --_neu-fg-muted: var(--neu-fg-muted, color-mix(in oklab, var(--_neu-bg), var(--_neu-ink, black) 30%));
+  --_neu-sd: var(--neu-shadow-dark, color-mix(in oklab, var(--_neu-bg), black min(100%, calc(var(--_neu-shade, 18%) * var(--_neu-k)))));
+  --_neu-sl: var(--neu-shadow-light, color-mix(in oklab, var(--_neu-bg), white min(100%, calc(var(--_neu-light, 100%) * var(--_neu-k)))));
+  --_neu-fg: var(--neu-fg, color-mix(in oklab, var(--_neu-bg), var(--_neu-ink, black) 32%));
+  --_neu-fg-muted: var(--neu-fg-muted, color-mix(in oklab, var(--_neu-bg), var(--_neu-ink, black) 18%));
   --_neu-accent-soft: color-mix(in oklab, var(--_neu-accent-c) 25%, var(--_neu-bg));
   --_neu-focus: 0 0 0 3px color-mix(in oklab, var(--_neu-accent-c) 45%, transparent);
   --_neu-raised: var(--_neu-d) var(--_neu-d) calc(var(--_neu-d) * 2) var(--_neu-sd), calc(var(--_neu-d) * -1) calc(var(--_neu-d) * -1) calc(var(--_neu-d) * 2) var(--_neu-sl);
