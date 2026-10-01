@@ -78,7 +78,12 @@ export class NeuTextField extends FormControlElement {
       dispatch(this, 'change');
     });
     input.addEventListener('keydown', (event) => {
-      if (event.key === 'Enter' && !event.isComposing) implicitSubmit(this.internals.form);
+      if (event.key !== 'Enter' || event.isComposing) return;
+      // Like a native input: submit once the keydown has finished dispatching, unless a listener
+      // (on the host or further up) cancelled it.
+      setTimeout(() => {
+        if (!event.defaultPrevented) implicitSubmit(this.internals.form);
+      }, 0);
     });
   }
 

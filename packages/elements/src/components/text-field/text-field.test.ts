@@ -2,7 +2,7 @@ import { afterEach, describe, expect, test } from 'vitest';
 import { userEvent } from 'vitest/browser';
 import '../../button.js';
 import { NeuTextField } from '../../text-field.js';
-import { axeViolations, mount, mountForm } from '../../test-utils/helpers.js';
+import { axeViolations, mount, mountForm, tick } from '../../test-utils/helpers.js';
 
 afterEach(() => {
   document.body.innerHTML = '';
@@ -109,7 +109,44 @@ describe('neu-text-field', () => {
     });
     (form.querySelector('neu-text-field') as NeuTextField).focus();
     await userEvent.keyboard('{Enter}');
+    await tick();
     expect(submitted).toBe(1);
+  });
+
+  test('preventDefault on the Enter keydown stops the implicit submission', async () => {
+    const form = mountForm(
+      '<neu-text-field name="q" label="Search"></neu-text-field><neu-button type="submit">Go</neu-button>',
+    );
+    let submitted = 0;
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+      submitted++;
+    });
+    const el = form.querySelector('neu-text-field') as NeuTextField;
+    el.addEventListener('keydown', (event) => {
+      if (event.key === 'Enter') event.preventDefault();
+    });
+    el.focus();
+    await userEvent.keyboard('{Enter}');
+    await tick();
+    expect(submitted).toBe(0);
+  });
+
+  test('Enter on an invalid required field reveals user-invalid', async () => {
+    const form = mountForm(
+      '<neu-text-field name="q" label="Search" required></neu-text-field><neu-button type="submit">Go</neu-button>',
+    );
+    let submitted = 0;
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+      submitted++;
+    });
+    const el = form.querySelector('neu-text-field') as NeuTextField;
+    el.focus();
+    await userEvent.keyboard('{Enter}');
+    await tick();
+    expect(submitted).toBe(0);
+    expect(el.matches(':state(user-invalid)')).toBe(true);
   });
 
   test('escapes hostile attribute values', () => {

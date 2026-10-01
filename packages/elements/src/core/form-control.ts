@@ -7,14 +7,16 @@ const SUBMITTERS =
 const submitAttempts = new WeakSet<HTMLFormElement>();
 const watchedForms = new WeakSet<HTMLFormElement>();
 
+function markSubmitAttempt(form: HTMLFormElement): void {
+  submitAttempts.add(form);
+  // Validation runs in the same task as the click/keydown/submit; forget the attempt afterwards.
+  setTimeout(() => submitAttempts.delete(form), 0);
+}
+
 function watchSubmitAttempts(form: HTMLFormElement): void {
   if (watchedForms.has(form)) return;
   watchedForms.add(form);
-  const mark = () => {
-    submitAttempts.add(form);
-    // Validation runs in the same task as the click/keydown; forget the attempt afterwards.
-    setTimeout(() => submitAttempts.delete(form), 0);
-  };
+  const mark = () => markSubmitAttempt(form);
   form.addEventListener(
     'click',
     (event) => {
@@ -110,8 +112,13 @@ export abstract class FormControlElement extends NeuElement {
   }
 }
 
-/** Enter in a text control submits like a native input: needs a submit button or a lone control. */
+/**
+ * Enter in a text control submits like a native input: needs a submit button or a lone control.
+ * It is a submit attempt in its own right, so invalid controls reveal user-invalid.
+ */
 export function implicitSubmit(form: HTMLFormElement | null): void {
   if (!form) return;
-  if (form.querySelector(SUBMITTERS) !== null || form.elements.length === 1) form.requestSubmit();
+  if (form.querySelector(SUBMITTERS) === null && form.elements.length !== 1) return;
+  markSubmitAttempt(form);
+  form.requestSubmit();
 }
