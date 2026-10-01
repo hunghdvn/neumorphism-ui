@@ -1,0 +1,27 @@
+# dependencies
+node_modules/
+
+# build output
+dist/
+.astro/
+.next/
+.nuxt/
+.output/
+*.tsbuildinfo
+
+# test output
+coverage/
+test-results/
+playwright-report/
+__screenshots__/*-actual.png
+__screenshots__/*-diff.png
+
+# brainstorming companion
+.superpowers/
+
+# env & OS
+.env
+.env.*
+!.env.example
+.DS_Store
+Thumbs.db

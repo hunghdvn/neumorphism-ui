@@ -1,0 +1,153 @@
+<style>
+  .neu { --bg:#e0e5ec; --sd:#a3b1c6; --sl:#ffffff; background:var(--bg); color:var(--fg);
+         border-radius:18px; padding:20px; display:grid; gap:14px; text-align:left;
+         font-family:system-ui,-apple-system,"Segoe UI",sans-serif; font-size:14px; width:100%; box-sizing:border-box; }
+  .neu.pure { --fg:#7b8aa3; --fg2:#a3b1c6; --accent:#6d5dfc; --err:#f28b82; }
+  .neu.aa   { --fg:#3d4852; --fg2:#556070; --accent:#3f51c8; --err:#b42318; --line:#737f93; }
+  .neu h4 { margin:0; font-size:16px; color:var(--fg); }
+  .neu label.lbl { font-size:12px; font-weight:600; color:var(--fg2); display:block; margin-bottom:6px; }
+  .neu .row { display:flex; gap:12px; align-items:center; flex-wrap:wrap; }
+  .neu input[type=text] { width:100%; box-sizing:border-box; padding:10px 14px; border-radius:12px; font:inherit;
+         background:var(--bg); color:var(--fg); border:none; outline:none;
+         box-shadow: inset 4px 4px 8px var(--sd), inset -4px -4px 8px var(--sl); }
+  .neu input::placeholder { color:var(--fg2); }
+  .neu .err { font-size:12px; margin-top:6px; color:var(--err); display:flex; gap:6px; align-items:center; }
+  .neu .btn { border:none; font:inherit; font-weight:600; padding:10px 18px; border-radius:12px; cursor:pointer;
+         background:var(--bg); color:var(--fg); box-shadow: 6px 6px 12px var(--sd), -6px -6px 12px var(--sl); }
+  .neu .btn:active { box-shadow: inset 4px 4px 8px var(--sd), inset -4px -4px 8px var(--sl); }
+  .neu .btn[disabled] { cursor:not-allowed; }
+  .neu .check, .neu .tog { display:flex; gap:8px; align-items:center; color:var(--fg); cursor:pointer; user-select:none; }
+  .neu .box { width:22px; height:22px; border-radius:7px; display:grid; place-items:center; font-size:14px; font-weight:800;
+         background:var(--bg); box-sizing:border-box; }
+  .neu .track { width:46px; height:26px; border-radius:13px; position:relative; box-sizing:border-box; }
+  .neu .knob { position:absolute; top:3px; left:23px; width:20px; height:20px; border-radius:50%; }
+
+  /* ---- A: pure ---- */
+  .pure .btn.primary { color:var(--accent); }
+  .pure .btn[disabled] { box-shadow:none; color:#c3cbd8; }
+  .pure .btn:focus-visible, .pure .btn.is-focus { outline:none; box-shadow: 3px 3px 6px var(--sd), -3px -3px 6px var(--sl); }
+  .pure input.invalid { box-shadow: inset 4px 4px 8px #e8b4b0, inset -4px -4px 8px var(--sl); }
+  .pure .box { box-shadow: inset 3px 3px 6px var(--sd), inset -3px -3px 6px var(--sl); color:#b4abfd; }
+  .pure .track { background:rgba(109,93,252,.12); box-shadow: inset 3px 3px 6px var(--sd), inset -3px -3px 6px var(--sl); }
+  .pure .knob { background:var(--bg); box-shadow: 2px 2px 4px var(--sd), -2px -2px 4px var(--sl); }
+
+  /* ---- B: AA ---- */
+  .aa input[type=text] { border:1px solid var(--line); box-shadow: inset 3px 3px 6px var(--sd), inset -3px -3px 6px var(--sl); }
+  .aa input.invalid { border:2px solid var(--err); }
+  .aa .btn.primary { background:var(--accent); color:#fff; }
+  .aa .btn[disabled] { opacity:.5; box-shadow:none; border:1px dashed var(--line); }
+  .aa .btn:focus-visible, .aa .btn.is-focus, .aa input:focus-visible { outline:2px solid var(--accent); outline-offset:3px; }
+  .aa .box { border:2px solid var(--line); box-shadow: 2px 2px 4px var(--sd), -2px -2px 4px var(--sl); }
+  .aa .box.on { background:var(--accent); border-color:var(--accent); color:#fff; }
+  .aa .track { background:var(--accent); box-shadow: inset 2px 2px 4px rgba(0,0,0,.25); }
+  .aa .knob { background:#fff; box-shadow: 1px 1px 3px rgba(0,0,0,.35); }
+  .aa .err::before { content:"!"; display:inline-grid; place-items:center; width:16px; height:16px; border-radius:50%;
+         background:var(--err); color:#fff; font-weight:800; font-size:11px; }
+
+  .legend { list-style:none; padding:0; margin:12px 0 0; font-size:12.5px; line-height:1.7; }
+  .legend .bad { color:var(--error); } .legend .ok { color:var(--success); }
+  .seg { display:flex; gap:6px; margin-bottom:10px; }
+  .seg button { flex:1; font:inherit; font-size:12px; padding:6px; border-radius:8px; cursor:pointer;
+         border:1px solid var(--border); background:var(--bg-secondary); color:var(--text-primary); }
+  .seg button.on { background:var(--accent); color:#fff; border-color:var(--accent); }
+  .card-image.neu-host { aspect-ratio:auto; display:block; padding:16px; background:var(--bg-tertiary); }
+</style>
+
+<h2>Cân bằng giữa thẩm mỹ neumorphism và accessibility</h2>
+<p class="subtitle">Cùng một form, 3 cách xử lý. Bấm <b>Tab</b> trong panel để thử focus thật. Click vào phần mô tả của card để chọn.</p>
+
+<div class="cards">
+
+  <!-- A -->
+  <div class="card" data-choice="pure" onclick="toggleSelect(this)">
+    <div class="card-image neu-host">
+      <div class="neu pure">
+        <h4>Đăng nhập</h4>
+        <div><label class="lbl">Email</label><input type="text" class="invalid" value="hung@" /><div class="err">Email không hợp lệ</div></div>
+        <div class="row">
+          <span class="check"><span class="box">✓</span>Ghi nhớ tôi</span>
+          <span class="tog"><span class="track"><span class="knob"></span></span>Thông báo</span>
+        </div>
+        <div class="row">
+          <button class="btn primary">Đăng nhập</button>
+          <button class="btn is-focus">Hủy</button>
+          <button class="btn" disabled>Đã khóa</button>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>A. Neumorphism thuần</h3>
+      <p>Đúng chất soft UI: mọi thứ cùng màu nền, chỉ có bóng tạo khối. Nút "Hủy" đang focus nhưng gần như không nhận ra.</p>
+      <ul class="legend">
+        <li class="bad">✗ Text 2.8:1 (cần 4.5:1)</li>
+        <li class="bad">✗ Chữ nút chính 3.6:1</li>
+        <li class="bad">✗ Viền input chỉ có bóng, khoảng 1.7:1 (cần 3:1)</li>
+        <li class="bad">✗ Focus chỉ đổi bóng</li>
+        <li class="bad">✗ Báo lỗi 1.9:1, chỉ dựa vào màu</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- B -->
+  <div class="card" data-choice="aa" onclick="toggleSelect(this)">
+    <div class="card-image neu-host">
+      <div class="neu aa">
+        <h4>Đăng nhập</h4>
+        <div><label class="lbl">Email</label><input type="text" class="invalid" value="hung@" /><div class="err">Email không hợp lệ</div></div>
+        <div class="row">
+          <span class="check"><span class="box on">✓</span>Ghi nhớ tôi</span>
+          <span class="tog"><span class="track"><span class="knob"></span></span>Thông báo</span>
+        </div>
+        <div class="row">
+          <button class="btn primary">Đăng nhập</button>
+          <button class="btn is-focus">Hủy</button>
+          <button class="btn" disabled>Đã khóa</button>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>B. Soft UI đạt WCAG AA</h3>
+      <p>Vẫn giữ khối nổi/lõm bằng bóng, nhưng thêm viền mảnh, focus ring, nút chính tô màu, lỗi có icon.</p>
+      <ul class="legend">
+        <li class="ok">✓ Text 7.4:1, text phụ 5.0:1</li>
+        <li class="ok">✓ Nút chính chữ trắng 6.5:1</li>
+        <li class="ok">✓ Viền input 3.2:1</li>
+        <li class="ok">✓ Focus ring rõ, 5.1:1</li>
+        <li class="ok">✓ Lỗi 5.2:1, có thêm icon và viền</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- C -->
+  <div class="card" data-choice="both" onclick="toggleSelect(this)">
+    <div class="card-image neu-host">
+      <div class="seg" onclick="event.stopPropagation()">
+        <button class="on" onclick="var p=this.closest('.card-image').querySelector('.neu');p.className='neu pure';this.classList.add('on');this.nextElementSibling.classList.remove('on')">Theme mặc định</button>
+        <button onclick="var p=this.closest('.card-image').querySelector('.neu');p.className='neu aa';this.classList.add('on');this.previousElementSibling.classList.remove('on')">High-contrast</button>
+      </div>
+      <div class="neu pure" onclick="event.stopPropagation()">
+        <h4>Đăng nhập</h4>
+        <div><label class="lbl">Email</label><input type="text" class="invalid" value="hung@" /><div class="err">Email không hợp lệ</div></div>
+        <div class="row">
+          <span class="check"><span class="box on">✓</span>Ghi nhớ tôi</span>
+          <span class="tog"><span class="track"><span class="knob"></span></span>Thông báo</span>
+        </div>
+        <div class="row">
+          <button class="btn primary">Đăng nhập</button>
+          <button class="btn is-focus">Hủy</button>
+          <button class="btn" disabled>Đã khóa</button>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>C. Cả hai, chuyển bằng theme</h3>
+      <p>Mặc định giống A, bật theme high-contrast thì thành B. Bấm nút phía trên để chuyển thử.</p>
+      <ul class="legend">
+        <li class="ok">✓ Người dùng tự chọn giữa thẩm mỹ và a11y</li>
+        <li class="bad">✗ Theme mặc định vẫn không đạt AA</li>
+        <li class="bad">✗ Mọi component phải thiết kế và test 2 lần</li>
+      </ul>
+    </div>
+  </div>
+
+</div>
