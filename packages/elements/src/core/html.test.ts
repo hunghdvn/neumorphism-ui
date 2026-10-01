@@ -32,9 +32,12 @@ describe('html', () => {
   });
 
   test('joins arrays', () => {
-    expect(html`<ul>${['a', html`<li>b</li>`]}</ul>`.value).toBe(
-      '<ul>a<li>b</li></ul>',
-    );
+    const arr = ['a', html`<li>b</li>`];
+    expect(
+      html`<ul>
+        ${arr}
+      </ul>`.value,
+    ).toBe('<ul>\n        a<li>b</li>\n      </ul>');
   });
 
   test('unsafeHTML passes markup through unchanged', () => {
