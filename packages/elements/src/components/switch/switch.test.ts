@@ -67,6 +67,65 @@ describe('neu-switch', () => {
     expect(events).toEqual([]);
   });
 
+  test('el.click() fires input then change before it returns', () => {
+    const el = mount<NeuSwitch>('<neu-switch>N</neu-switch>');
+    const events: string[] = [];
+    el.addEventListener('input', () => events.push(`input:${el.checked}`));
+    el.addEventListener('change', () => events.push(`change:${el.checked}`));
+    el.click();
+    expect(events).toEqual(['input:true', 'change:true']);
+  });
+
+  test('a click listener that stops propagation still gets input and change, a task later', async () => {
+    const el = mount<NeuSwitch>('<neu-switch>N</neu-switch>');
+    const events: string[] = [];
+    el.addEventListener('click', (event) => event.stopPropagation());
+    el.addEventListener('input', () => events.push('input'));
+    el.addEventListener('change', () => events.push('change'));
+    el.click();
+    expect(events).toEqual([]);
+    await tick();
+    expect(events).toEqual(['input', 'change']);
+    expect(el.checked).toBe(true);
+  });
+
+  test('preventDefault in a click listener reverts within the click', async () => {
+    const el = mount<NeuSwitch>('<neu-switch>N</neu-switch>');
+    const events: string[] = [];
+    el.addEventListener('click', (event) => event.preventDefault());
+    el.addEventListener('input', () => events.push('input'));
+    el.click();
+    expect(el.checked).toBe(false);
+    await tick();
+    expect(el.checked).toBe(false);
+    expect(events).toEqual([]);
+  });
+
+  test('setting checked inside a click listener suppresses input and change', async () => {
+    const el = mount<NeuSwitch>('<neu-switch>N</neu-switch>');
+    const events: string[] = [];
+    el.addEventListener('click', () => {
+      el.checked = false;
+    });
+    el.addEventListener('input', () => events.push('input'));
+    el.addEventListener('change', () => events.push('change'));
+    el.click();
+    await tick();
+    expect(el.checked).toBe(false);
+    expect(events).toEqual([]);
+  });
+
+  test('a switch removed by a click listener fires no input or change', async () => {
+    const el = mount<NeuSwitch>('<neu-switch>N</neu-switch>');
+    const events: string[] = [];
+    el.addEventListener('click', () => el.remove());
+    el.addEventListener('input', () => events.push('input'));
+    el.addEventListener('change', () => events.push('change'));
+    el.click();
+    await tick();
+    expect(events).toEqual([]);
+  });
+
   test('disabled: no events, no toggle, not focusable', async () => {
     const el = mount<NeuSwitch>('<neu-switch disabled>N</neu-switch>');
     const events: string[] = [];
@@ -87,6 +146,14 @@ describe('neu-switch', () => {
     await userEvent.keyboard('{Enter}');
     expect(el.checked).toBe(false);
     expect(keydown(el, ' ').defaultPrevented).toBe(true);
+  });
+
+  test('a repeated Enter keydown does not toggle', () => {
+    const el = mount<NeuSwitch>('<neu-switch>N</neu-switch>');
+    el.dispatchEvent(
+      new KeyboardEvent('keydown', { key: 'Enter', repeat: true, bubbles: true, cancelable: true }),
+    );
+    expect(el.checked).toBe(false);
   });
 
   test('re-connecting does not double-handle clicks', async () => {

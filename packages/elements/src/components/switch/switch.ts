@@ -42,22 +42,34 @@ export class NeuSwitch extends FormControlElement {
 
   /**
    * Native checkbox order: flip now, let click listeners see it, then input + change.
-   * A macrotask, not a microtask: for a real (trusted) click the microtask queue drains
-   * between listeners, which would fire input/change before later click listeners ran.
+   * They fire from a one-shot bubble listener on window for this same click, so they land within
+   * the click's dispatch, after the listeners on the way up. Not a microtask: for a real (trusted)
+   * click the microtask queue drains between listeners. A click that never reaches window
+   * (stopPropagation, bubbles: false) is finished by the timeout fallback instead.
    */
   private onClick(event: Event): void {
     const before = this.current;
     this.dirty = true;
     this.setCurrent(!before);
-    setTimeout(() => {
+    let done = false;
+    const finish = () => {
+      if (done) return;
+      done = true;
+      window.removeEventListener('click', onWindowClick);
+      clearTimeout(fallback);
       if (event.defaultPrevented) {
         this.setCurrent(before);
-        return;
+      } else if (this.isConnected && this.current === !before) {
+        this.markInteracted();
+        dispatch(this, 'input');
+        dispatch(this, 'change');
       }
-      this.markInteracted();
-      dispatch(this, 'input');
-      dispatch(this, 'change');
-    });
+    };
+    const onWindowClick = (other: Event) => {
+      if (other === event) finish();
+    };
+    window.addEventListener('click', onWindowClick);
+    const fallback = setTimeout(finish, 0);
   }
 
   private onKeyDown(event: KeyboardEvent): void {
@@ -65,7 +77,7 @@ export class NeuSwitch extends FormControlElement {
       event.preventDefault();
     } else if (event.key === 'Enter') {
       event.preventDefault();
-      this.click();
+      if (!event.repeat) this.click();
     }
   }
 
