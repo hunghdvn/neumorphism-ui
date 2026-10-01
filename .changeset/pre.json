@@ -1,0 +1,11 @@
+{
+  "mode": "pre",
+  "tag": "next",
+  "initialVersions": {
+    "@neu-ui/elements": "0.0.0",
+    "@neu-ui/react": "0.0.0",
+    "@neu-ui/ssr": "0.0.0",
+    "@neu-ui/tokens": "0.0.0"
+  },
+  "changesets": []
+}

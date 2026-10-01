@@ -29,6 +29,10 @@
     "test": "pnpm --filter @neu-ui/elements build && vitest run",
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
   "dependencies": {
     "@neu-ui/elements": "workspace:*"
   },

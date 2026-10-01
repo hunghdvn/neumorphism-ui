@@ -18,9 +18,12 @@
     "test:ssr:prod": "playwright test -c playwright.ssr-prod.config.ts",
     "test:ssr:dev": "playwright test -c playwright.ssr-dev.config.ts",
     "test:visual": "playwright test -c playwright.visual.config.ts",
-    "measure:ssr": "node scripts/measure-ssr-html.mjs"
+    "measure:ssr": "node scripts/measure-ssr-html.mjs",
+    "changeset": "changeset",
+    "release": "pnpm build && changeset publish"
   },
   "devDependencies": {
+    "@changesets/cli": "2.31.1",
     "@eslint/js": "10.0.1",
     "@playwright/test": "1.63.0",
     "@types/node": "24.19.0",

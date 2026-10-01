@@ -27,6 +27,10 @@
     "test": "vitest run",
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
   "devDependencies": {
     "esbuild": "0.28.2"
   }
