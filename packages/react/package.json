@@ -1,0 +1,44 @@
+{
+  "name": "@neu-ui/react",
+  "version": "0.0.0",
+  "description": "React wrappers for neumorphism-ui",
+  "license": "MIT",
+  "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hunghdvn/neumorphism-ui.git",
+    "directory": "packages/react"
+  },
+  "files": [
+    "dist"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "sideEffects": false,
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "test": "pnpm --filter @neu-ui/elements build && vitest run && node scripts/ssr-react18.mjs",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "dependencies": {
+    "@neu-ui/elements": "workspace:*"
+  },
+  "peerDependencies": {
+    "react": "^18.3 || ^19",
+    "react-dom": "^18.3 || ^19"
+  },
+  "devDependencies": {
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0",
+    "esbuild": "0.28.2",
+    "react": "19.3.0",
+    "react-dom": "19.3.0",
+    "react18": "npm:react@18.3.1",
+    "react-dom18": "npm:react-dom@18.3.1"
+  }
+}

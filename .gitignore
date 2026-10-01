@@ -35,3 +35,5 @@ next-env.d.ts
 # visual baselines are only committed for linux (CI)
 e2e/__screenshots__/win32/
 e2e/__screenshots__/darwin/
+
+ssr-react18.tmp.mjs
