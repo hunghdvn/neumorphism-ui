@@ -538,6 +538,8 @@ trước khi làm tiếp.
   bằng attribute, để React 18 và 19 hoạt động giống nhau. Trên server thì render thành attribute
   để SSR dùng được.
 - Map event: `onChange` → `change`, `onInput` → `input`, `onNeuOpen` → `neu-open`…
+  Riêng control có `value` (text field) theo `<input>` của React: cả `onInput` và `onChange` đều
+  nghe `input` (chạy mỗi lần sửa); event DOM `change` không có prop trong v1.
   Handler nhận event DOM gốc.
 - **Controlled / uncontrolled** như `<input>` của React: truyền `value` (hoặc `checked`) thì sau
   mỗi `input`/`change`, wrapper đặt lại property theo prop ở lần commit kế tiếp. Dùng

@@ -29,5 +29,5 @@ interface NeuTextFieldOwnProps {
 export type NeuTextFieldProps = WrapperProps<keyof NeuTextFieldOwnProps> & NeuTextFieldOwnProps;
 
 export const NeuTextField = createComponent<NeuTextFieldProps, NeuTextFieldElement>(NeuTextFieldElement, {
-  events: { onInput: 'input', onChange: 'change' },
+  events: { onInput: 'input', onChange: 'input' },
 });

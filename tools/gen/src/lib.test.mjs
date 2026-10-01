@@ -13,6 +13,7 @@ import {
 const defs = [...definitions.values()];
 const switchDef = definitions.get('neu-switch');
 const buttonDef = definitions.get('neu-button');
+const textFieldDef = definitions.get('neu-text-field');
 
 describe('naming', () => {
   test('tags, files and events map to the expected identifiers', () => {
@@ -42,6 +43,14 @@ describe('buildReactWrapper', () => {
     expect(source).toContain("  size?: 'sm' | 'md' | 'lg';");
     expect(source).toContain('  onChange?: (event: Event) => void;');
     expect(source).toContain("events: { onInput: 'input', onChange: 'change' }");
+  });
+
+  test('a value control maps onChange to the input event, like React <input>', () => {
+    const source = buildReactWrapper(textFieldDef);
+    expect(source).toContain('  onInput?: (event: Event) => void;');
+    expect(source).toContain('  onChange?: (event: Event) => void;');
+    expect(source).toContain("events: { onInput: 'input', onChange: 'input' }");
+    expect(source).not.toContain("'change'");
   });
 
   test('click stays a native React prop and is not mapped', () => {

@@ -114,6 +114,45 @@ test('controlled text field transforms what the user types', async () => {
   expect(el.value).toBe('AB');
 });
 
+test('controlled text field: onChange fires on every keystroke, like React <input>', async () => {
+  function Mirror() {
+    const [value, setValue] = React.useState('a');
+    return h(NeuTextField, {
+      label: 'L',
+      value,
+      onChange: (event: Event) => setValue((event.target as NeuTextFieldElement).value),
+    });
+  }
+  await render(h(Mirror));
+  const el = container.querySelector('neu-text-field') as NeuTextFieldElement;
+  await act(async () => {
+    el.focus();
+    // Put the caret at the end so typing appends (Chromium may select the value on focus).
+    el.setSelectionRange(1, 1);
+    await userEvent.keyboard('b');
+    await tick();
+  });
+  expect(el.value).toBe('ab');
+});
+
+test('text field: onInput and onChange both receive each edit, in prop order', async () => {
+  const seen: string[] = [];
+  await render(
+    h(NeuTextField, {
+      label: 'L',
+      onInput: (event: Event) => seen.push(`input:${event.type}`),
+      onChange: (event: Event) => seen.push(`change:${event.type}`),
+    }),
+  );
+  const el = container.querySelector('neu-text-field') as NeuTextFieldElement;
+  await act(async () => {
+    el.focus();
+    await userEvent.keyboard('x');
+    await tick();
+  });
+  expect(seen).toEqual(['input:input', 'change:input']);
+});
+
 test('dropping defaultValue removes the default attribute instead of writing "undefined"', async () => {
   await render(h(NeuTextField, { label: 'L', defaultValue: 'a' }));
   const el = container.querySelector('neu-text-field') as NeuTextFieldElement;

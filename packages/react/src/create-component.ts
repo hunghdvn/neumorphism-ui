@@ -20,6 +20,8 @@ export interface WrapperConfig {
   readonly events?: Readonly<Record<string, string>>;
 }
 
+type Handler = (event: Event) => void;
+
 interface ElementClass<E extends HTMLElement> {
   readonly def: ComponentDef;
   new (): E;
@@ -49,12 +51,16 @@ export function createComponent<P extends object, E extends HTMLElement>(
 
     const host: Record<string, unknown> = {};
     const element: Record<string, unknown> = {};
-    const handlers: Record<string, (event: Event) => void> = {};
+    // Several props may share one DOM event (onInput and onChange on a text field); they run in
+    // the order of the wrapper's event map.
+    const handlers: Record<string, Handler[]> = {};
+    for (const [key, eventName] of Object.entries(events)) {
+      const value = rest[key];
+      if (typeof value === 'function') (handlers[eventName] ??= []).push(value as Handler);
+    }
     for (const [key, value] of Object.entries(rest)) {
-      const eventName = Object.hasOwn(events, key) ? events[key] : undefined;
-      if (eventName !== undefined) {
-        if (typeof value === 'function') handlers[eventName] = value as (event: Event) => void;
-      } else if (elementKeys.has(key)) {
+      if (Object.hasOwn(events, key)) continue;
+      if (elementKeys.has(key)) {
         element[key] = value;
       } else {
         host[key] = value;
@@ -112,7 +118,7 @@ export function createComponent<P extends object, E extends HTMLElement>(
       }
       const listener = (event: Event) => {
         if (event.target !== node) return;
-        handlersRef.current[event.type]?.(event);
+        for (const handler of handlersRef.current[event.type] ?? []) handler(event);
         if (!valueProp) return;
         // Controlled: once React has had a chance to re-render, snap back to the prop.
         queueMicrotask(() => {
