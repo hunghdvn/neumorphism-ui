@@ -1,0 +1,20 @@
+{
+  "name": "@neu-ui/elements",
+  "version": "0.0.0",
+  "description": "Neumorphism UI web components",
+  "license": "MIT",
+  "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hunghdvn/neumorphism-ui.git",
+    "directory": "packages/elements"
+  },
+  "scripts": {
+    "test": "vitest run",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "devDependencies": {
+    "axe-core": "4.13.0",
+    "esbuild": "0.28.2"
+  }
+}
