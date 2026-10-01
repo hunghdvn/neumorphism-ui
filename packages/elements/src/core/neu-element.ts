@@ -1,0 +1,221 @@
+import type { ComponentDef } from './define.js';
+import {
+  attributeName,
+  coerceProperty,
+  parseAttribute,
+  parseProps,
+  serializeAttribute,
+  type PropDecl,
+  type PropValue,
+} from './props.js';
+
+/**
+ * HTMLElement does not exist in Node (SSR, React server rendering). Falling back to an empty
+ * class lets every module be imported there; nothing is ever constructed on the server.
+ */
+const ServerSafeHTMLElement: typeof HTMLElement =
+  (globalThis.HTMLElement as typeof HTMLElement | undefined) ??
+  (class {} as unknown as typeof HTMLElement);
+
+const sheets = new WeakMap<ComponentDef, CSSStyleSheet>();
+
+function sheetFor(def: ComponentDef): CSSStyleSheet {
+  let sheet = sheets.get(def);
+  if (!sheet) {
+    sheet = new CSSStyleSheet();
+    sheet.replaceSync(def.styles);
+    sheets.set(def, sheet);
+  }
+  return sheet;
+}
+
+export abstract class NeuElement extends ServerSafeHTMLElement {
+  declare static def: ComponentDef;
+  /** Own properties to re-apply after upgrade besides def.props (spec §6.2 step 3). */
+  static extraProperties: readonly string[] = [];
+
+  static get observedAttributes(): string[] {
+    return Object.entries(this.def.props).map(([key, decl]) => attributeName(key, decl));
+  }
+
+  /** Installs accessors for def.props and registers the tag. Safe to call in Node. */
+  static define(): void {
+    const def = this.def;
+    for (const [key, decl] of Object.entries(def.props)) {
+      if (Object.prototype.hasOwnProperty.call(this.prototype, key)) continue;
+      Object.defineProperty(this.prototype, key, {
+        configurable: true,
+        enumerable: true,
+        get(this: NeuElement) {
+          return this.props[key];
+        },
+        set(this: NeuElement, value: unknown) {
+          this.setProp(key, coerceProperty(decl, value));
+        },
+      });
+    }
+    const registry = globalThis.customElements as CustomElementRegistry | undefined;
+    if (registry && !registry.get(def.tag)) {
+      registry.define(def.tag, this as unknown as CustomElementConstructor);
+    }
+  }
+
+  protected readonly internals: ElementInternals;
+  protected readonly props: Record<string, PropValue>;
+  private root: ShadowRoot | null = null;
+  private readonly refs = new Map<string, Element>();
+  private reflecting = false;
+  private hasConnected = false;
+  private formDisabled = false;
+
+  constructor() {
+    super();
+    this.internals = this.attachInternals();
+    this.props = parseProps(this.def.props, (name) => this.getAttribute(name));
+    // Disabled controls emit no events at all, including the native click (spec §6.4).
+    this.addEventListener(
+      'click',
+      (event) => {
+        if (!this.isDisabled) return;
+        event.preventDefault();
+        event.stopImmediatePropagation();
+      },
+      { capture: true },
+    );
+  }
+
+  connectedCallback(): void {
+    if (!this.hasConnected) {
+      this.hasConnected = true;
+      this.upgradeProperties();
+      this.update(this.allKeys());
+      this.ensureRoot();
+    }
+    this.connected();
+  }
+
+  disconnectedCallback(): void {
+    this.disconnected();
+  }
+
+  attributeChangedCallback(name: string, _old: string | null, value: string | null): void {
+    if (this.reflecting) return;
+    for (const [key, decl] of Object.entries(this.def.props)) {
+      if (attributeName(key, decl) === name) {
+        this.setProp(key, parseAttribute(decl, value), true);
+        return;
+      }
+    }
+  }
+
+  /** Called by the browser for form-associated subclasses inside a disabled fieldset. */
+  formDisabledCallback(disabled: boolean): void {
+    this.formDisabled = disabled;
+    if (this.hasConnected) this.update(new Set(['disabled']));
+  }
+
+  protected get def(): ComponentDef {
+    return (this.constructor as typeof NeuElement).def;
+  }
+
+  protected get isDisabled(): boolean {
+    return this.props.disabled === true || this.formDisabled;
+  }
+
+  /** Element marked data-ref="name" in the shadow root, or null before the root exists. */
+  protected ref<T extends Element = HTMLElement>(name: string): T | null {
+    if (!this.root) return null;
+    let el = this.refs.get(name);
+    if (!el) {
+      const found = this.root.querySelector(`[data-ref="${name}"]`);
+      if (!found) return null;
+      this.refs.set(name, found);
+      el = found;
+    }
+    return el as T;
+  }
+
+  protected setProp(key: string, value: PropValue, fromAttribute = false): void {
+    const decl = this.def.props[key];
+    if (!decl || Object.is(this.props[key], value)) return;
+    this.props[key] = value;
+    if (!fromAttribute && decl.reflect) this.reflect(key, decl, value);
+    const changed = new Set([key]);
+    this.willUpdate(changed);
+    if (this.hasConnected) this.update(changed);
+  }
+
+  protected toggleState(name: string, on: boolean): void {
+    if (on) this.internals.states.add(name);
+    else this.internals.states.delete(name);
+  }
+
+  protected syncFocusable(focusable: boolean): void {
+    if (!focusable) this.removeAttribute('tabindex');
+    else if (this.getAttribute('tabindex') !== '0') this.setAttribute('tabindex', '0');
+  }
+
+  /** Runs on every prop change, connected or not. Keep it free of DOM work. */
+  protected willUpdate(_changed: ReadonlySet<string>): void {}
+  /** Patches host state and shadow DOM for the changed props. Must be idempotent. */
+  protected update(_changed: ReadonlySet<string>): void {}
+  /** Runs once, after the shadow root exists (rendered or adopted from SSR). */
+  protected rendered(): void {}
+  protected connected(): void {}
+  protected disconnected(): void {}
+
+  private allKeys(): Set<string> {
+    return new Set(Object.keys(this.def.props));
+  }
+
+  private reflect(key: string, decl: PropDecl, value: PropValue): void {
+    const attribute = serializeAttribute(decl, value);
+    const name = attributeName(key, decl);
+    this.reflecting = true;
+    try {
+      if (attribute === null) this.removeAttribute(name);
+      else this.setAttribute(name, attribute);
+    } finally {
+      this.reflecting = false;
+    }
+  }
+
+  private upgradeProperties(): void {
+    const ctor = this.constructor as typeof NeuElement;
+    const self = this as unknown as Record<string, unknown>;
+    for (const key of [...Object.keys(ctor.def.props), ...ctor.extraProperties]) {
+      if (!Object.prototype.hasOwnProperty.call(this, key)) continue;
+      const value = self[key];
+      delete self[key];
+      self[key] = value;
+    }
+  }
+
+  private ensureRoot(): void {
+    if (this.root) return;
+    const existing = this.internals.shadowRoot;
+    if (existing) {
+      this.adoptRoot(existing);
+      return;
+    }
+    if (document.readyState === 'loading') {
+      // The parser may not have reached this element's declarative shadow root yet (spec §8.1).
+      document.addEventListener('DOMContentLoaded', () => this.ensureRoot(), { once: true });
+      return;
+    }
+    const root = this.attachShadow({
+      mode: 'open',
+      delegatesFocus: this.def.delegatesFocus ?? false,
+    });
+    root.innerHTML = this.def.template(this.props).value;
+    this.adoptRoot(root);
+  }
+
+  private adoptRoot(root: ShadowRoot): void {
+    this.root = root;
+    root.adoptedStyleSheets = [sheetFor(this.def)];
+    root.querySelector('style[data-neu-ssr]')?.remove();
+    this.rendered();
+    this.update(this.allKeys());
+  }
+}
