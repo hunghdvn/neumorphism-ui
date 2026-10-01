@@ -1,16 +1,47 @@
 import { NeuElement } from './neu-element.js';
 
+const SUBMITTERS =
+  'button:not([type]), button[type="submit"], input[type="submit"], input[type="image"], neu-button[type="submit"]';
+
+/** Forms the user is trying to submit during the current task (click on a submitter, or Enter). */
+const submitAttempts = new WeakSet<HTMLFormElement>();
+const watchedForms = new WeakSet<HTMLFormElement>();
+
+function watchSubmitAttempts(form: HTMLFormElement): void {
+  if (watchedForms.has(form)) return;
+  watchedForms.add(form);
+  const mark = () => {
+    submitAttempts.add(form);
+    // Validation runs in the same task as the click/keydown; forget the attempt afterwards.
+    setTimeout(() => submitAttempts.delete(form), 0);
+  };
+  form.addEventListener(
+    'click',
+    (event) => {
+      if (event.target instanceof Element && event.target.closest(SUBMITTERS)) mark();
+    },
+    { capture: true },
+  );
+  form.addEventListener(
+    'keydown',
+    (event) => {
+      if (event.key === 'Enter') mark();
+    },
+    { capture: true },
+  );
+}
+
 /** Base for every control that has a value (spec §6.6). */
 export abstract class FormControlElement extends NeuElement {
   static formAssociated = true;
   private interacted = false;
-  private checkingSilently = false;
 
   constructor() {
     super();
-    // The browser fires `invalid` on a failed submit attempt and on reportValidity().
+    // A failed submit attempt fires `invalid`; so does form.checkValidity(), which must stay silent.
     this.addEventListener('invalid', () => {
-      if (!this.checkingSilently) this.markInteracted();
+      const form = this.internals.form;
+      if (form && submitAttempts.has(form)) this.markInteracted();
     });
   }
 
@@ -28,16 +59,13 @@ export abstract class FormControlElement extends NeuElement {
   }
 
   checkValidity(): boolean {
-    this.checkingSilently = true;
-    try {
-      return this.internals.checkValidity();
-    } finally {
-      this.checkingSilently = false;
-    }
+    return this.internals.checkValidity();
   }
 
   reportValidity(): boolean {
-    return this.internals.reportValidity();
+    const valid = this.internals.reportValidity();
+    if (!valid) this.markInteracted();
+    return valid;
   }
 
   formResetCallback(): void {
@@ -50,6 +78,10 @@ export abstract class FormControlElement extends NeuElement {
     if (typeof state !== 'string') return;
     this.restoreState(state);
     this.commit();
+  }
+
+  formAssociatedCallback(form: HTMLFormElement | null): void {
+    if (form) watchSubmitAttempts(form);
   }
 
   protected abstract formValue(): string | null;
@@ -77,9 +109,6 @@ export abstract class FormControlElement extends NeuElement {
     this.toggleState('user-invalid', this.interacted && !this.internals.validity.valid);
   }
 }
-
-const SUBMITTERS =
-  'button:not([type]), button[type="submit"], input[type="submit"], input[type="image"], neu-button[type="submit"]';
 
 /** Enter in a text control submits like a native input: needs a submit button or a lone control. */
 export function implicitSubmit(form: HTMLFormElement | null): void {

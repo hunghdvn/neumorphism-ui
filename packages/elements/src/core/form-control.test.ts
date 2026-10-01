@@ -104,7 +104,9 @@ test('form.reset() restores the default value and clears user-invalid', () => {
 });
 
 test('user-invalid appears only after interaction or a submit attempt', () => {
-  const form = mountForm('<neu-probe-field name="a" required></neu-probe-field>');
+  const form = mountForm(
+    '<neu-probe-field name="a" required></neu-probe-field><button>Go</button>',
+  );
   const field = form.querySelector('neu-probe-field') as NeuProbeField;
   expect(field.validity.valueMissing).toBe(true);
   expect(field.validationMessage).toBe('Required');
@@ -115,7 +117,7 @@ test('user-invalid appears only after interaction or a submit attempt', () => {
     submitted = true;
     event.preventDefault();
   });
-  form.requestSubmit();
+  form.querySelector('button')!.click();
   expect(submitted).toBe(false);
   expect(field.matches(':state(user-invalid)')).toBe(true);
 });
@@ -137,6 +139,33 @@ test('formStateRestoreCallback restores a saved state', () => {
   field.formStateRestoreCallback('restored');
   expect(field.value).toBe('restored');
   expect(new FormData(form).get('a')).toBe('restored');
+});
+
+test('form.checkValidity() and a programmatic requestSubmit() stay silent; reportValidity() reveals', () => {
+  const form = mountForm('<neu-probe-field name="a" required></neu-probe-field>');
+  const field = form.querySelector('neu-probe-field') as NeuProbeField;
+  form.checkValidity();
+  expect(field.matches(':state(user-invalid)')).toBe(false);
+  form.addEventListener('submit', (event) => {
+    event.preventDefault();
+  });
+  form.requestSubmit();
+  expect(field.matches(':state(user-invalid)')).toBe(false);
+  const reportResult = field.reportValidity();
+  expect(reportResult).toBe(false);
+  expect(field.matches(':state(user-invalid)')).toBe(true);
+});
+
+test('Enter followed by a submit in the same task counts as a submit attempt', () => {
+  const form = mountForm('<input name="q"><neu-probe-field name="a" required></neu-probe-field>');
+  const field = form.querySelector('neu-probe-field') as NeuProbeField;
+  const input = form.querySelector('input') as HTMLInputElement;
+  form.addEventListener('submit', (event) => {
+    event.preventDefault();
+  });
+  input.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
+  form.requestSubmit();
+  expect(field.matches(':state(user-invalid)')).toBe(true);
 });
 
 test('implicitSubmit submits only when the form has a submit button or a single control', () => {
