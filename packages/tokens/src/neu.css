@@ -1,0 +1,167 @@
+/*
+ * @neu-ui/tokens: theme variables for neumorphism-ui (spec §5).
+ * Everything sits in @layer neu, so unlayered author CSS always wins.
+ * Optional overrides that are never set here: --neu-fg, --neu-fg-muted,
+ * --neu-shadow-dark, --neu-shadow-light. Names starting with --_neu- are private.
+ */
+@layer neu {
+  :root,
+  [data-neu-theme='light'] {
+    color-scheme: light;
+    --neu-bg: #e0e5ec;
+    --neu-accent: #6d5dfc;
+    --_neu-shade: 22%;
+    --_neu-light: 70%;
+    --_neu-ink: black;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-neu-theme='light']) {
+      color-scheme: dark;
+      --neu-bg: #2b2f36;
+      --neu-accent: #8b7dff;
+      --_neu-shade: 45%;
+      --_neu-light: 6%;
+      --_neu-ink: white;
+    }
+  }
+
+  [data-neu-theme='dark'] {
+    color-scheme: dark;
+    --neu-bg: #2b2f36;
+    --neu-accent: #8b7dff;
+    --_neu-shade: 45%;
+    --_neu-light: 6%;
+    --_neu-ink: white;
+  }
+
+  :root {
+    --neu-distance: 6px;
+    --neu-intensity: 1;
+    --neu-radius: 12px;
+    --neu-success: #3bb273;
+    --neu-warning: #e6a23c;
+    --neu-danger: #e5484d;
+    --neu-duration: 150ms;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    :root {
+      --neu-duration: 0ms;
+    }
+  }
+
+  /* §5.3: custom properties inherit computed values, so derive again wherever --neu-bg may change. */
+  :root,
+  [data-neu-theme],
+  .neu-surface {
+    --_neu-sd: var(
+      --neu-shadow-dark,
+      color-mix(
+        in oklab,
+        var(--neu-bg),
+        black min(100%, calc(var(--_neu-shade) * var(--neu-intensity)))
+      )
+    );
+    --_neu-sl: var(
+      --neu-shadow-light,
+      color-mix(
+        in oklab,
+        var(--neu-bg),
+        white min(100%, calc(var(--_neu-light) * var(--neu-intensity)))
+      )
+    );
+    --_neu-fg: var(--neu-fg, color-mix(in oklab, var(--neu-bg), var(--_neu-ink) 50%));
+    --_neu-fg-muted: var(--neu-fg-muted, color-mix(in oklab, var(--neu-bg), var(--_neu-ink) 30%));
+    --_neu-accent-soft: color-mix(in oklab, var(--neu-accent) 25%, var(--neu-bg));
+    --_neu-focus: 0 0 0 3px color-mix(in oklab, var(--neu-accent) 45%, transparent);
+
+    --neu-shadow-raised-sm:
+      calc(var(--neu-distance) * 0.5) calc(var(--neu-distance) * 0.5) var(--neu-distance)
+        var(--_neu-sd),
+      calc(var(--neu-distance) * -0.5) calc(var(--neu-distance) * -0.5) var(--neu-distance)
+        var(--_neu-sl);
+    --neu-shadow-raised-md:
+      var(--neu-distance) var(--neu-distance) calc(var(--neu-distance) * 2) var(--_neu-sd),
+      calc(var(--neu-distance) * -1) calc(var(--neu-distance) * -1) calc(var(--neu-distance) * 2)
+        var(--_neu-sl);
+    --neu-shadow-raised-lg:
+      calc(var(--neu-distance) * 2) calc(var(--neu-distance) * 2) calc(var(--neu-distance) * 4)
+        var(--_neu-sd),
+      calc(var(--neu-distance) * -2) calc(var(--neu-distance) * -2) calc(var(--neu-distance) * 4)
+        var(--_neu-sl);
+    --neu-shadow-inset-sm:
+      inset calc(var(--neu-distance) * 0.5) calc(var(--neu-distance) * 0.5) var(--neu-distance)
+        var(--_neu-sd),
+      inset calc(var(--neu-distance) * -0.5) calc(var(--neu-distance) * -0.5) var(--neu-distance)
+        var(--_neu-sl);
+    --neu-shadow-inset-md:
+      inset var(--neu-distance) var(--neu-distance) calc(var(--neu-distance) * 2) var(--_neu-sd),
+      inset calc(var(--neu-distance) * -1) calc(var(--neu-distance) * -1)
+        calc(var(--neu-distance) * 2) var(--_neu-sl);
+    --neu-shadow-inset-lg:
+      inset calc(var(--neu-distance) * 2) calc(var(--neu-distance) * 2)
+        calc(var(--neu-distance) * 4) var(--_neu-sd),
+      inset calc(var(--neu-distance) * -2) calc(var(--neu-distance) * -2)
+        calc(var(--neu-distance) * 4) var(--_neu-sl);
+
+    background-color: var(--neu-bg);
+    color: var(--_neu-fg);
+  }
+
+  .neu-raised,
+  .neu-inset,
+  .neu-flat,
+  .neu-convex,
+  .neu-concave {
+    background-color: var(--neu-bg);
+    border-radius: var(--neu-radius);
+  }
+  .neu-raised {
+    box-shadow: var(--neu-shadow-raised-md);
+  }
+  .neu-inset {
+    box-shadow: var(--neu-shadow-inset-md);
+  }
+  .neu-flat {
+    box-shadow: none;
+  }
+  .neu-convex {
+    box-shadow: var(--neu-shadow-raised-md);
+    background-image: linear-gradient(
+      145deg,
+      color-mix(in oklab, var(--neu-bg), white 8%),
+      color-mix(in oklab, var(--neu-bg), black 6%)
+    );
+  }
+  .neu-concave {
+    box-shadow: var(--neu-shadow-raised-md);
+    background-image: linear-gradient(
+      145deg,
+      color-mix(in oklab, var(--neu-bg), black 6%),
+      color-mix(in oklab, var(--neu-bg), white 8%)
+    );
+  }
+
+  /* §5.6: hide until registered, but keep the final box. Components undo this from :host. */
+  neu-button:not(:defined),
+  neu-switch:not(:defined),
+  neu-text-field:not(:defined) {
+    visibility: hidden;
+  }
+  neu-button:not(:defined) {
+    display: inline-block;
+    min-block-size: 2.5rem;
+  }
+  neu-switch:not(:defined) {
+    display: inline-flex;
+    min-block-size: 1.625rem;
+  }
+  neu-text-field:not(:defined) {
+    display: block;
+    min-block-size: 2.75rem;
+  }
+  neu-text-field[label]:not(:defined) {
+    min-block-size: 4.125rem;
+  }
+}
