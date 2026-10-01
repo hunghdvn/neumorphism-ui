@@ -13,6 +13,8 @@
     --_neu-shade: 18%;
     --_neu-light: 100%;
     --_neu-ink: black;
+    --_neu-fg-mix: 32%;
+    --_neu-fg-muted-mix: 18%;
   }
 
   @media (prefers-color-scheme: dark) {
@@ -23,6 +25,8 @@
       --_neu-shade: 45%;
       --_neu-light: 6%;
       --_neu-ink: white;
+      --_neu-fg-mix: 42%;
+      --_neu-fg-muted-mix: 24%;
     }
   }
 
@@ -33,6 +37,8 @@
     --_neu-shade: 45%;
     --_neu-light: 6%;
     --_neu-ink: white;
+    --_neu-fg-mix: 42%;
+    --_neu-fg-muted-mix: 24%;
   }
 
   :root {
@@ -71,8 +77,14 @@
         white min(100%, calc(var(--_neu-light) * var(--neu-intensity)))
       )
     );
-    --_neu-fg: var(--neu-fg, color-mix(in oklab, var(--neu-bg), var(--_neu-ink) 32%));
-    --_neu-fg-muted: var(--neu-fg-muted, color-mix(in oklab, var(--neu-bg), var(--_neu-ink) 18%));
+    --_neu-fg: var(
+      --neu-fg,
+      color-mix(in oklab, var(--neu-bg), var(--_neu-ink) var(--_neu-fg-mix))
+    );
+    --_neu-fg-muted: var(
+      --neu-fg-muted,
+      color-mix(in oklab, var(--neu-bg), var(--_neu-ink) var(--_neu-fg-muted-mix))
+    );
     --_neu-accent-soft: color-mix(in oklab, var(--neu-accent) 25%, var(--neu-bg));
     --_neu-focus: 0 0 0 3px color-mix(in oklab, var(--neu-accent) 45%, transparent);
 

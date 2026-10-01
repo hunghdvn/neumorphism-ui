@@ -137,8 +137,8 @@ Biến nội bộ có tiền tố `--_neu-` và **không phải API công khai**
   color-mix(in oklab, var(--neu-bg), black min(100%, calc(var(--_neu-shade) * var(--neu-intensity)))));
 --_neu-sl: var(--neu-shadow-light,
   color-mix(in oklab, var(--neu-bg), white min(100%, calc(var(--_neu-light) * var(--neu-intensity)))));
---_neu-fg:       var(--neu-fg,       color-mix(in oklab, var(--neu-bg), var(--_neu-ink) 50%));
---_neu-fg-muted: var(--neu-fg-muted, color-mix(in oklab, var(--neu-bg), var(--_neu-ink) 30%));
+--_neu-fg:       var(--neu-fg,       color-mix(in oklab, var(--neu-bg), var(--_neu-ink) var(--_neu-fg-mix)));
+--_neu-fg-muted: var(--neu-fg-muted, color-mix(in oklab, var(--neu-bg), var(--_neu-ink) var(--_neu-fg-muted-mix)));
 --_neu-accent-soft: color-mix(in oklab, var(--neu-accent) 25%, var(--neu-bg));
 ```
 
@@ -146,9 +146,13 @@ Hằng số theo theme (đặt ở cấp theme, không dẫn xuất từ nền n
 
 | Hằng số | Sáng | Tối |
 |---|---|---|
-| `--_neu-shade` (phần trăm trộn đen cho bóng tối) | `22%` | `45%` |
-| `--_neu-light` (phần trăm trộn trắng cho bóng sáng) | `70%` | `6%` |
+| `--_neu-shade` (phần trăm trộn đen cho bóng tối) | `18%` | `45%` |
+| `--_neu-light` (phần trăm trộn trắng cho bóng sáng) | `100%` | `6%` |
 | `--_neu-ink` (màu trộn cho chữ) | `black` | `white` |
+| `--_neu-fg-mix` (phần trăm trộn `--_neu-ink` cho chữ) | `32%` | `42%` |
+| `--_neu-fg-muted-mix` (phần trăm trộn `--_neu-ink` cho chữ phụ) | `18%` | `24%` |
+
+Các giá trị trên đã được tinh chỉnh theo mockup A ở giai đoạn 1.
 
 `--neu-fg`, `--neu-fg-muted`, `--neu-shadow-dark`, `--neu-shadow-light` là **biến ghi đè tùy chọn**:
 tokens **không bao giờ đặt** chúng. Nếu đặt sẵn ở `:root`, chúng sẽ bị kế thừa dưới dạng giá trị

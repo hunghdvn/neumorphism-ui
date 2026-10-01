@@ -14,6 +14,8 @@ test.each([
   '--_neu-shade',
   '--_neu-light',
   '--_neu-ink',
+  '--_neu-fg-mix',
+  '--_neu-fg-muted-mix',
 ])('hostTheme fallback for %s matches the tokens default', (name) => {
   const tokenValue = new RegExp(`${name}:\\s*([^;]+);`).exec(tokens)?.[1]?.trim();
   const fallback = new RegExp(`var\\(${name},\\s*([^)]+)\\)`).exec(hostTheme)?.[1]?.trim();

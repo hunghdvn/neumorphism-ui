@@ -28,5 +28,6 @@ test('keyboard focus ring', async ({ page }) => {
   await page.reload();
   await page.waitForFunction(() => customElements.get('neu-button'));
   await page.keyboard.press('Tab');
+  await expect(page.locator('#light neu-button').first()).toBeFocused();
   await expect(page.locator('#light .row').first()).toHaveScreenshot('focus.png');
 });
