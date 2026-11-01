@@ -23,4 +23,10 @@ function onSubmit(event: Event) {
       <pre data-testid="result">{{ result }}</pre>
     </form>
   </main>
+  <!-- Teleported output reaches render:html outside the body chunk (e.g. a modal). -->
+  <Teleport to="body">
+    <aside style="padding: 0 32px 32px; font-family: system-ui, sans-serif">
+      <neu-text-field data-testid="teleported" label="Teleported" />
+    </aside>
+  </Teleport>
 </template>

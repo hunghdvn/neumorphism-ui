@@ -76,6 +76,20 @@ test('2. server HTML renders the components without JavaScript, with the same la
   await withJs.close();
 });
 
+test('teleported content gets a declarative shadow root without JavaScript (Nuxt)', async ({
+  browser,
+}) => {
+  test.skip(target() !== 'nuxt', 'only the Nuxt example teleports');
+  const { baseURL, ...device } = test.info().project.use;
+  const noJs = await browser.newContext({ ...device, baseURL, javaScriptEnabled: false });
+  const page = await noJs.newPage();
+  await page.goto('/');
+  const field = page.getByTestId('teleported');
+  await expect(field).toBeAttached();
+  expect(await field.evaluate((el) => !!el.shadowRoot?.querySelector('input'))).toBe(true);
+  await noJs.close();
+});
+
 test('3. hydration causes no layout shift (Chromium Layout Instability API)', async ({
   page,
   browserName,
