@@ -92,10 +92,7 @@ export class NeuSwitch extends FormControlElement {
   }
 
   protected override update(changed: ReadonlySet<string>): void {
-    if (changed.has('disabled')) {
-      this.internals.ariaDisabled = this.isDisabled ? 'true' : null;
-      this.syncFocusable(!this.isDisabled);
-    }
+    if (changed.has('disabled')) this.syncDisabledState();
     if (changed.has('checked')) this.setCurrent(this.current);
     else if (changed.has('required') || changed.has('value')) this.commit();
   }

@@ -70,6 +70,26 @@ describe('neu-button', () => {
     expect(el.getAttribute('tabindex')).toBe('-1');
   });
 
+  test('a tabindex the author sets later is the one restored after a disabled toggle', () => {
+    // Roving tabindex: the app makes the button inactive after it connected.
+    const el = mount<NeuButton>('<neu-button>Save</neu-button>');
+    el.setAttribute('tabindex', '-1');
+    el.disabled = true;
+    expect(el.hasAttribute('tabindex')).toBe(false);
+    el.disabled = false;
+    expect(el.getAttribute('tabindex')).toBe('-1');
+    // A framework changing tabIndex after mount.
+    el.setAttribute('tabindex', '2');
+    el.disabled = true;
+    el.disabled = false;
+    expect(el.getAttribute('tabindex')).toBe('2');
+    // Dropping it returns to the default.
+    el.removeAttribute('tabindex');
+    el.disabled = true;
+    el.disabled = false;
+    expect(el.getAttribute('tabindex')).toBe('0');
+  });
+
   test('loading: no click event, still focusable, aria-busy', () => {
     const el = mount<NeuButton>('<neu-button loading>Save</neu-button>');
     const clicks = countClicks(el);

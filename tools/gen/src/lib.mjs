@@ -1,4 +1,4 @@
-import { attributeName } from '@neu-ui/elements/ssr.js';
+import { attributeName, formDefaultProp } from '@neu-ui/elements/ssr.js';
 
 const pascal = (text) =>
   text
@@ -22,9 +22,6 @@ function defaultText(decl) {
   return `'${decl.default ?? ''}'`;
 }
 
-const defaultPropOf = (valueProp) =>
-  valueProp === 'checked' ? 'defaultChecked' : valueProp === 'value' ? 'defaultValue' : undefined;
-
 /** Custom Elements Manifest 2.1.0 for IDEs, docs and Storybook-like tools. */
 export function buildManifest(defs) {
   return {
@@ -34,7 +31,7 @@ export function buildManifest(defs) {
       const name = tagToClassName(def.tag);
       const path = `dist/${tagToFileBase(def.tag)}.js`;
       const valueProp = def.form?.valueProp;
-      const defaultProp = defaultPropOf(valueProp);
+      const defaultProp = formDefaultProp(def);
       const attributes = Object.entries(def.props).map(([key, decl]) => ({
         name: attributeName(key, decl),
         fieldName: key === valueProp ? defaultProp : key,
@@ -125,7 +122,7 @@ function reactEvents(def) {
 export function buildReactWrapper(def) {
   const name = tagToClassName(def.tag);
   const file = tagToFileBase(def.tag);
-  const defaultProp = defaultPropOf(def.form?.valueProp);
+  const defaultProp = formDefaultProp(def);
   const lines = Object.entries(def.props).map(([key, decl]) => `  ${key}?: ${propTsType(decl)};`);
   if (defaultProp === 'defaultChecked') lines.push('  defaultChecked?: boolean;');
   if (defaultProp === 'defaultValue') lines.push('  defaultValue?: string;');

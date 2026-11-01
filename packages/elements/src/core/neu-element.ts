@@ -86,8 +86,10 @@ export abstract class NeuElement extends ServerSafeHTMLElement {
   private reflecting = false;
   private hasConnected = false;
   private formDisabled = false;
-  /** The author's tabindex, read at the first syncFocusable (null when none was set). */
-  private authorTabIndex: string | null | undefined;
+  /** The author's tabindex (null when none is set), kept current by syncFocusable. */
+  private authorTabIndex: string | null = null;
+  /** The tabindex syncFocusable last left on the host (null: removed; undefined: never ran). */
+  private writtenTabIndex: string | null | undefined;
 
   constructor() {
     super();
@@ -171,12 +173,24 @@ export abstract class NeuElement extends ServerSafeHTMLElement {
     else this.internals.states.delete(name);
   }
 
-  /** Focusable: the author's tabindex, or 0. Not focusable: no tabindex at all. */
+  /**
+   * Focusable: the author's tabindex, or 0. Not focusable: no tabindex at all.
+   * A tabindex other than the one this method last left there was set (or removed) by the author
+   * since, as a roving-tabindex widget or a framework re-render does; it becomes the author's value.
+   */
   protected syncFocusable(focusable: boolean): void {
-    if (this.authorTabIndex === undefined) this.authorTabIndex = this.getAttribute('tabindex');
+    const current = this.getAttribute('tabindex');
+    if (current !== this.writtenTabIndex) this.authorTabIndex = current;
     const wanted = focusable ? (this.authorTabIndex ?? '0') : null;
     if (wanted === null) this.removeAttribute('tabindex');
-    else if (this.getAttribute('tabindex') !== wanted) this.setAttribute('tabindex', wanted);
+    else if (current !== wanted) this.setAttribute('tabindex', wanted);
+    this.writtenTabIndex = wanted;
+  }
+
+  /** For controls whose host is the control: aria-disabled and focusability follow isDisabled. */
+  protected syncDisabledState(): void {
+    this.internals.ariaDisabled = this.isDisabled ? 'true' : null;
+    this.syncFocusable(!this.isDisabled);
   }
 
   /** Runs on every prop change, connected or not. Keep it free of DOM work. */

@@ -139,6 +139,16 @@ describe('neu-switch', () => {
     expect(el.hasAttribute('tabindex')).toBe(false);
   });
 
+  test('a tabindex the author sets later survives a disabled toggle; aria-disabled follows', () => {
+    const el = mount<NeuSwitch>('<neu-switch>N</neu-switch>');
+    expect(el.getAttribute('tabindex')).toBe('0');
+    el.setAttribute('tabindex', '-1');
+    el.disabled = true;
+    expect([el.hasAttribute('tabindex'), internalsOf(el).ariaDisabled]).toEqual([false, 'true']);
+    el.disabled = false;
+    expect([el.getAttribute('tabindex'), internalsOf(el).ariaDisabled]).toEqual(['-1', null]);
+  });
+
   test('Space toggles on keyup, Enter on keydown, and Space does not scroll', async () => {
     const el = mount<NeuSwitch>('<neu-switch>N</neu-switch>');
     el.focus();

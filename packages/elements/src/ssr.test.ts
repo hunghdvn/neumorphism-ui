@@ -1,7 +1,7 @@
 import { afterEach, describe, expect, test } from 'vitest';
 import './all.js';
 import type { NeuTextField } from './text-field.js';
-import { definitions, renderDSD } from './ssr.js';
+import { definitions, formDefaultProp, renderDSD } from './ssr.js';
 
 afterEach(() => {
   document.body.innerHTML = '';
@@ -114,5 +114,13 @@ describe('SSR parity', () => {
 
   test('definitions lists the phase-1 tags', () => {
     expect([...definitions.keys()].sort()).toEqual(['neu-button', 'neu-switch', 'neu-text-field']);
+  });
+
+  test('formDefaultProp names the property that holds a form control default', () => {
+    expect([...definitions.values()].map((def) => [def.tag, formDefaultProp(def)])).toEqual([
+      ['neu-button', undefined],
+      ['neu-switch', 'defaultChecked'],
+      ['neu-text-field', 'defaultValue'],
+    ]);
   });
 });

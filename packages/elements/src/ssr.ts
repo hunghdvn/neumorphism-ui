@@ -5,6 +5,7 @@ import type { ComponentDef } from './core/define.js';
 import { parseProps } from './core/props.js';
 
 export type { ComponentDef, ComponentDocs, DocEntry, FormDef } from './core/define.js';
+export { formDefaultProp } from './core/define.js';
 export type { InferProps, PropDecl, PropsSchema, PropValue } from './core/props.js';
 export {
   attributeName,

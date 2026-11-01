@@ -35,3 +35,14 @@ export function defineComponent<const S extends PropsSchema>(
 ): ComponentDef<S> {
   return def;
 }
+
+/**
+ * The element property that sets a form control's default (its value attribute), as wrappers and
+ * generated types expose it: `defaultChecked` for `checked`, `defaultValue` for `value`.
+ */
+export function formDefaultProp(def: ComponentDef): 'defaultChecked' | 'defaultValue' | undefined {
+  const valueProp = def.form?.valueProp;
+  if (valueProp === 'checked') return 'defaultChecked';
+  if (valueProp === 'value') return 'defaultValue';
+  return undefined;
+}

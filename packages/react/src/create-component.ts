@@ -2,6 +2,7 @@
 import {
   attributeName,
   coerceProperty,
+  formDefaultProp,
   renderShadowContents,
   serializeAttribute,
   type ComponentDef,
@@ -38,8 +39,7 @@ export function createComponent<P extends object, E extends HTMLElement>(
   const def = elementClass.def;
   const events = config.events ?? {};
   const valueProp = def.form?.valueProp;
-  const defaultProp =
-    valueProp === 'checked' ? 'defaultChecked' : valueProp === 'value' ? 'defaultValue' : undefined;
+  const defaultProp = formDefaultProp(def);
   const elementKeys = new Set(Object.keys(def.props));
   if (defaultProp) elementKeys.add(defaultProp);
 

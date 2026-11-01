@@ -75,9 +75,8 @@ export class NeuButton extends NeuElement {
 
   protected override update(changed: ReadonlySet<string>): void {
     if (changed.has('disabled') || changed.has('loading')) {
-      this.internals.ariaDisabled = this.isDisabled ? 'true' : null;
+      this.syncDisabledState();
       this.internals.ariaBusy = this.props.loading === true ? 'true' : null;
-      this.syncFocusable(!this.isDisabled);
     }
   }
 }
