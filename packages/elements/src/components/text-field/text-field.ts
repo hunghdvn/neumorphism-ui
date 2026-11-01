@@ -3,6 +3,24 @@ import { FormControlElement, implicitSubmit } from '../../core/form-control.js';
 import { copyValidity } from '../../core/validation.js';
 import { textFieldDef, type TextFieldProps } from './text-field.def.js';
 
+/** Props that can change the form value, its restore state or its validity. */
+const COMMIT_PROPS = [
+  'value',
+  'type',
+  'required',
+  'disabled',
+  'readOnly',
+  'minLength',
+  'maxLength',
+  'pattern',
+  'errorText',
+  'autocomplete',
+];
+
+function needsCommit(changed: ReadonlySet<string>): boolean {
+  return COMMIT_PROPS.some((key) => changed.has(key));
+}
+
 export class NeuTextField extends FormControlElement {
   static override def = textFieldDef;
   static override extraProperties = ['defaultValue'];
@@ -68,10 +86,32 @@ export class NeuTextField extends FormControlElement {
     return this.ref<HTMLInputElement>('input');
   }
 
+  /** A detached input of this type holding `value`, sanitized the way the browser does it. */
+  private probe(value: string): HTMLInputElement {
+    const probe = document.createElement('input');
+    probe.type = this.p.type;
+    probe.value = value;
+    return probe;
+  }
+
+  /** Stands in for the inner input until it exists, so validity is right from the start. */
+  private validityProbe(): HTMLInputElement {
+    const p = this.p;
+    const probe = this.probe(this.value);
+    probe.required = p.required;
+    probe.readOnly = p.readOnly;
+    probe.disabled = this.isDisabled;
+    if (p.pattern) probe.setAttribute('pattern', p.pattern);
+    if (p.minLength >= 0) probe.setAttribute('minlength', String(p.minLength));
+    if (p.maxLength >= 0) probe.setAttribute('maxlength', String(p.maxLength));
+    return probe;
+  }
+
   protected override rendered(): void {
     const input = this.input!;
     // An SSR'd input works before JS loads; keep whatever was typed or autofilled meanwhile.
-    if (input.value !== this.p.value) this.dirty = true;
+    // Compare with the sanitized default: the browser trims or strips some values by itself.
+    if (input.value !== this.probe(this.p.value).value) this.dirty = true;
     if (this.pendingValue !== null) {
       input.value = this.pendingValue;
       this.pendingValue = null;
@@ -120,17 +160,36 @@ export class NeuTextField extends FormControlElement {
     }
     if (changed.has('label')) setText(this.ref('label-text'), p.label);
     if (changed.has('helpText')) setText(this.ref('help-text'), p.helpText);
-    this.commit();
+    if (needsCommit(changed)) this.commit();
+  }
+
+  /** update() only runs once connected; before that, keep the value and validity current here. */
+  protected override willUpdate(changed: ReadonlySet<string>): void {
+    if (!this.isConnected && !this.input && needsCommit(changed)) this.commit();
   }
 
   protected formValue(): string {
     return this.value;
   }
 
+  /** Like a native input, a password or autocomplete=off field is never saved for restore. */
+  protected override formState(): string | null {
+    const p = this.p;
+    if (p.type === 'password' || p.autocomplete.trim().toLowerCase() === 'off') return null;
+    return this.value;
+  }
+
   protected validate(): void {
     const input = this.input;
-    if (!input || input.validity.valid) this.internals.setValidity({});
-    else this.internals.setValidity(copyValidity(input.validity), input.validationMessage, input);
+    const source = input ?? this.validityProbe();
+    if (source.validity.valid) this.internals.setValidity({});
+    else {
+      this.internals.setValidity(
+        copyValidity(source.validity),
+        source.validationMessage,
+        input ?? undefined,
+      );
+    }
     setText(this.ref('error-text'), this.p.errorText || input?.validationMessage || '');
   }
 

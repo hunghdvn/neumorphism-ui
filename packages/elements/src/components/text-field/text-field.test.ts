@@ -1,6 +1,7 @@
-import { afterEach, describe, expect, test } from 'vitest';
+import { afterEach, describe, expect, test, vi } from 'vitest';
 import { userEvent } from 'vitest/browser';
 import '../../button.js';
+import { renderDSD } from '../../ssr.js';
 import '../../switch.js';
 import { NeuTextField } from '../../text-field.js';
 import { axeViolations, keydown, mount, mountForm, tick } from '../../test-utils/helpers.js';
@@ -285,6 +286,91 @@ describe('neu-text-field', () => {
     await tick();
     expect(submitted).toBe(0);
     expect(el.matches(':state(user-invalid)')).toBe(true);
+  });
+
+  test('a password or autocomplete=off field keeps no restore state; others keep their value', async () => {
+    const spy = vi.spyOn(ElementInternals.prototype, 'setFormValue');
+    try {
+      const last: unknown[] = [];
+      for (const attrs of ['type="password"', 'autocomplete="OFF"', 'type="email"']) {
+        const el = mount<NeuTextField>(`<neu-text-field label="A" ${attrs}></neu-text-field>`);
+        el.focus();
+        await userEvent.keyboard('secret');
+        last.push(spy.mock.lastCall);
+        el.parentElement!.remove();
+      }
+      expect(last).toEqual([
+        ['secret', null],
+        ['secret', null],
+        ['secret', 'secret'],
+      ]);
+    } finally {
+      spy.mockRestore();
+    }
+  });
+
+  test('a required empty field is invalid before it connects', () => {
+    const el = document.createElement('neu-text-field') as NeuTextField;
+    el.required = true;
+    expect([el.checkValidity(), el.validity.valueMissing]).toEqual([false, true]);
+    el.value = 'x';
+    expect([el.checkValidity(), el.validity.valueMissing]).toEqual([true, false]);
+  });
+
+  test('a required empty field is invalid while it waits for the parser', () => {
+    const form = mountForm('');
+    // An own property shadows Document.prototype.readyState; deleting it restores the real getter.
+    Object.defineProperty(document, 'readyState', { configurable: true, get: () => 'loading' });
+    let el: NeuTextField;
+    try {
+      el = document.createElement('neu-text-field') as NeuTextField;
+      el.required = true;
+      form.append(el);
+      expect(el.shadowRoot).toBeNull();
+      expect([el.checkValidity(), el.validity.valueMissing, form.checkValidity()]).toEqual([
+        false,
+        true,
+        false,
+      ]);
+    } finally {
+      delete (document as { readyState?: unknown }).readyState;
+    }
+    document.dispatchEvent(new Event('DOMContentLoaded'));
+    expect(inputOf(el).required).toBe(true);
+    expect(el.validity.valueMissing).toBe(true);
+  });
+
+  test('an untouched SSR field whose value the browser sanitized still follows its value attribute', () => {
+    const attrs = { label: 'Email', type: 'email', value: ' a@b.co ' };
+    const doc = document.implementation.createHTMLDocument('');
+    doc.body.setHTMLUnsafe(
+      `<neu-text-field label="Email" type="email" value=" a@b.co ">${renderDSD('neu-text-field', attrs)}</neu-text-field>`,
+    );
+    const el = document.adoptNode(doc.body.firstElementChild!) as NeuTextField;
+    document.body.append(el);
+    expect(inputOf(el).value).toBe('a@b.co');
+    // While the inner input is itself untouched it mirrors its value attribute, which hides a wrong
+    // `dirty` from the public API until something writes the inner value; so check it directly.
+    expect((el as unknown as { dirty: boolean }).dirty).toBe(false);
+    el.setAttribute('value', 'c@d.co');
+    expect([inputOf(el).value, el.value]).toEqual(['c@d.co', 'c@d.co']);
+  });
+
+  test('changing only presentation props does not touch the form value', () => {
+    const el = mount<NeuTextField>('<neu-text-field label="A" value="x"></neu-text-field>');
+    const spy = vi.spyOn(ElementInternals.prototype, 'setFormValue');
+    try {
+      el.label = 'B';
+      el.helpText = 'Help';
+      el.placeholder = 'p';
+      el.size = 'lg';
+      el.inputMode = 'email';
+      expect(spy).not.toHaveBeenCalled();
+      el.required = true;
+      expect(spy).toHaveBeenCalledTimes(1);
+    } finally {
+      spy.mockRestore();
+    }
   });
 
   test('escapes hostile attribute values', () => {

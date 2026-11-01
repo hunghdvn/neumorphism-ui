@@ -126,7 +126,8 @@ export abstract class FormControlElement extends NeuElement {
   }
 
   protected abstract formValue(): string | null;
-  protected formState(): string {
+  /** What the browser saves to restore the control after navigation; null saves nothing. */
+  protected formState(): string | null {
     return this.formValue() ?? '';
   }
   protected abstract validate(): void;
