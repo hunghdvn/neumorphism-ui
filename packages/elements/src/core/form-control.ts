@@ -1,11 +1,24 @@
 import { NeuElement } from './neu-element.js';
 
-const SUBMITTERS =
-  'button:not([type]), button[type="submit"], input[type="submit"], input[type="image"], neu-button[type="submit"]';
-
 /** Forms the user is trying to submit during the current task (click on a submitter, or Enter). */
 const submitAttempts = new WeakSet<HTMLFormElement>();
-const watchedForms = new WeakSet<HTMLFormElement>();
+let watching = false;
+
+/** Input types that block implicit submission when the form has no submit button (HTML §4.10.21.2). */
+const BLOCKING_TYPES = new Set([
+  'text',
+  'search',
+  'url',
+  'tel',
+  'email',
+  'password',
+  'date',
+  'month',
+  'week',
+  'time',
+  'datetime-local',
+  'number',
+]);
 
 /** Records that the user is trying to submit `form` in this task, so validation errors may show. */
 export function markSubmitAttempt(form: HTMLFormElement): void {
@@ -14,21 +27,49 @@ export function markSubmitAttempt(form: HTMLFormElement): void {
   setTimeout(() => submitAttempts.delete(form), 0);
 }
 
-function watchSubmitAttempts(form: HTMLFormElement): void {
-  if (watchedForms.has(form)) return;
-  watchedForms.add(form);
-  const mark = () => markSubmitAttempt(form);
-  form.addEventListener(
+function isSubmitButton(el: Element): boolean {
+  if (el instanceof HTMLButtonElement) return el.type === 'submit';
+  if (el instanceof HTMLInputElement) return el.type === 'submit' || el.type === 'image';
+  return el.localName === 'neu-button' && (el as Element & { type?: unknown }).type === 'submit';
+}
+
+/** The form owner of a control (its `form` property), which also covers form="id" association. */
+function formOf(node: EventTarget): HTMLFormElement | null {
+  const form = (node as { form?: unknown }).form;
+  return form instanceof HTMLFormElement ? form : null;
+}
+
+/**
+ * One capture listener pair on document sees every submit attempt: submitters outside their form
+ * (form="id") and forms inside open shadow roots included. The composed path is walked rather than
+ * the retargeted event.target, which would hide a control inside a shadow root from the document.
+ */
+function watchSubmitAttempts(): void {
+  if (watching || typeof document === 'undefined') return;
+  watching = true;
+  document.addEventListener(
     'click',
     (event) => {
-      if (event.target instanceof Element && event.target.closest(SUBMITTERS)) mark();
+      for (const node of event.composedPath()) {
+        if (!(node instanceof Element) || !isSubmitButton(node)) continue;
+        const form = formOf(node);
+        if (form) markSubmitAttempt(form);
+        return;
+      }
     },
     { capture: true },
   );
-  form.addEventListener(
+  document.addEventListener(
     'keydown',
     (event) => {
-      if (event.key === 'Enter') mark();
+      if (event.key !== 'Enter') return;
+      for (const node of event.composedPath()) {
+        const form = formOf(node);
+        if (form) {
+          markSubmitAttempt(form);
+          return;
+        }
+      }
     },
     { capture: true },
   );
@@ -41,6 +82,7 @@ export abstract class FormControlElement extends NeuElement {
 
   constructor() {
     super();
+    watchSubmitAttempts();
     // A failed submit attempt fires `invalid`; so does form.checkValidity(), which must stay silent.
     this.addEventListener('invalid', () => {
       const form = this.internals.form;
@@ -83,10 +125,6 @@ export abstract class FormControlElement extends NeuElement {
     this.commit();
   }
 
-  formAssociatedCallback(form: HTMLFormElement | null): void {
-    if (form) watchSubmitAttempts(form);
-  }
-
   protected abstract formValue(): string | null;
   protected formState(): string {
     return this.formValue() ?? '';
@@ -114,12 +152,28 @@ export abstract class FormControlElement extends NeuElement {
 }
 
 /**
- * Enter in a text control submits like a native input: needs a submit button or a lone control.
- * It is a submit attempt in its own right, so invalid controls reveal user-invalid.
+ * Enter in a text control submits like a native input (HTML §4.10.21.2). With a default button
+ * (the form's first submit button, form="id" ones included) it clicks that button unless it is
+ * disabled, so the button's own guards and click listeners apply. Without one, it submits only
+ * when a single field blocks implicit submission. Either way it is a submit attempt in its own
+ * right, so invalid controls reveal user-invalid.
  */
 export function implicitSubmit(form: HTMLFormElement | null): void {
   if (!form) return;
-  if (form.querySelector(SUBMITTERS) === null && form.elements.length !== 1) return;
+  const elements = [...form.elements];
+  const defaultButton = elements.find(isSubmitButton) as HTMLElement | undefined;
+  if (defaultButton) {
+    if (defaultButton.matches(':disabled') || defaultButton.hasAttribute('disabled')) return;
+    markSubmitAttempt(form);
+    defaultButton.click();
+    return;
+  }
+  const blocking = elements.filter(
+    (el) =>
+      (el instanceof HTMLInputElement && BLOCKING_TYPES.has(el.type)) ||
+      el.localName === 'neu-text-field',
+  );
+  if (blocking.length !== 1) return;
   markSubmitAttempt(form);
   form.requestSubmit();
 }

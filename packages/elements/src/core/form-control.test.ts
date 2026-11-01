@@ -79,6 +79,14 @@ function mountForm(inner: string): HTMLFormElement {
   return form;
 }
 
+/**
+ * Cancels `invalid` so a failed submit shows no browser popup. Firefox's popup takes focus from the
+ * test frame, and real pointer or key input in a parallel test file then goes nowhere.
+ */
+function suppressValidationPopup(form: HTMLFormElement): void {
+  form.addEventListener('invalid', (event) => event.preventDefault(), { capture: true });
+}
+
 afterEach(() => {
   document.body.innerHTML = '';
 });
@@ -168,11 +176,45 @@ test('Enter followed by a submit in the same task counts as a submit attempt', (
   expect(field.matches(':state(user-invalid)')).toBe(true);
 });
 
+test('submit attempts are seen in a form inside a shadow root', () => {
+  const host = document.body.appendChild(document.createElement('div'));
+  const root = host.attachShadow({ mode: 'open' });
+  root.innerHTML =
+    '<form><input name="q"><neu-probe-field name="a" required></neu-probe-field><button>Go</button></form>';
+  const form = root.querySelector('form')!;
+  const field = root.querySelector('neu-probe-field') as NeuProbeField;
+  suppressValidationPopup(form);
+  form.addEventListener('submit', (event) => {
+    event.preventDefault();
+  });
+  root
+    .querySelector('input')!
+    .dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true, composed: true }));
+  form.requestSubmit();
+  expect(field.matches(':state(user-invalid)')).toBe(true);
+  form.reset();
+  expect(field.matches(':state(user-invalid)')).toBe(false);
+  root.querySelector('button')!.click();
+  expect(field.matches(':state(user-invalid)')).toBe(true);
+});
+
+test('submit attempts are seen for a submitter associated with form="id"', () => {
+  document.body.innerHTML =
+    '<form id="f"><neu-probe-field name="a" required></neu-probe-field></form><button form="f">Go</button>';
+  const form = document.getElementById('f') as HTMLFormElement;
+  const field = form.querySelector('neu-probe-field') as NeuProbeField;
+  suppressValidationPopup(form);
+  form.addEventListener('submit', (event) => {
+    event.preventDefault();
+  });
+  document.querySelector('button')!.click();
+  expect(field.matches(':state(user-invalid)')).toBe(true);
+});
+
 test('implicitSubmit submits only when the form has a submit button or a single control', () => {
-  const single = mountForm('<neu-probe-field name="a" value="1"></neu-probe-field>');
-  const multi = mountForm(
-    '<neu-probe-field name="a" value="1"></neu-probe-field><neu-probe-field name="b" value="2"></neu-probe-field>',
-  );
+  // Only text-like fields block implicit submission, so the lone/multi fixtures use native inputs.
+  const single = mountForm('<input name="a" value="1">');
+  const multi = mountForm('<input name="a" value="1"><input name="b" value="2">');
   const withButton = mountForm(
     '<neu-probe-field name="a" value="1"></neu-probe-field><neu-probe-field name="b" value="2"></neu-probe-field><button>Go</button>',
   );

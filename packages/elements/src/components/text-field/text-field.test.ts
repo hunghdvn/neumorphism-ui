@@ -1,6 +1,7 @@
 import { afterEach, describe, expect, test } from 'vitest';
 import { userEvent } from 'vitest/browser';
 import '../../button.js';
+import '../../switch.js';
 import { NeuTextField } from '../../text-field.js';
 import { axeViolations, keydown, mount, mountForm, tick } from '../../test-utils/helpers.js';
 
@@ -9,6 +10,14 @@ afterEach(() => {
 });
 
 const inputOf = (el: NeuTextField) => el.shadowRoot!.querySelector('input')!;
+
+/**
+ * Cancels `invalid` so a failed submit shows no browser popup. Firefox's popup takes focus from the
+ * test frame, and the next real pointer or key input in a parallel test file then goes nowhere.
+ */
+function suppressValidationPopup(form: HTMLFormElement): void {
+  form.addEventListener('invalid', (event) => event.preventDefault(), { capture: true });
+}
 
 describe('neu-text-field', () => {
   test('renders a labelled native input that receives focus through the host', () => {
@@ -164,6 +173,101 @@ describe('neu-text-field', () => {
     }
     keydown(inputOf(el), 'Enter');
     expect(submitted).toBe(1);
+  });
+
+  describe('implicit submission (Enter)', () => {
+    /** Presses Enter in the first text field of `form` and reports how often it submitted. */
+    async function enterIn(form: HTMLFormElement): Promise<number> {
+      let submitted = 0;
+      form.addEventListener('submit', (event) => {
+        event.preventDefault();
+        submitted++;
+      });
+      form.querySelector<NeuTextField>('neu-text-field')!.focus();
+      await userEvent.keyboard('{Enter}');
+      await tick();
+      return submitted;
+    }
+
+    test('does nothing when the default button is disabled or loading', async () => {
+      const forms = [
+        '<button type="submit" disabled>Go</button>',
+        '<neu-button type="submit" disabled>Go</neu-button>',
+        '<neu-button type="submit" loading>Go</neu-button>',
+        '<button disabled>Go</button><neu-button type="submit">Later</neu-button>',
+      ].map((button) => mountForm(`<neu-text-field name="q" label="Q"></neu-text-field>${button}`));
+      const results: number[] = [];
+      for (const form of forms) results.push(await enterIn(form));
+      expect(results).toEqual([0, 0, 0, 0]);
+    });
+
+    test('clicks the default button, so its click listeners run and it is the submitter', async () => {
+      const native = mountForm(
+        '<neu-text-field name="q" label="Q"></neu-text-field><button type="button">No</button>' +
+          '<button name="go" value="1">Go</button><button>Second</button>',
+      );
+      const neu = mountForm(
+        '<neu-text-field name="q" label="Q"></neu-text-field><neu-button type="submit">Go</neu-button>',
+      );
+      const seen: string[] = [];
+      native.addEventListener('submit', (event) => {
+        seen.push(`submitter:${(event.submitter as HTMLButtonElement | null)?.textContent}`);
+      });
+      for (const button of document.querySelectorAll('button, neu-button')) {
+        button.addEventListener('click', () => seen.push(`click:${button.textContent}`));
+      }
+      expect([await enterIn(native), await enterIn(neu)]).toEqual([1, 1]);
+      expect(seen).toEqual(['click:Go', 'submitter:Go', 'click:Go']);
+    });
+
+    test('without a submit button, submits when the field is the only one that blocks it', async () => {
+      const results = [
+        '<input type="hidden" name="csrf" value="t">',
+        '<neu-switch name="s">S</neu-switch><neu-button>Other</neu-button>',
+        '<fieldset><input type="checkbox" name="c"><input type="radio" name="r"></fieldset>',
+      ].map((extra) => mountForm(`${extra}<neu-text-field name="q" label="Q"></neu-text-field>`));
+      const submitted: number[] = [];
+      for (const form of results) submitted.push(await enterIn(form));
+      expect(submitted).toEqual([1, 1, 1]);
+    });
+
+    test('without a submit button, does nothing when another field blocks it', async () => {
+      const forms = [
+        '<neu-text-field name="r" label="R"></neu-text-field>',
+        '<input type="email" name="e">',
+        '<input type="date" name="d">',
+      ].map((extra) => mountForm(`<neu-text-field name="q" label="Q"></neu-text-field>${extra}`));
+      const submitted: number[] = [];
+      for (const form of forms) submitted.push(await enterIn(form));
+      expect(submitted).toEqual([0, 0, 0]);
+    });
+
+    test('uses a submit neu-button outside the form (form="f") as the default button', async () => {
+      document.body.innerHTML =
+        '<form id="f"><neu-text-field name="a" label="A" required></neu-text-field>' +
+        '<neu-text-field name="b" label="B"></neu-text-field></form>' +
+        '<footer><neu-button form="f" type="submit">Go</neu-button></footer>';
+      const form = document.getElementById('f') as HTMLFormElement;
+      const field = form.querySelector('neu-text-field') as NeuTextField;
+      suppressValidationPopup(form);
+      let clicks = 0;
+      document.querySelector('neu-button')!.addEventListener('click', () => clicks++);
+      expect(await enterIn(form)).toBe(0);
+      expect(clicks).toBe(1);
+      expect(field.matches(':state(user-invalid)')).toBe(true);
+    });
+
+    test('a click on a submit neu-button outside the form reveals user-invalid inside it', async () => {
+      document.body.innerHTML =
+        '<form id="f"><neu-text-field name="a" label="A" required></neu-text-field></form>' +
+        '<neu-button form="f" type="submit">Go</neu-button>';
+      const form = document.getElementById('f') as HTMLFormElement;
+      const field = form.querySelector('neu-text-field') as NeuTextField;
+      suppressValidationPopup(form);
+      form.addEventListener('submit', (event) => event.preventDefault());
+      document.querySelector<HTMLElement>('neu-button')!.click();
+      expect(field.matches(':state(user-invalid)')).toBe(true);
+    });
   });
 
   test('Enter on an invalid required field reveals user-invalid', async () => {
