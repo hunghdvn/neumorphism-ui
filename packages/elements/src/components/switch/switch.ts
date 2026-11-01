@@ -1,4 +1,4 @@
-import { afterDispatch, dispatch } from '../../core/dom.js';
+import { afterDispatch, dispatch, hasFocusWithinTree } from '../../core/dom.js';
 import { FormControlElement } from '../../core/form-control.js';
 import { requiredCheckboxMessage } from '../../core/validation.js';
 import { switchDef } from './switch.def.js';
@@ -21,7 +21,10 @@ export class NeuSwitch extends FormControlElement {
     this.addEventListener('click', (event) => this.onClick(event));
     this.addEventListener('keydown', (event) => this.onKeyDown(event));
     this.addEventListener('keyup', (event) => this.onKeyUp(event));
-    this.addEventListener('blur', () => this.toggleState('pressed', false));
+    // Disarm when focus moves away, not when only the window loses focus.
+    this.addEventListener('blur', () => {
+      if (!hasFocusWithinTree(this)) this.toggleState('pressed', false);
+    });
   }
 
   get checked(): boolean {

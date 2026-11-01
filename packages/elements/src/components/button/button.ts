@@ -1,4 +1,4 @@
-import { afterDispatch } from '../../core/dom.js';
+import { afterDispatch, hasFocusWithinTree } from '../../core/dom.js';
 import { markSubmitAttempt } from '../../core/form-control.js';
 import { NeuElement } from '../../core/neu-element.js';
 import { buttonDef } from './button.def.js';
@@ -20,7 +20,10 @@ export class NeuButton extends NeuElement {
     this.addEventListener('click', (event) => this.onClick(event));
     this.addEventListener('keydown', (event) => this.onKeyDown(event));
     this.addEventListener('keyup', (event) => this.onKeyUp(event));
-    this.addEventListener('blur', () => this.toggleState('pressed', false));
+    // Disarm when focus moves away, not when only the window loses focus.
+    this.addEventListener('blur', () => {
+      if (!hasFocusWithinTree(this)) this.toggleState('pressed', false);
+    });
   }
 
   get form(): HTMLFormElement | null {

@@ -208,6 +208,17 @@ describe('neu-switch', () => {
     }
   });
 
+  test('the window losing focus between Space down and up does not disarm it', async () => {
+    const el = mount<NeuSwitch>('<neu-switch>N</neu-switch>');
+    el.focus();
+    keydown(el, ' ');
+    // Deactivating the window or frame fires blur, but the element stays the active element.
+    el.dispatchEvent(new FocusEvent('blur'));
+    keyup(el, ' ');
+    await tick();
+    expect(el.checked).toBe(true);
+  });
+
   test('a keyup listener that calls preventDefault stops the Space toggle', async () => {
     const el = mount<NeuSwitch>('<neu-switch>N</neu-switch>');
     const events: string[] = [];

@@ -10,6 +10,14 @@ export function setOptionalAttribute(el: Element | null, name: string, value: st
   else if (el.getAttribute(name) !== value) el.setAttribute(name, value);
 }
 
+/**
+ * True while `el` is the focused element of its tree. It stays true when only the window or frame
+ * loses focus, which also fires blur on the element; it is false once focus moved elsewhere.
+ */
+export function hasFocusWithinTree(el: Element): boolean {
+  return (el.getRootNode() as Partial<DocumentOrShadowRoot>).activeElement === el;
+}
+
 /** Dispatches a bubbling, composed event from a host (spec §6.4). */
 export function dispatch(target: EventTarget, type: string): void {
   target.dispatchEvent(new Event(type, { bubbles: true, composed: true }));

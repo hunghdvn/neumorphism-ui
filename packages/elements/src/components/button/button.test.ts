@@ -123,6 +123,18 @@ describe('neu-button', () => {
     expect(clicks()).toBe(0);
   });
 
+  test('the window losing focus between Space down and up does not disarm it', async () => {
+    const el = mount<NeuButton>('<neu-button>Save</neu-button>');
+    const clicks = countClicks(el);
+    el.focus();
+    keydown(el, ' ');
+    // Deactivating the window or frame fires blur, but the element stays the active element.
+    el.dispatchEvent(new FocusEvent('blur'));
+    keyup(el, ' ');
+    await tick();
+    expect(clicks()).toBe(1);
+  });
+
   test('type=submit submits, type=reset resets, type=button does neither', async () => {
     const form = mountForm(
       '<input name="q" value="a"><neu-button type="submit">Go</neu-button>' +
