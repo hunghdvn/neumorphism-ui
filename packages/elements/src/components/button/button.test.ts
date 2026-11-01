@@ -227,6 +227,24 @@ describe('neu-button', () => {
     expect([clicks(), submitted]).toEqual([1, 1]);
   });
 
+  test('a Space keydown cancelled before it reaches the button does not arm it', async () => {
+    const el = mount<NeuButton>('<neu-button>Save</neu-button>');
+    const clicks = countClicks(el);
+    const cancelSpace = (event: KeyboardEvent) => {
+      if (event.key === ' ') event.preventDefault();
+    };
+    document.addEventListener('keydown', cancelSpace, { capture: true });
+    try {
+      keydown(el, ' ');
+      expect(el.matches(':state(pressed)')).toBe(false);
+      keyup(el, ' ');
+      await tick();
+      expect(clicks()).toBe(0);
+    } finally {
+      document.removeEventListener('keydown', cancelSpace, { capture: true });
+    }
+  });
+
   test('a keyup listener that calls preventDefault stops the Space activation', async () => {
     const el = mount<NeuButton>('<neu-button>Save</neu-button>');
     const clicks = countClicks(el);

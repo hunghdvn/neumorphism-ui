@@ -193,7 +193,10 @@ export abstract class NeuElement extends ServerSafeHTMLElement {
     this.syncFocusable(!this.isDisabled);
   }
 
-  /** Runs on every prop change, connected or not. Keep it free of DOM work. */
+  /**
+   * Runs on every prop change, connected or not. ElementInternals work (form value, validity) is
+   * fine here; leave shadow-DOM and attribute writes to update().
+   */
   protected willUpdate(_changed: ReadonlySet<string>): void {}
   /** Patches host state and shadow DOM for the changed props. Must be idempotent. */
   protected update(_changed: ReadonlySet<string>): void {}

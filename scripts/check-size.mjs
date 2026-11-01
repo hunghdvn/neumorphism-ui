@@ -24,7 +24,7 @@ async function bundled(contents) {
 
 const core = [
   "export { NeuElement } from './core/neu-element.js';",
-  "export { FormControlElement, implicitSubmit } from './core/form-control.js';",
+  "export { FormControlElement } from './core/form-control.js';",
   "export { html, unsafeHTML } from './core/html.js';",
   "export * from './core/dom.js';",
   "export * from './core/validation.js';",

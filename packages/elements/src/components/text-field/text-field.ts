@@ -1,6 +1,7 @@
 import { afterDispatch, dispatch, setOptionalAttribute, setText } from '../../core/dom.js';
-import { FormControlElement, implicitSubmit } from '../../core/form-control.js';
+import { FormControlElement } from '../../core/form-control.js';
 import { copyValidity } from '../../core/validation.js';
+import { implicitSubmit } from './implicit-submit.js';
 import { textFieldDef, type TextFieldProps } from './text-field.def.js';
 
 /** Props that can change the form value, its restore state or its validity. */
@@ -182,7 +183,9 @@ export class NeuTextField extends FormControlElement {
   protected validate(): void {
     const input = this.input;
     const source = input ?? this.validityProbe();
-    if (source.validity.valid) this.internals.setValidity({});
+    // A disabled or readonly input still sets flags such as typeMismatch, but is barred from
+    // validation and has no message; setValidity() would throw on flags without a message.
+    if (!source.willValidate || source.validity.valid) this.internals.setValidity({});
     else {
       this.internals.setValidity(
         copyValidity(source.validity),

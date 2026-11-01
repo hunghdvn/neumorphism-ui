@@ -60,6 +60,8 @@ export class NeuSwitch extends FormControlElement {
 
   private onKeyDown(event: KeyboardEvent): void {
     if (event.key === ' ') {
+      // An earlier listener that cancelled the keydown has claimed the key: do not arm.
+      if (event.defaultPrevented) return;
       event.preventDefault();
       this.toggleState('pressed', true);
     } else if (event.key === 'Enter' && !event.repeat) {

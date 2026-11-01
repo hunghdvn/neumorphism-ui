@@ -317,6 +317,40 @@ describe('neu-text-field', () => {
     expect([el.checkValidity(), el.validity.valueMissing]).toEqual([true, false]);
   });
 
+  test('a disabled or readonly field with an invalid value renders and is valid', () => {
+    const markups = [
+      '<neu-text-field type="email" disabled value="abc"></neu-text-field>',
+      '<neu-text-field readonly pattern="[0-9]+" value="abc"></neu-text-field>',
+    ];
+    const parsed = markups.map((markup) => mount<NeuTextField>(markup));
+    expect(
+      parsed.map((el) => [!!el.shadowRoot?.querySelector('input'), el.checkValidity()]),
+    ).toEqual([
+      [true, true],
+      [true, true],
+    ]);
+  });
+
+  test('a disabled or readonly field with an invalid value is valid before and after connecting', () => {
+    const disabled = document.createElement('neu-text-field') as NeuTextField;
+    disabled.type = 'email';
+    disabled.disabled = true;
+    disabled.value = 'abc';
+    const readOnly = document.createElement('neu-text-field') as NeuTextField;
+    readOnly.readOnly = true;
+    readOnly.pattern = '[0-9]+';
+    readOnly.value = 'abc';
+    const fields = [disabled, readOnly];
+    expect(fields.map((el) => el.checkValidity())).toEqual([true, true]);
+    document.body.append(...fields);
+    expect(
+      fields.map((el) => [!!el.shadowRoot?.querySelector('input'), el.checkValidity()]),
+    ).toEqual([
+      [true, true],
+      [true, true],
+    ]);
+  });
+
   test('a required empty field is invalid while it waits for the parser', () => {
     const form = mountForm('');
     // An own property shadows Document.prototype.readyState; deleting it restores the real getter.

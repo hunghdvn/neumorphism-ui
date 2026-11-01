@@ -191,6 +191,23 @@ describe('neu-switch', () => {
     expect(el.checked).toBe(false);
   });
 
+  test('a Space keydown cancelled before it reaches the switch does not arm it', async () => {
+    const el = mount<NeuSwitch>('<neu-switch>N</neu-switch>');
+    const cancelSpace = (event: KeyboardEvent) => {
+      if (event.key === ' ') event.preventDefault();
+    };
+    document.addEventListener('keydown', cancelSpace, { capture: true });
+    try {
+      keydown(el, ' ');
+      expect(el.matches(':state(pressed)')).toBe(false);
+      keyup(el, ' ');
+      await tick();
+      expect(el.checked).toBe(false);
+    } finally {
+      document.removeEventListener('keydown', cancelSpace, { capture: true });
+    }
+  });
+
   test('a keyup listener that calls preventDefault stops the Space toggle', async () => {
     const el = mount<NeuSwitch>('<neu-switch>N</neu-switch>');
     const events: string[] = [];

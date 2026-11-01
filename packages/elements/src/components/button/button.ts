@@ -59,7 +59,8 @@ export class NeuButton extends NeuElement {
       afterDispatch(event, () => {
         if (!event.defaultPrevented && !this.inactive) this.click();
       });
-    } else if (event.key === ' ') {
+    } else if (event.key === ' ' && !event.defaultPrevented) {
+      // An earlier listener that cancelled the keydown has claimed the key: do not arm.
       event.preventDefault();
       this.toggleState('pressed', true);
     }

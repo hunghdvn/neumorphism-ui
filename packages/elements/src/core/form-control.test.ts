@@ -1,6 +1,7 @@
 import { afterEach, expect, test } from 'vitest';
+import { implicitSubmit } from '../components/text-field/implicit-submit.js';
 import { defineComponent } from './define.js';
-import { FormControlElement, implicitSubmit } from './form-control.js';
+import { FormControlElement } from './form-control.js';
 import { html } from './html.js';
 
 const fieldDef = defineComponent({
@@ -196,6 +197,19 @@ test('submit attempts are seen in a form inside a shadow root', () => {
   expect(field.matches(':state(user-invalid)')).toBe(false);
   root.querySelector('button')!.click();
   expect(field.matches(':state(user-invalid)')).toBe(true);
+});
+
+test('Enter outside every form is no submit attempt, even beside a form named "form"', () => {
+  // window.form and document.form resolve to this form through named-property access.
+  document.body.innerHTML =
+    '<div id="d" tabindex="0"></div><form id="form" name="form"><neu-probe-field name="a" required></neu-probe-field></form>';
+  const form = document.getElementById('form') as HTMLFormElement;
+  const field = form.querySelector('neu-probe-field') as NeuProbeField;
+  document
+    .getElementById('d')!
+    .dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
+  form.checkValidity();
+  expect(field.matches(':state(user-invalid)')).toBe(false);
 });
 
 test('submit attempts are seen for a submitter associated with form="id"', () => {
