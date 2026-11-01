@@ -7,7 +7,8 @@ const SUBMITTERS =
 const submitAttempts = new WeakSet<HTMLFormElement>();
 const watchedForms = new WeakSet<HTMLFormElement>();
 
-function markSubmitAttempt(form: HTMLFormElement): void {
+/** Records that the user is trying to submit `form` in this task, so validation errors may show. */
+export function markSubmitAttempt(form: HTMLFormElement): void {
   submitAttempts.add(form);
   // Validation runs in the same task as the click/keydown/submit; forget the attempt afterwards.
   setTimeout(() => submitAttempts.delete(form), 0);

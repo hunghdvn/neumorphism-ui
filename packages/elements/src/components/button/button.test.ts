@@ -8,6 +8,7 @@ import {
   keyup,
   mount,
   mountForm,
+  tick,
 } from '../../test-utils/helpers.js';
 
 afterEach(() => {
@@ -118,6 +119,103 @@ describe('neu-button', () => {
     await userEvent.click(reset!);
     await userEvent.click(noop!);
     expect(events).toEqual(['submit', 'reset']);
+  });
+
+  test('el.click() on a submit button submits before it returns', () => {
+    const form = mountForm('<neu-button type="submit">Go</neu-button>');
+    let submitted = 0;
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+      submitted++;
+    });
+    (form.querySelector('neu-button') as NeuButton).click();
+    expect(submitted).toBe(1);
+  });
+
+  test('a host click listener that calls preventDefault stops submit and reset', async () => {
+    const form = mountForm(
+      '<input name="q" value="a"><neu-button type="submit">Go</neu-button>' +
+        '<neu-button type="reset">Reset</neu-button>',
+    );
+    const events: string[] = [];
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+      events.push('submit');
+    });
+    form.addEventListener('reset', () => events.push('reset'));
+    const [submit, reset] = form.querySelectorAll<NeuButton>('neu-button');
+    for (const button of [submit!, reset!]) {
+      button.addEventListener('click', (event) => event.preventDefault());
+    }
+    await userEvent.click(submit!);
+    await userEvent.click(reset!);
+    submit!.click();
+    reset!.click();
+    await tick();
+    expect(events).toEqual([]);
+  });
+
+  test('a document click listener that calls preventDefault stops submit and reset', async () => {
+    const form = mountForm(
+      '<input name="q" value="a"><neu-button type="submit">Go</neu-button>' +
+        '<neu-button type="reset">Reset</neu-button>',
+    );
+    const events: string[] = [];
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+      events.push('submit');
+    });
+    form.addEventListener('reset', () => events.push('reset'));
+    const cancel = (event: Event) => event.preventDefault();
+    document.addEventListener('click', cancel);
+    try {
+      const [submit, reset] = form.querySelectorAll<NeuButton>('neu-button');
+      await userEvent.click(submit!);
+      await userEvent.click(reset!);
+      submit!.click();
+      reset!.click();
+      await tick();
+      expect(events).toEqual([]);
+    } finally {
+      document.removeEventListener('click', cancel);
+    }
+  });
+
+  test('Enter is left uncancelled; a document keydown listener that cancels it stops activation', async () => {
+    const form = mountForm('<neu-button type="submit">Go</neu-button>');
+    let submitted = 0;
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+      submitted++;
+    });
+    const el = form.querySelector('neu-button') as NeuButton;
+    const clicks = countClicks(el);
+    const cancelEnter = (event: KeyboardEvent) => {
+      if (event.key === 'Enter') event.preventDefault();
+    };
+    document.addEventListener('keydown', cancelEnter);
+    try {
+      el.focus();
+      await userEvent.keyboard('{Enter}');
+      expect(keydown(el, 'Enter').defaultPrevented).toBe(true);
+      await tick();
+      expect([clicks(), submitted]).toEqual([0, 0]);
+    } finally {
+      document.removeEventListener('keydown', cancelEnter);
+    }
+    expect(keydown(el, 'Enter').defaultPrevented).toBe(false);
+    expect([clicks(), submitted]).toEqual([1, 1]);
+  });
+
+  test('a keyup listener that calls preventDefault stops the Space activation', async () => {
+    const el = mount<NeuButton>('<neu-button>Save</neu-button>');
+    const clicks = countClicks(el);
+    el.addEventListener('keyup', (event) => event.preventDefault());
+    keydown(el, ' ');
+    keyup(el, ' ');
+    await tick();
+    expect(clicks()).toBe(0);
+    expect(el.matches(':state(pressed)')).toBe(false);
   });
 
   test('a disabled fieldset disables the button', () => {

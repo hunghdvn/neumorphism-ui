@@ -5,6 +5,7 @@ import {
   axeViolations,
   internalsOf,
   keydown,
+  keyup,
   mount,
   mountForm,
   tick,
@@ -146,6 +147,50 @@ describe('neu-switch', () => {
     await userEvent.keyboard('{Enter}');
     expect(el.checked).toBe(false);
     expect(keydown(el, ' ').defaultPrevented).toBe(true);
+  });
+
+  test('Enter is left uncancelled; a document keydown listener that cancels it stops the toggle', async () => {
+    const el = mount<NeuSwitch>('<neu-switch>N</neu-switch>');
+    const cancelEnter = (event: KeyboardEvent) => {
+      if (event.key === 'Enter') event.preventDefault();
+    };
+    document.addEventListener('keydown', cancelEnter);
+    try {
+      el.focus();
+      await userEvent.keyboard('{Enter}');
+      keydown(el, 'Enter');
+      await tick();
+      expect(el.checked).toBe(false);
+    } finally {
+      document.removeEventListener('keydown', cancelEnter);
+    }
+    expect(keydown(el, 'Enter').defaultPrevented).toBe(false);
+    expect(el.checked).toBe(true);
+  });
+
+  test('a Space keyup without a Space keydown on the switch does not toggle', async () => {
+    const el = mount<NeuSwitch>('<neu-switch>N</neu-switch>');
+    el.focus();
+    keyup(el, ' ');
+    await tick();
+    expect(el.checked).toBe(false);
+    keydown(el, ' ');
+    el.blur();
+    keyup(el, ' ');
+    await tick();
+    expect(el.checked).toBe(false);
+  });
+
+  test('a keyup listener that calls preventDefault stops the Space toggle', async () => {
+    const el = mount<NeuSwitch>('<neu-switch>N</neu-switch>');
+    const events: string[] = [];
+    el.addEventListener('keyup', (event) => event.preventDefault());
+    el.addEventListener('change', () => events.push('change'));
+    keydown(el, ' ');
+    keyup(el, ' ');
+    await tick();
+    expect(el.checked).toBe(false);
+    expect(events).toEqual([]);
   });
 
   test('a repeated Enter keydown does not toggle', () => {

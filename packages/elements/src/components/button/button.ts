@@ -1,3 +1,5 @@
+import { afterDispatch } from '../../core/dom.js';
+import { markSubmitAttempt } from '../../core/form-control.js';
 import { NeuElement } from '../../core/neu-element.js';
 import { buttonDef } from './button.def.js';
 
@@ -15,7 +17,7 @@ export class NeuButton extends NeuElement {
     super();
     this.internals.role = 'button';
     this.addEventListener('click', (event) => this.onClickCapture(event), { capture: true });
-    this.addEventListener('click', () => this.onClick());
+    this.addEventListener('click', (event) => this.onClick(event));
     this.addEventListener('keydown', (event) => this.onKeyDown(event));
     this.addEventListener('keyup', (event) => this.onKeyUp(event));
     this.addEventListener('blur', () => this.toggleState('pressed', false));
@@ -36,18 +38,27 @@ export class NeuButton extends NeuElement {
     event.stopImmediatePropagation();
   }
 
-  private onClick(): void {
-    const form = this.internals.form;
-    if (!form) return;
-    if (this.props.type === 'submit') form.requestSubmit();
-    else if (this.props.type === 'reset') form.reset();
+  /** Like a native button: submit or reset once the click has dispatched, unless it was cancelled. */
+  private onClick(event: Event): void {
+    afterDispatch(event, () => {
+      const form = this.internals.form;
+      if (event.defaultPrevented || !form) return;
+      if (this.props.type === 'submit') {
+        markSubmitAttempt(form);
+        form.requestSubmit();
+      } else if (this.props.type === 'reset') {
+        form.reset();
+      }
+    });
   }
 
   private onKeyDown(event: KeyboardEvent): void {
     if (this.inactive) return;
     if (event.key === 'Enter') {
-      event.preventDefault();
-      this.click();
+      // Not cancelled here, so a handler further up can still cancel the activation.
+      afterDispatch(event, () => {
+        if (!event.defaultPrevented && !this.inactive) this.click();
+      });
     } else if (event.key === ' ') {
       event.preventDefault();
       this.toggleState('pressed', true);
@@ -57,7 +68,9 @@ export class NeuButton extends NeuElement {
   private onKeyUp(event: KeyboardEvent): void {
     if (event.key !== ' ' || !this.internals.states.has('pressed')) return;
     this.toggleState('pressed', false);
-    if (!this.inactive) this.click();
+    afterDispatch(event, () => {
+      if (!event.defaultPrevented && !this.inactive) this.click();
+    });
   }
 
   protected override update(changed: ReadonlySet<string>): void {

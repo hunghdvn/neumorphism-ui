@@ -1,4 +1,4 @@
-import { dispatch } from '../../core/dom.js';
+import { afterDispatch, dispatch } from '../../core/dom.js';
 import { FormControlElement } from '../../core/form-control.js';
 import { requiredCheckboxMessage } from '../../core/validation.js';
 import { switchDef } from './switch.def.js';
@@ -20,9 +20,8 @@ export class NeuSwitch extends FormControlElement {
     this.internals.role = 'switch';
     this.addEventListener('click', (event) => this.onClick(event));
     this.addEventListener('keydown', (event) => this.onKeyDown(event));
-    this.addEventListener('keyup', (event) => {
-      if (event.key === ' ') this.click();
-    });
+    this.addEventListener('keyup', (event) => this.onKeyUp(event));
+    this.addEventListener('blur', () => this.toggleState('pressed', false));
   }
 
   get checked(): boolean {
@@ -41,22 +40,14 @@ export class NeuSwitch extends FormControlElement {
   }
 
   /**
-   * Native checkbox order: flip now, let click listeners see it, then input + change.
-   * They fire from a one-shot bubble listener on window for this same click, so they land within
-   * the click's dispatch, after the listeners on the way up. Not a microtask: for a real (trusted)
-   * click the microtask queue drains between listeners. A click that never reaches window
-   * (stopPropagation, bubbles: false) is finished by the timeout fallback instead.
+   * Native checkbox order: flip now, let click listeners see it, then input + change once the
+   * click has finished dispatching (within it, unless propagation was stopped before window).
    */
   private onClick(event: Event): void {
     const before = this.current;
     this.dirty = true;
     this.setCurrent(!before);
-    let done = false;
-    const finish = () => {
-      if (done) return;
-      done = true;
-      window.removeEventListener('click', onWindowClick);
-      clearTimeout(fallback);
+    afterDispatch(event, () => {
       if (event.defaultPrevented) {
         this.setCurrent(before);
       } else if (this.isConnected && this.current === !before) {
@@ -64,21 +55,28 @@ export class NeuSwitch extends FormControlElement {
         dispatch(this, 'input');
         dispatch(this, 'change');
       }
-    };
-    const onWindowClick = (other: Event) => {
-      if (other === event) finish();
-    };
-    window.addEventListener('click', onWindowClick);
-    const fallback = setTimeout(finish, 0);
+    });
   }
 
   private onKeyDown(event: KeyboardEvent): void {
     if (event.key === ' ') {
       event.preventDefault();
-    } else if (event.key === 'Enter') {
-      event.preventDefault();
-      if (!event.repeat) this.click();
+      this.toggleState('pressed', true);
+    } else if (event.key === 'Enter' && !event.repeat) {
+      // Not cancelled here, so a handler further up can still cancel the toggle.
+      afterDispatch(event, () => {
+        if (!event.defaultPrevented) this.click();
+      });
     }
+  }
+
+  /** Like a native checkbox, Space toggles on keyup only after its own keydown. */
+  private onKeyUp(event: KeyboardEvent): void {
+    if (event.key !== ' ' || !this.internals.states.has('pressed')) return;
+    this.toggleState('pressed', false);
+    afterDispatch(event, () => {
+      if (!event.defaultPrevented) this.click();
+    });
   }
 
   private setCurrent(value: boolean): void {

@@ -2,7 +2,7 @@ import { afterEach, describe, expect, test } from 'vitest';
 import { userEvent } from 'vitest/browser';
 import '../../button.js';
 import { NeuTextField } from '../../text-field.js';
-import { axeViolations, mount, mountForm, tick } from '../../test-utils/helpers.js';
+import { axeViolations, keydown, mount, mountForm, tick } from '../../test-utils/helpers.js';
 
 afterEach(() => {
   document.body.innerHTML = '';
@@ -140,6 +140,30 @@ describe('neu-text-field', () => {
     await userEvent.keyboard('{Enter}');
     await tick();
     expect(submitted).toBe(0);
+  });
+
+  test('Enter submits once the keydown has finished dispatching, not a task later', () => {
+    const form = mountForm(
+      '<neu-text-field name="q" label="Search"></neu-text-field><neu-button type="submit">Go</neu-button>',
+    );
+    let submitted = 0;
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+      submitted++;
+    });
+    const el = form.querySelector('neu-text-field') as NeuTextField;
+    const cancelEnter = (event: KeyboardEvent) => {
+      if (event.key === 'Enter') event.preventDefault();
+    };
+    document.addEventListener('keydown', cancelEnter);
+    try {
+      keydown(inputOf(el), 'Enter');
+      expect(submitted).toBe(0);
+    } finally {
+      document.removeEventListener('keydown', cancelEnter);
+    }
+    keydown(inputOf(el), 'Enter');
+    expect(submitted).toBe(1);
   });
 
   test('Enter on an invalid required field reveals user-invalid', async () => {

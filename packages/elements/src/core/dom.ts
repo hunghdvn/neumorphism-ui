@@ -14,3 +14,28 @@ export function setOptionalAttribute(el: Element | null, name: string, value: st
 export function dispatch(target: EventTarget, type: string): void {
   target.dispatchEvent(new Event(type, { bubbles: true, composed: true }));
 }
+
+/**
+ * Runs `run` once `event` has finished dispatching — after every listener, including those on
+ * window — or on the next task if propagation was stopped before window. Runs exactly once.
+ *
+ * A one-shot bubble listener on window catches this same event object, so `run` lands within the
+ * dispatch, after the listeners on the way up, and sees their preventDefault(). Not a microtask:
+ * for a trusted event the microtask queue drains between listeners. An event that never reaches
+ * window (stopPropagation, bubbles: false, a disconnected target) is finished by the timeout.
+ */
+export function afterDispatch(event: Event, run: () => void): void {
+  let done = false;
+  const finish = () => {
+    if (done) return;
+    done = true;
+    window.removeEventListener(event.type, onWindow);
+    clearTimeout(fallback);
+    run();
+  };
+  const onWindow = (other: Event) => {
+    if (other === event) finish();
+  };
+  window.addEventListener(event.type, onWindow);
+  const fallback = setTimeout(finish, 0);
+}

@@ -1,4 +1,4 @@
-import { dispatch, setOptionalAttribute, setText } from '../../core/dom.js';
+import { afterDispatch, dispatch, setOptionalAttribute, setText } from '../../core/dom.js';
 import { FormControlElement, implicitSubmit } from '../../core/form-control.js';
 import { copyValidity } from '../../core/validation.js';
 import { textFieldDef, type TextFieldProps } from './text-field.def.js';
@@ -88,9 +88,9 @@ export class NeuTextField extends FormControlElement {
       if (event.key !== 'Enter' || event.isComposing) return;
       // Like a native input: submit once the keydown has finished dispatching, unless a listener
       // (on the host or further up) cancelled it.
-      setTimeout(() => {
+      afterDispatch(event, () => {
         if (!event.defaultPrevented) implicitSubmit(this.internals.form);
-      }, 0);
+      });
     });
   }
 
