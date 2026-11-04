@@ -1,4 +1,5 @@
 import { buttonDef } from './components/button/button.def.js';
+import { iconDef } from './components/icon/icon.def.js';
 import { switchDef } from './components/switch/switch.def.js';
 import { textFieldDef } from './components/text-field/text-field.def.js';
 import type { ComponentDef } from './core/define.js';
@@ -21,6 +22,7 @@ export const definitions: ReadonlyMap<string, ComponentDef> = /* @__PURE__ */ ne
   ComponentDef
 >([
   [buttonDef.tag, buttonDef],
+  [iconDef.tag, iconDef],
   [switchDef.tag, switchDef],
   [textFieldDef.tag, textFieldDef],
 ]);

@@ -196,6 +196,125 @@
     },
     {
       "kind": "javascript-module",
+      "path": "dist/icon.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "NeuIcon",
+          "tagName": "neu-icon",
+          "customElement": true,
+          "description": "A vector icon from the built-in set or a registered icon library.",
+          "attributes": [
+            {
+              "name": "name",
+              "fieldName": "name",
+              "type": {
+                "text": "string"
+              },
+              "default": "''"
+            },
+            {
+              "name": "library",
+              "fieldName": "library",
+              "type": {
+                "text": "string"
+              },
+              "default": "'system'"
+            },
+            {
+              "name": "label",
+              "fieldName": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "''"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "name",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "name",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "library",
+              "type": {
+                "text": "string"
+              },
+              "default": "'system'",
+              "attribute": "library",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "label",
+              "reflects": true
+            }
+          ],
+          "events": [],
+          "slots": [],
+          "cssParts": [
+            {
+              "name": "svg",
+              "description": "The rendered SVG element."
+            }
+          ],
+          "cssProperties": [
+            {
+              "name": "--neu-bg",
+              "description": "Surface colour; shadows and text are derived from it."
+            },
+            {
+              "name": "--neu-accent",
+              "description": "Accent colour."
+            },
+            {
+              "name": "--neu-distance",
+              "description": "Shadow distance for the md size."
+            },
+            {
+              "name": "--neu-intensity",
+              "description": "Shadow strength multiplier."
+            },
+            {
+              "name": "--neu-radius",
+              "description": "Corner radius for the md size."
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "NeuIcon",
+          "declaration": {
+            "name": "NeuIcon",
+            "module": "dist/icon.js"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "neu-icon",
+          "declaration": {
+            "name": "NeuIcon",
+            "module": "dist/icon.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "dist/switch.js",
       "declarations": [
         {

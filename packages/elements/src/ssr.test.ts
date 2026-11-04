@@ -24,6 +24,7 @@ const cases: Case[] = [
     light: '',
     ref: 'input',
   },
+  { tag: 'neu-icon', attrs: { name: 'check', label: 'Done' }, light: '', ref: '.box' },
 ];
 
 function attributeText(attrs: Record<string, string>): string {
@@ -74,18 +75,21 @@ describe('SSR parity', () => {
 
   test('server-rendered disabled controls look disabled before their definitions run', () => {
     // The same server markup under tag names that are never defined, so nothing upgrades.
-    const looks = cases.map((c) => {
-      const markup = ssrMarkup({ ...c, attrs: { ...c.attrs, disabled: '' } });
-      const probe = `${c.tag}-not-defined`;
-      document.body.setHTMLUnsafe(markup.replaceAll(c.tag, probe));
-      const el = document.body.querySelector(probe)!;
-      const part = (selector: string) => getComputedStyle(el.shadowRoot!.querySelector(selector)!);
-      const look =
-        c.tag === 'neu-button'
-          ? part('.base').boxShadow
-          : part(c.tag === 'neu-switch' ? '.base' : '.control').opacity;
-      return [c.tag, getComputedStyle(el).cursor, look];
-    });
+    const looks = cases
+      .filter((c) => c.tag !== 'neu-icon')
+      .map((c) => {
+        const markup = ssrMarkup({ ...c, attrs: { ...c.attrs, disabled: '' } });
+        const probe = `${c.tag}-not-defined`;
+        document.body.setHTMLUnsafe(markup.replaceAll(c.tag, probe));
+        const el = document.body.querySelector(probe)!;
+        const part = (selector: string) =>
+          getComputedStyle(el.shadowRoot!.querySelector(selector)!);
+        const look =
+          c.tag === 'neu-button'
+            ? part('.base').boxShadow
+            : part(c.tag === 'neu-switch' ? '.base' : '.control').opacity;
+        return [c.tag, getComputedStyle(el).cursor, look];
+      });
     expect(looks).toEqual([
       ['neu-button', 'not-allowed', 'none'],
       ['neu-switch', 'not-allowed', '0.55'],
@@ -114,13 +118,19 @@ describe('SSR parity', () => {
     expect(renderDSD('constructor', {})).toBe('');
   });
 
-  test('definitions lists the phase-1 tags', () => {
-    expect([...definitions.keys()].sort()).toEqual(['neu-button', 'neu-switch', 'neu-text-field']);
+  test('definitions lists the registered tags', () => {
+    expect([...definitions.keys()].sort()).toEqual([
+      'neu-button',
+      'neu-icon',
+      'neu-switch',
+      'neu-text-field',
+    ]);
   });
 
   test('formDefaultProp names the property that holds a form control default', () => {
     expect([...definitions.values()].map((def) => [def.tag, formDefaultProp(def)])).toEqual([
       ['neu-button', undefined],
+      ['neu-icon', undefined],
       ['neu-switch', 'defaultChecked'],
       ['neu-text-field', 'defaultValue'],
     ]);

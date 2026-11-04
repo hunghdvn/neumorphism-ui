@@ -33,6 +33,7 @@ const core = [
 
 const components = [
   ['neu-button', './button.js', 'NeuButton'],
+  ['neu-icon', './icon.js', 'NeuIcon'],
   ['neu-switch', './switch.js', 'NeuSwitch'],
   ['neu-text-field', './text-field.js', 'NeuTextField'],
 ];

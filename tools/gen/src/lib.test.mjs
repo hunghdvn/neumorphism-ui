@@ -66,11 +66,11 @@ describe('buildManifest', () => {
     const manifest = buildManifest(defs);
     expect(manifest.schemaVersion).toBe('2.1.0');
     const tags = manifest.modules.map((m) => m.declarations[0].tagName);
-    expect(tags).toEqual(['neu-button', 'neu-switch', 'neu-text-field']);
+    expect(tags).toEqual(['neu-button', 'neu-icon', 'neu-switch', 'neu-text-field']);
     for (const mod of manifest.modules) {
       expect(mod.exports.some((e) => e.kind === 'custom-element-definition')).toBe(true);
     }
-    const sw = manifest.modules[1].declarations[0];
+    const sw = manifest.modules[2].declarations[0];
     expect(sw.attributes.find((a) => a.name === 'checked').fieldName).toBe('defaultChecked');
   });
 });

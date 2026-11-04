@@ -157,6 +157,7 @@
 
   /* §5.6: hide until registered, but keep the final box. Components undo this from :host. */
   neu-button:not(:defined),
+  neu-icon:not(:defined),
   neu-switch:not(:defined),
   neu-text-field:not(:defined) {
     visibility: hidden;
@@ -164,6 +165,11 @@
   neu-button:not(:defined) {
     display: inline-block;
     min-block-size: 2.5rem;
+  }
+  neu-icon:not(:defined) {
+    display: inline-block;
+    inline-size: 1em;
+    block-size: 1em;
   }
   neu-switch:not(:defined) {
     display: inline-flex;
