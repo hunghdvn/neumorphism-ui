@@ -69,6 +69,7 @@ describe('buildManifest', () => {
     expect(tags).toEqual([
       'neu-button',
       'neu-button-group',
+      'neu-divider',
       'neu-icon',
       'neu-icon-button',
       'neu-surface',
@@ -78,7 +79,8 @@ describe('buildManifest', () => {
     for (const mod of manifest.modules) {
       expect(mod.exports.some((e) => e.kind === 'custom-element-definition')).toBe(true);
     }
-    const sw = manifest.modules[2].declarations[0];
+    const sw = manifest.modules.find((m) => m.declarations[0].tagName === 'neu-switch')
+      .declarations[0];
     expect(sw.attributes.find((a) => a.name === 'checked').fieldName).toBe('defaultChecked');
   });
 });

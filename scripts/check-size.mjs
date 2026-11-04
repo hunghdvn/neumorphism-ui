@@ -34,6 +34,7 @@ const core = [
 const components = [
   ['neu-button', './button.js', 'NeuButton'],
   ['neu-button-group', './button-group.js', 'NeuButtonGroup'],
+  ['neu-divider', './divider.js', 'NeuDivider'],
   ['neu-icon', './icon.js', 'NeuIcon'],
   ['neu-icon-button', './icon-button.js', 'NeuIconButton'],
   ['neu-surface', './surface.js', 'NeuSurface'],

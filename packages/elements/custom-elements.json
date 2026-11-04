@@ -302,6 +302,89 @@
     },
     {
       "kind": "javascript-module",
+      "path": "dist/divider.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "NeuDivider",
+          "tagName": "neu-divider",
+          "customElement": true,
+          "description": "A thin engraved line that separates content.",
+          "attributes": [
+            {
+              "name": "orientation",
+              "fieldName": "orientation",
+              "type": {
+                "text": "'horizontal' | 'vertical'"
+              },
+              "default": "'horizontal'"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "orientation",
+              "type": {
+                "text": "'horizontal' | 'vertical'"
+              },
+              "default": "'horizontal'",
+              "attribute": "orientation",
+              "reflects": true
+            }
+          ],
+          "events": [],
+          "slots": [],
+          "cssParts": [
+            {
+              "name": "base",
+              "description": "The engraved line."
+            }
+          ],
+          "cssProperties": [
+            {
+              "name": "--neu-bg",
+              "description": "Surface colour; shadows and text are derived from it."
+            },
+            {
+              "name": "--neu-accent",
+              "description": "Accent colour."
+            },
+            {
+              "name": "--neu-distance",
+              "description": "Shadow distance for the md size."
+            },
+            {
+              "name": "--neu-intensity",
+              "description": "Shadow strength multiplier."
+            },
+            {
+              "name": "--neu-radius",
+              "description": "Corner radius for the md size."
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "NeuDivider",
+          "declaration": {
+            "name": "NeuDivider",
+            "module": "dist/divider.js"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "neu-divider",
+          "declaration": {
+            "name": "NeuDivider",
+            "module": "dist/divider.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "dist/icon.js",
       "declarations": [
         {

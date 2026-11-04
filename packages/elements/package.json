@@ -28,6 +28,10 @@
       "types": "./dist/icon-button.d.ts",
       "default": "./dist/icon-button.js"
     },
+    "./divider.js": {
+      "types": "./dist/divider.d.ts",
+      "default": "./dist/divider.js"
+    },
     "./icon.js": {
       "types": "./dist/icon.d.ts",
       "default": "./dist/icon.js"
@@ -63,6 +67,7 @@
   "sideEffects": [
     "./dist/button.js",
     "./dist/button-group.js",
+    "./dist/divider.js",
     "./dist/icon.js",
     "./dist/icon-button.js",
     "./dist/surface.js",

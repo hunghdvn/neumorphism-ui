@@ -36,6 +36,7 @@ const cases: Case[] = [
     light: '<p>Inside</p>',
     ref: '.base',
   },
+  { tag: 'neu-divider', attrs: { orientation: 'vertical' }, light: '', ref: '.base' },
   { tag: 'neu-icon', attrs: { name: 'check', label: 'Done' }, light: '', ref: '.box' },
   { tag: 'neu-icon-button', attrs: { icon: 'x', label: 'Close' }, light: '', ref: '.icon' },
 ];
@@ -89,9 +90,7 @@ describe('SSR parity', () => {
   test('server-rendered disabled controls look disabled before their definitions run', () => {
     // The same server markup under tag names that are never defined, so nothing upgrades.
     const looks = cases
-      .filter(
-        (c) => c.tag !== 'neu-icon' && c.tag !== 'neu-button-group' && c.tag !== 'neu-surface',
-      )
+      .filter((c) => 'disabled' in definitions.get(c.tag)!.props)
       .map((c) => {
         const markup = ssrMarkup({ ...c, attrs: { ...c.attrs, disabled: '' } });
         const probe = `${c.tag}-not-defined`;
@@ -137,6 +136,7 @@ describe('SSR parity', () => {
     expect([...definitions.keys()].sort()).toEqual([
       'neu-button',
       'neu-button-group',
+      'neu-divider',
       'neu-icon',
       'neu-icon-button',
       'neu-surface',
@@ -149,6 +149,7 @@ describe('SSR parity', () => {
     expect([...definitions.values()].map((def) => [def.tag, formDefaultProp(def)])).toEqual([
       ['neu-button', undefined],
       ['neu-button-group', undefined],
+      ['neu-divider', undefined],
       ['neu-icon', undefined],
       ['neu-icon-button', undefined],
       ['neu-surface', undefined],

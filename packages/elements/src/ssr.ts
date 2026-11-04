@@ -1,5 +1,6 @@
 import { buttonDef } from './components/button/button.def.js';
 import { buttonGroupDef } from './components/button-group/button-group.def.js';
+import { dividerDef } from './components/divider/divider.def.js';
 import { iconDef } from './components/icon/icon.def.js';
 import { iconButtonDef } from './components/icon-button/icon-button.def.js';
 import { surfaceDef } from './components/surface/surface.def.js';
@@ -26,6 +27,7 @@ export const definitions: ReadonlyMap<string, ComponentDef> = /* @__PURE__ */ ne
 >([
   [buttonDef.tag, buttonDef],
   [buttonGroupDef.tag, buttonGroupDef],
+  [dividerDef.tag, dividerDef],
   [iconDef.tag, iconDef],
   [iconButtonDef.tag, iconButtonDef],
   [surfaceDef.tag, surfaceDef],

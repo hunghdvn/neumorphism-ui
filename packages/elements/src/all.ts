@@ -1,5 +1,6 @@
 export * from './button.js';
 export * from './button-group.js';
+export * from './divider.js';
 export * from './icon.js';
 export * from './icon-button.js';
 export * from './icons.js';
