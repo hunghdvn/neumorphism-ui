@@ -157,6 +157,7 @@
   }
 
   /* §5.6: hide until registered, but keep the final box. Components undo this from :host. */
+  neu-avatar:not(:defined),
   neu-badge:not(:defined),
   neu-button:not(:defined),
   neu-divider:not(:defined),
@@ -166,6 +167,11 @@
   neu-switch:not(:defined),
   neu-text-field:not(:defined) {
     visibility: hidden;
+  }
+  neu-avatar:not(:defined) {
+    display: inline-block;
+    inline-size: 2.5rem;
+    block-size: 2.5rem;
   }
   neu-badge:not(:defined) {
     display: inline-block;

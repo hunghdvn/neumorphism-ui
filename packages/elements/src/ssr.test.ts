@@ -40,6 +40,17 @@ const cases: Case[] = [
   { tag: 'neu-divider', attrs: { orientation: 'vertical' }, light: '', ref: '.base' },
   { tag: 'neu-icon', attrs: { name: 'check', label: 'Done' }, light: '', ref: '.box' },
   { tag: 'neu-icon-button', attrs: { icon: 'x', label: 'Close' }, light: '', ref: '.icon' },
+  {
+    tag: 'neu-avatar',
+    attrs: {
+      src: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==',
+      initials: 'HD',
+      label: 'Hung',
+      size: 'lg',
+    },
+    light: '',
+    ref: '.image',
+  },
   { tag: 'neu-spinner', attrs: { label: 'Saving', size: 'lg' }, light: '', ref: '.indicator' },
 ];
 
@@ -136,6 +147,7 @@ describe('SSR parity', () => {
 
   test('definitions lists the registered tags', () => {
     expect([...definitions.keys()].sort()).toEqual([
+      'neu-avatar',
       'neu-badge',
       'neu-button',
       'neu-button-group',
@@ -151,6 +163,7 @@ describe('SSR parity', () => {
 
   test('formDefaultProp names the property that holds a form control default', () => {
     expect([...definitions.values()].map((def) => [def.tag, formDefaultProp(def)])).toEqual([
+      ['neu-avatar', undefined],
       ['neu-badge', undefined],
       ['neu-button', undefined],
       ['neu-button-group', undefined],

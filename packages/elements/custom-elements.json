@@ -4,6 +4,177 @@
   "modules": [
     {
       "kind": "javascript-module",
+      "path": "dist/avatar.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "NeuAvatar",
+          "tagName": "neu-avatar",
+          "customElement": true,
+          "description": "A user picture that falls back to initials, then to a generic user icon.",
+          "attributes": [
+            {
+              "name": "src",
+              "fieldName": "src",
+              "type": {
+                "text": "string"
+              },
+              "default": "''"
+            },
+            {
+              "name": "label",
+              "fieldName": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "''"
+            },
+            {
+              "name": "initials",
+              "fieldName": "initials",
+              "type": {
+                "text": "string"
+              },
+              "default": "''"
+            },
+            {
+              "name": "size",
+              "fieldName": "size",
+              "type": {
+                "text": "'sm' | 'md' | 'lg'"
+              },
+              "default": "'md'"
+            },
+            {
+              "name": "shape",
+              "fieldName": "shape",
+              "type": {
+                "text": "'circle' | 'rounded'"
+              },
+              "default": "'circle'"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "src",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "src",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "label",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "initials",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "initials",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "size",
+              "type": {
+                "text": "'sm' | 'md' | 'lg'"
+              },
+              "default": "'md'",
+              "attribute": "size",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "shape",
+              "type": {
+                "text": "'circle' | 'rounded'"
+              },
+              "default": "'circle'",
+              "attribute": "shape",
+              "reflects": true
+            }
+          ],
+          "events": [],
+          "slots": [],
+          "cssParts": [
+            {
+              "name": "base",
+              "description": "The sized, raised wrapper."
+            },
+            {
+              "name": "image",
+              "description": "The picture."
+            },
+            {
+              "name": "initials",
+              "description": "The initials shown when there is no picture."
+            },
+            {
+              "name": "icon",
+              "description": "Wrapper around the fallback user icon."
+            },
+            {
+              "name": "svg",
+              "description": "The rendered fallback SVG element."
+            }
+          ],
+          "cssProperties": [
+            {
+              "name": "--neu-bg",
+              "description": "Surface colour; shadows and text are derived from it."
+            },
+            {
+              "name": "--neu-accent",
+              "description": "Accent colour."
+            },
+            {
+              "name": "--neu-distance",
+              "description": "Shadow distance for the md size."
+            },
+            {
+              "name": "--neu-intensity",
+              "description": "Shadow strength multiplier."
+            },
+            {
+              "name": "--neu-radius",
+              "description": "Corner radius for the md size."
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "NeuAvatar",
+          "declaration": {
+            "name": "NeuAvatar",
+            "module": "dist/avatar.js"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "neu-avatar",
+          "declaration": {
+            "name": "NeuAvatar",
+            "module": "dist/avatar.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "dist/badge.js",
       "declarations": [
         {

@@ -67,6 +67,7 @@ describe('buildManifest', () => {
     expect(manifest.schemaVersion).toBe('2.1.0');
     const tags = manifest.modules.map((m) => m.declarations[0].tagName);
     expect(tags).toEqual([
+      'neu-avatar',
       'neu-badge',
       'neu-button',
       'neu-button-group',
