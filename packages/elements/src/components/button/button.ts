@@ -50,6 +50,13 @@ export class NeuButton extends NeuElement {
       if (event.defaultPrevented || !form) return;
       if (this.props.type === 'submit') {
         markSubmitAttempt(form);
+        // requestSubmit() without an argument reports no submitter; claim it for this host.
+        form.addEventListener(
+          'submit',
+          (submit) =>
+            Object.defineProperty(submit, 'submitter', { value: this, configurable: true }),
+          { once: true, capture: true },
+        );
         form.requestSubmit();
       } else if (this.props.type === 'reset') {
         form.reset();

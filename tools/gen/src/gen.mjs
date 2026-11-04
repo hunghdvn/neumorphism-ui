@@ -1,8 +1,14 @@
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { definitions } from '@neu-ui/elements/ssr.js';
-import { buildManifest, buildReactIndex, buildReactWrapper, tagToFileBase } from './lib.mjs';
+import {
+  buildManifest,
+  buildReactIndex,
+  buildReactWrapper,
+  findOrphans,
+  tagToFileBase,
+} from './lib.mjs';
 
 const check = process.argv.includes('--check');
 const root = fileURLToPath(new URL('../../../', import.meta.url));
@@ -28,6 +34,13 @@ for (const [relative, content] of outputs) {
     writeFileSync(file, content);
     console.log(`wrote ${relative}`);
   }
+}
+
+const generatedDir = 'packages/react/src/generated';
+if (check && existsSync(join(root, generatedDir))) {
+  const known = new Set(outputs.keys());
+  const orphans = findOrphans(readdirSync(join(root, generatedDir)), generatedDir, known);
+  stale.push(...orphans.map((file) => `${file} (not a generated output)`));
 }
 
 if (stale.length > 0) {

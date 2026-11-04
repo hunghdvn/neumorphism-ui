@@ -5,6 +5,7 @@ import {
   buildReactIndex,
   buildReactWrapper,
   eventToReactProp,
+  findOrphans,
   propTsType,
   tagToClassName,
   tagToFileBase,
@@ -78,4 +79,12 @@ test('buildReactIndex re-exports every wrapper', () => {
   expect(buildReactIndex(defs)).toContain(
     "export { NeuTextField, type NeuTextFieldProps } from './text-field.js';",
   );
+});
+
+describe('findOrphans', () => {
+  test('lists files in generated/ that are not outputs', () => {
+    const outputs = new Set(['packages/react/src/generated/index.ts']);
+    const found = findOrphans(['index.ts', 'orphan.ts'], 'packages/react/src/generated', outputs);
+    expect(found).toEqual(['packages/react/src/generated/orphan.ts']);
+  });
 });

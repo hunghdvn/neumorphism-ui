@@ -22,6 +22,12 @@ test('a text field delegates focus and pre-fills its input', () => {
   expect(html).toContain('>Email</span>');
 });
 
+test('a text field escapes a hostile label', () => {
+  const html = renderToString(h(NeuTextField, { label: '"><script>x</script>' }));
+  expect(html).toContain('&lt;script&gt;');
+  expect(html).not.toContain('<script>x');
+});
+
 test('a button forwards its variant and escapes hostile values', () => {
   const html = renderToString(h(NeuButton, { variant: 'primary', title: '"><script>' }, 'Save'));
   expect(html).toContain('variant="primary"');

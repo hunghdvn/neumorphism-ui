@@ -1,6 +1,7 @@
 import { afterEach, describe, expect, test } from 'vitest';
 import { userEvent } from 'vitest/browser';
 import { NeuButton } from '../../button.js';
+import { NeuTextField } from '../../text-field.js';
 import {
   axeViolations,
   internalsOf,
@@ -151,6 +152,34 @@ describe('neu-button', () => {
     await userEvent.click(reset!);
     await userEvent.click(noop!);
     expect(events).toEqual(['submit', 'reset']);
+  });
+
+  test('submit triggered by a neu-button exposes it as SubmitEvent.submitter', async () => {
+    const form = mountForm('<neu-button type="submit">Go</neu-button>');
+    const button = form.querySelector('neu-button') as NeuButton;
+    const submitters: unknown[] = [];
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+      submitters.push((event as SubmitEvent).submitter);
+    });
+    await userEvent.click(button);
+    expect(submitters).toEqual([button]);
+  });
+
+  test('implicit submission from a text field exposes the default button as submitter', async () => {
+    const form = mountForm(
+      '<neu-text-field label="Q" name="q"></neu-text-field><neu-button type="submit">Go</neu-button>',
+    );
+    const button = form.querySelector('neu-button') as NeuButton;
+    const submitters: unknown[] = [];
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+      submitters.push((event as SubmitEvent).submitter);
+    });
+    (form.querySelector('neu-text-field') as NeuTextField).focus();
+    await userEvent.keyboard('{Enter}');
+    await tick();
+    expect(submitters).toEqual([button]);
   });
 
   test('el.click() on a submit button submits before it returns', () => {

@@ -17,6 +17,9 @@ const label = { type: 'string' } as const satisfies PropDecl;
 const max = { type: 'number', default: 100 } as const satisfies PropDecl;
 const disabled = { type: 'boolean' } as const satisfies PropDecl;
 
+// @ts-expect-error values requires a default
+export const enumWithoutDefault = { type: 'string', values: ['a', 'b'] } satisfies PropDecl;
+
 describe('attributeName', () => {
   test('converts camelCase to kebab-case', () => {
     expect(attributeName('helpText', label)).toBe('help-text');

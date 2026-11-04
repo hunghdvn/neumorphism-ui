@@ -40,6 +40,35 @@ describe('themes (§5.5)', () => {
   });
 });
 
+describe('dark media block', () => {
+  test('the dark media block sets the dark defaults', () => {
+    const rules: CSSStyleRule[] = [];
+    const walk = (list: CSSRuleList, inDark: boolean): void => {
+      for (const rule of Array.from(list)) {
+        if (rule instanceof CSSMediaRule) {
+          walk(rule.cssRules, inDark || rule.conditionText.includes('prefers-color-scheme: dark'));
+        } else if (rule instanceof CSSStyleRule) {
+          if (inDark) rules.push(rule);
+          walk(rule.cssRules, inDark);
+        } else if ('cssRules' in rule) {
+          walk((rule as CSSGroupingRule).cssRules, inDark);
+        }
+      }
+    };
+    for (const sheet of Array.from(document.styleSheets)) walk(sheet.cssRules, false);
+    const root = rules.find((rule) =>
+      /^:root:not\(\[data-neu-theme=.light.\]\)$/.test(rule.selectorText),
+    );
+    expect(root, 'dark :root rule').toBeDefined();
+    const get = (name: string) => root!.style.getPropertyValue(name).trim();
+    expect(get('--neu-bg')).toBe('#2b2f36');
+    expect(get('--_neu-shade')).toBe('45%');
+    expect(get('--_neu-light')).toBe('6%');
+    expect(get('--_neu-fg-mix')).toBe('42%');
+    expect(get('--_neu-fg-muted-mix')).toBe('24%');
+  });
+});
+
 describe('derived values (§5.2, §5.3)', () => {
   test('shadows are recomputed inside .neu-surface with a different background', () => {
     document.documentElement.setAttribute('data-neu-theme', 'light');

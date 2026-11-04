@@ -105,6 +105,8 @@ describe('SSR parity', () => {
     });
     expect(out).not.toContain('<img');
     expect(out).not.toContain('" onfocus="');
+    expect(out).toContain('&lt;img');
+    expect(out).toContain('&quot;');
   });
 
   test('unknown tags render nothing, including Object.prototype keys', () => {
