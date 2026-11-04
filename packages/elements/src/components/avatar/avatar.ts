@@ -10,17 +10,13 @@ export class NeuAvatar extends NeuElement {
   declare shape: 'circle' | 'rounded';
   private broken = false;
 
-  constructor() {
-    super();
-    this.internals.role = 'img';
-  }
-
   protected override willUpdate(changed: ReadonlySet<string>): void {
     if (changed.has('src')) this.setBroken(false);
   }
 
   protected override rendered(): void {
-    const img = this.ref<HTMLImageElement>('image')!;
+    const img = this.ref<HTMLImageElement>('image');
+    if (!img) return;
     img.addEventListener('error', () => this.setBroken(true));
     // The error event may have fired before this element upgraded; it will not fire again.
     if (img.hasAttribute('src') && img.complete && img.naturalWidth === 0) this.broken = true;
@@ -28,7 +24,13 @@ export class NeuAvatar extends NeuElement {
   }
 
   protected override update(changed: ReadonlySet<string>): void {
-    if (changed.has('label')) this.internals.ariaLabel = String(this.props.label) || null;
+    if (changed.has('label')) {
+      // Like neu-icon: a picture is named by its label, otherwise it is decoration.
+      const label = String(this.props.label);
+      this.internals.role = label ? 'img' : null;
+      this.internals.ariaLabel = label || null;
+      this.internals.ariaHidden = label ? null : 'true';
+    }
     const img = this.ref<HTMLImageElement>('image');
     if (!img) return;
     const src = String(this.props.src);

@@ -51,6 +51,44 @@ describe('neu-avatar', () => {
     expect(await axeViolations(el)).toEqual([]);
   });
 
+  test('without a label it is decorative, not an unnamed image', async () => {
+    const el = avatar(' initials="HD"');
+    expect(internalsOf(el).role).toBeNull();
+    expect(internalsOf(el).ariaHidden).toBe('true');
+    el.label = 'Hung Do';
+    expect(internalsOf(el).role).toBe('img');
+    expect(internalsOf(el).ariaHidden).toBeNull();
+    el.label = '';
+    expect(internalsOf(el).role).toBeNull();
+    expect(internalsOf(el).ariaLabel).toBeNull();
+    expect(internalsOf(el).ariaHidden).toBe('true');
+    expect(await axeViolations(el)).toEqual([]);
+  });
+
+  test('rendered() tolerates a root without the image', () => {
+    const errors: unknown[] = [];
+    const onError = (event: ErrorEvent) => errors.push(event.error);
+    window.addEventListener('error', onError);
+    Object.defineProperty(document, 'readyState', { configurable: true, get: () => 'loading' });
+    let el: NeuAvatar;
+    try {
+      el = document.createElement('neu-avatar') as NeuAvatar;
+      document.body.append(el);
+      // A declarative root that never got its <img data-ref="image">.
+      const root = el.attachShadow({ mode: 'open' });
+      root.innerHTML = '<span data-ref="base"></span>';
+      document.dispatchEvent(new Event('DOMContentLoaded'));
+    } finally {
+      delete (document as { readyState?: unknown }).readyState;
+      window.removeEventListener('error', onError);
+    }
+    expect(errors).toEqual([]);
+    expect(el.shadowRoot!.adoptedStyleSheets).toHaveLength(1);
+    expect(() => {
+      el.initials = 'HD';
+    }).not.toThrow();
+  });
+
   test('falls back image → initials → icon', async () => {
     const el = avatar(` src="${PNG}" initials="HD"`);
     expect(show(el)).toBe('image');

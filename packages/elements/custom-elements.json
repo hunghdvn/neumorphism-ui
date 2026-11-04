@@ -11,7 +11,7 @@
           "name": "NeuAvatar",
           "tagName": "neu-avatar",
           "customElement": true,
-          "description": "A user picture that falls back to initials, then to a generic user icon.",
+          "description": "A user picture that falls back to initials, then to a generic user icon. With `label` it is an image named by it; without, it is decorative and hidden from assistive technology.",
           "attributes": [
             {
               "name": "src",

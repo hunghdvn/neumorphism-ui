@@ -19,7 +19,8 @@ export const avatarDef = defineComponent({
     return html`<span part="base" class="base" data-ref="base" data-show="${show}"><img part="image" class="image" data-ref="image" alt=""${p.src ? html` src="${p.src}"` : ''}><span part="initials" class="initials" data-ref="initials">${p.initials}</span><span part="icon" class="icon">${unsafeHTML(systemIconSvg('user') ?? '')}</span></span>`;
   },
   docs: {
-    summary: 'A user picture that falls back to initials, then to a generic user icon.',
+    summary:
+      'A user picture that falls back to initials, then to a generic user icon. With `label` it is an image named by it; without, it is decorative and hidden from assistive technology.',
     events: [],
     slots: [],
     parts: [
