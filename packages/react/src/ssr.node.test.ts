@@ -33,3 +33,10 @@ test('a button forwards its variant and escapes hostile values', () => {
   expect(html).toContain('variant="primary"');
   expect(html).not.toContain('"><script>');
 });
+
+test('re-exports registerIconLibrary from the elements package', async () => {
+  const elements = await import('@neu-ui/elements/icons.js');
+  const react = await import('./index.js');
+  expect(typeof react.registerIconLibrary).toBe('function');
+  expect(react.registerIconLibrary).toBe(elements.registerIconLibrary);
+});

@@ -54,6 +54,9 @@ registerIconLibrary('brand', {
 <neu-icon library="brand" name="logo" label="Acme"></neu-icon>
 ```
 
+The name `system` is reserved for the built-in set: registering a library called `system` is
+silently ignored.
+
 `resolve` returns either SVG markup or a URL. Markup is sanitized with an allowlist: no scripts,
 event handlers, animation, `<style>`, `<image>` or `<a>`, and only local `#` hrefs survive.
 

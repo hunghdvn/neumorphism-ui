@@ -19,4 +19,19 @@ import { NeuSwitch, NeuTextField } from '@neu-ui/react';
 <NeuSwitch name="notify" defaultChecked>Notifications</NeuSwitch>;
 ```
 
+## Icon libraries
+
+`NeuIcon` and `NeuIconButton` ship the built-in `system` icons. Register your own library with
+`registerIconLibrary`, re-exported here from `@neu-ui/elements` so you need no second import:
+
+```tsx
+import { NeuIcon, registerIconLibrary } from '@neu-ui/react';
+
+registerIconLibrary('brand', { resolve: (name) => `/icons/${name}.svg` });
+
+<NeuIcon library="brand" name="logo" label="Acme" />;
+```
+
+`system` is reserved; registering a library with that name is ignored.
+
 MIT licensed.
