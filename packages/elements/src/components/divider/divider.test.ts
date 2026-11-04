@@ -36,6 +36,16 @@ describe('neu-divider', () => {
     expect(base(el).getBoundingClientRect().height).toBe(2);
   });
 
+  test('a vertical divider in inline text still shows a line about 1em tall', () => {
+    const p = mount<HTMLElement>(
+      '<p style="font-size:16px">Home <neu-divider orientation="vertical"></neu-divider> About</p>',
+    );
+    const rect = base(p.querySelector('neu-divider')!).getBoundingClientRect();
+    expect(rect.height).toBeGreaterThanOrEqual(16);
+    expect(rect.height).toBeLessThan(40);
+    expect(rect.width).toBe(2);
+  });
+
   test('a vertical divider is as tall as its sibling in a flex row', () => {
     const row = mount<HTMLElement>(
       '<div style="display:flex"><span style="display:block;height:40px">x</span><neu-divider orientation="vertical"></neu-divider></div>',
