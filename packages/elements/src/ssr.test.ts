@@ -25,6 +25,7 @@ const cases: Case[] = [
     ref: 'input',
   },
   { tag: 'neu-icon', attrs: { name: 'check', label: 'Done' }, light: '', ref: '.box' },
+  { tag: 'neu-icon-button', attrs: { icon: 'x', label: 'Close' }, light: '', ref: '.icon' },
 ];
 
 function attributeText(attrs: Record<string, string>): string {
@@ -84,16 +85,16 @@ describe('SSR parity', () => {
         const el = document.body.querySelector(probe)!;
         const part = (selector: string) =>
           getComputedStyle(el.shadowRoot!.querySelector(selector)!);
-        const look =
-          c.tag === 'neu-button'
-            ? part('.base').boxShadow
-            : part(c.tag === 'neu-switch' ? '.base' : '.control').opacity;
+        const look = c.tag.endsWith('button')
+          ? part('.base').boxShadow
+          : part(c.tag === 'neu-switch' ? '.base' : '.control').opacity;
         return [c.tag, getComputedStyle(el).cursor, look];
       });
     expect(looks).toEqual([
       ['neu-button', 'not-allowed', 'none'],
       ['neu-switch', 'not-allowed', '0.55'],
       ['neu-text-field', 'not-allowed', '0.6'],
+      ['neu-icon-button', 'not-allowed', 'none'],
     ]);
   });
 
@@ -122,6 +123,7 @@ describe('SSR parity', () => {
     expect([...definitions.keys()].sort()).toEqual([
       'neu-button',
       'neu-icon',
+      'neu-icon-button',
       'neu-switch',
       'neu-text-field',
     ]);
@@ -131,6 +133,7 @@ describe('SSR parity', () => {
     expect([...definitions.values()].map((def) => [def.tag, formDefaultProp(def)])).toEqual([
       ['neu-button', undefined],
       ['neu-icon', undefined],
+      ['neu-icon-button', undefined],
       ['neu-switch', 'defaultChecked'],
       ['neu-text-field', 'defaultValue'],
     ]);

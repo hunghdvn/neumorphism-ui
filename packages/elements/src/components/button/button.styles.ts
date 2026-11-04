@@ -1,26 +1,30 @@
 import { hostTheme } from '../../core/styles.js';
 
-export const buttonStyles = `${hostTheme}
+/** Look and states shared by every button-like component; sizing is each component's own. */
+export const buttonBaseStyles = `${hostTheme}
 :host { display: inline-block; vertical-align: middle; cursor: pointer; user-select: none; }
 :host(:disabled), :host([disabled]), :host([loading]) { cursor: not-allowed; }
 .base {
   display: inline-flex; align-items: center; justify-content: center;
-  min-block-size: 2.5rem; padding-inline: 1.125rem;
   border-radius: var(--_neu-r);
   background: var(--_neu-bg);
   color: var(--_neu-fg);
-  font: inherit; font-weight: 600; font-size: 0.9375rem; line-height: 1;
   box-shadow: var(--_neu-raised);
   transition: box-shadow var(--_neu-dur) ease, color var(--_neu-dur) ease;
 }
-:host([size='sm']) .base { min-block-size: 2rem; padding-inline: 0.875rem; font-size: 0.8125rem; box-shadow: var(--_neu-raised-sm); }
-:host([size='lg']) .base { min-block-size: 3rem; padding-inline: 1.5rem; font-size: 1.0625rem; }
+:host([size='sm']) .base { box-shadow: var(--_neu-raised-sm); }
 :host([variant='primary']) .base { color: var(--_neu-accent-c); }
 :host([variant='flat']) .base { box-shadow: none; }
 :host([variant='flat']:hover:not(:disabled):not([disabled])) .base { box-shadow: var(--_neu-raised-sm); }
 :host(:active:not(:disabled):not([disabled]):not([loading])) .base, :host(:state(pressed)) .base { box-shadow: var(--_neu-inset-sm); }
 :host(:focus-visible) .base { box-shadow: var(--_neu-raised), var(--_neu-focus); }
 :host(:disabled) .base, :host([disabled]) .base { box-shadow: none; color: var(--_neu-fg-muted); }
+`;
+
+export const buttonStyles = `${buttonBaseStyles}
+.base { min-block-size: 2.5rem; padding-inline: 1.125rem; font: inherit; font-weight: 600; font-size: 0.9375rem; line-height: 1; }
+:host([size='sm']) .base { min-block-size: 2rem; padding-inline: 0.875rem; font-size: 0.8125rem; }
+:host([size='lg']) .base { min-block-size: 3rem; padding-inline: 1.5rem; font-size: 1.0625rem; }
 .prefix, .suffix { display: inline-flex; }
 ::slotted([slot='prefix']) { margin-inline-end: 0.5em; }
 ::slotted([slot='suffix']) { margin-inline-start: 0.5em; }

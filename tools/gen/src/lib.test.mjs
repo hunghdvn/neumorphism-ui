@@ -66,7 +66,13 @@ describe('buildManifest', () => {
     const manifest = buildManifest(defs);
     expect(manifest.schemaVersion).toBe('2.1.0');
     const tags = manifest.modules.map((m) => m.declarations[0].tagName);
-    expect(tags).toEqual(['neu-button', 'neu-icon', 'neu-switch', 'neu-text-field']);
+    expect(tags).toEqual([
+      'neu-button',
+      'neu-icon',
+      'neu-icon-button',
+      'neu-switch',
+      'neu-text-field',
+    ]);
     for (const mod of manifest.modules) {
       expect(mod.exports.some((e) => e.kind === 'custom-element-definition')).toBe(true);
     }

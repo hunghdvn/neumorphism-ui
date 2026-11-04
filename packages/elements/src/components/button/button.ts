@@ -1,10 +1,11 @@
 import { afterDispatch, isActiveInRoot } from '../../core/dom.js';
 import { markSubmitAttempt } from '../../core/form-control.js';
+import type { ComponentDef } from '../../core/define.js';
 import { NeuElement } from '../../core/neu-element.js';
 import { buttonDef } from './button.def.js';
 
 export class NeuButton extends NeuElement {
-  static override def = buttonDef;
+  static override def: ComponentDef = buttonDef;
   /** Form-associated only to reach internals.form; a button contributes no value. */
   static formAssociated = true;
   declare variant: 'default' | 'primary' | 'flat';

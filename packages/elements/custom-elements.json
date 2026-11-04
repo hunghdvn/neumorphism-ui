@@ -294,6 +294,231 @@
     },
     {
       "kind": "javascript-module",
+      "path": "dist/icon-button.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "NeuIconButton",
+          "tagName": "neu-icon-button",
+          "customElement": true,
+          "description": "A raised button that shows an icon instead of a label. Name it with label.",
+          "attributes": [
+            {
+              "name": "icon",
+              "fieldName": "icon",
+              "type": {
+                "text": "string"
+              },
+              "default": "''"
+            },
+            {
+              "name": "library",
+              "fieldName": "library",
+              "type": {
+                "text": "string"
+              },
+              "default": "'system'"
+            },
+            {
+              "name": "label",
+              "fieldName": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "''"
+            },
+            {
+              "name": "shape",
+              "fieldName": "shape",
+              "type": {
+                "text": "'circle' | 'square'"
+              },
+              "default": "'circle'"
+            },
+            {
+              "name": "variant",
+              "fieldName": "variant",
+              "type": {
+                "text": "'default' | 'primary' | 'flat'"
+              },
+              "default": "'default'"
+            },
+            {
+              "name": "size",
+              "fieldName": "size",
+              "type": {
+                "text": "'sm' | 'md' | 'lg'"
+              },
+              "default": "'md'"
+            },
+            {
+              "name": "disabled",
+              "fieldName": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false"
+            },
+            {
+              "name": "type",
+              "fieldName": "type",
+              "type": {
+                "text": "'button' | 'submit' | 'reset'"
+              },
+              "default": "'button'"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "icon",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "icon",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "library",
+              "type": {
+                "text": "string"
+              },
+              "default": "'system'",
+              "attribute": "library",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "label",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "shape",
+              "type": {
+                "text": "'circle' | 'square'"
+              },
+              "default": "'circle'",
+              "attribute": "shape",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "variant",
+              "type": {
+                "text": "'default' | 'primary' | 'flat'"
+              },
+              "default": "'default'",
+              "attribute": "variant",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "size",
+              "type": {
+                "text": "'sm' | 'md' | 'lg'"
+              },
+              "default": "'md'",
+              "attribute": "size",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "disabled",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "type",
+              "type": {
+                "text": "'button' | 'submit' | 'reset'"
+              },
+              "default": "'button'",
+              "attribute": "type",
+              "reflects": true
+            }
+          ],
+          "events": [
+            {
+              "name": "click",
+              "type": {
+                "text": "Event"
+              },
+              "description": "Fired on activation; never while disabled."
+            }
+          ],
+          "slots": [],
+          "cssParts": [
+            {
+              "name": "base",
+              "description": "The raised surface."
+            },
+            {
+              "name": "icon",
+              "description": "Wrapper around the icon."
+            },
+            {
+              "name": "svg",
+              "description": "The rendered SVG element."
+            }
+          ],
+          "cssProperties": [
+            {
+              "name": "--neu-bg",
+              "description": "Surface colour; shadows and text are derived from it."
+            },
+            {
+              "name": "--neu-accent",
+              "description": "Accent colour."
+            },
+            {
+              "name": "--neu-distance",
+              "description": "Shadow distance for the md size."
+            },
+            {
+              "name": "--neu-intensity",
+              "description": "Shadow strength multiplier."
+            },
+            {
+              "name": "--neu-radius",
+              "description": "Corner radius for the md size."
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "NeuIconButton",
+          "declaration": {
+            "name": "NeuIconButton",
+            "module": "dist/icon-button.js"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "neu-icon-button",
+          "declaration": {
+            "name": "NeuIconButton",
+            "module": "dist/icon-button.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "dist/switch.js",
       "declarations": [
         {
