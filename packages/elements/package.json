@@ -20,6 +20,10 @@
       "types": "./dist/button.d.ts",
       "default": "./dist/button.js"
     },
+    "./button-group.js": {
+      "types": "./dist/button-group.d.ts",
+      "default": "./dist/button-group.js"
+    },
     "./icon-button.js": {
       "types": "./dist/icon-button.d.ts",
       "default": "./dist/icon-button.js"
@@ -54,6 +58,7 @@
   },
   "sideEffects": [
     "./dist/button.js",
+    "./dist/button-group.js",
     "./dist/icon.js",
     "./dist/icon-button.js",
     "./dist/switch.js",

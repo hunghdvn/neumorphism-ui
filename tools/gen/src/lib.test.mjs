@@ -68,6 +68,7 @@ describe('buildManifest', () => {
     const tags = manifest.modules.map((m) => m.declarations[0].tagName);
     expect(tags).toEqual([
       'neu-button',
+      'neu-button-group',
       'neu-icon',
       'neu-icon-button',
       'neu-switch',

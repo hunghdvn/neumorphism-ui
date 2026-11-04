@@ -167,6 +167,9 @@
     display: inline-block;
     min-block-size: 2.5rem;
   }
+  neu-button-group:not(:defined) {
+    display: inline-flex;
+  }
   neu-icon-button:not(:defined) {
     display: inline-block;
     inline-size: 2.5rem;

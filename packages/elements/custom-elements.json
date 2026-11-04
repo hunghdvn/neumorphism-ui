@@ -196,6 +196,112 @@
     },
     {
       "kind": "javascript-module",
+      "path": "dist/button-group.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "NeuButtonGroup",
+          "tagName": "neu-button-group",
+          "customElement": true,
+          "description": "Merges adjacent buttons into one raised block.",
+          "attributes": [
+            {
+              "name": "label",
+              "fieldName": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "''"
+            },
+            {
+              "name": "orientation",
+              "fieldName": "orientation",
+              "type": {
+                "text": "'horizontal' | 'vertical'"
+              },
+              "default": "'horizontal'"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "label",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "orientation",
+              "type": {
+                "text": "'horizontal' | 'vertical'"
+              },
+              "default": "'horizontal'",
+              "attribute": "orientation",
+              "reflects": true
+            }
+          ],
+          "events": [],
+          "slots": [
+            {
+              "name": "",
+              "description": "neu-button and neu-icon-button elements."
+            }
+          ],
+          "cssParts": [
+            {
+              "name": "base",
+              "description": "The raised wrapper around the buttons."
+            }
+          ],
+          "cssProperties": [
+            {
+              "name": "--neu-bg",
+              "description": "Surface colour; shadows and text are derived from it."
+            },
+            {
+              "name": "--neu-accent",
+              "description": "Accent colour."
+            },
+            {
+              "name": "--neu-distance",
+              "description": "Shadow distance for the md size."
+            },
+            {
+              "name": "--neu-intensity",
+              "description": "Shadow strength multiplier."
+            },
+            {
+              "name": "--neu-radius",
+              "description": "Corner radius for the md size."
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "NeuButtonGroup",
+          "declaration": {
+            "name": "NeuButtonGroup",
+            "module": "dist/button-group.js"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "neu-button-group",
+          "declaration": {
+            "name": "NeuButtonGroup",
+            "module": "dist/button-group.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "dist/icon.js",
       "declarations": [
         {

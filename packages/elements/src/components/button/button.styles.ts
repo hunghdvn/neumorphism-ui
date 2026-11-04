@@ -6,18 +6,19 @@ export const buttonBaseStyles = `${hostTheme}
 :host(:disabled), :host([disabled]), :host([loading]) { cursor: not-allowed; }
 .base {
   display: inline-flex; align-items: center; justify-content: center;
-  border-radius: var(--_neu-r);
+  border-start-start-radius: var(--_neu-grp-ss, var(--_neu-rr, var(--_neu-r))); border-start-end-radius: var(--_neu-grp-se, var(--_neu-rr, var(--_neu-r)));
+  border-end-start-radius: var(--_neu-grp-es, var(--_neu-rr, var(--_neu-r))); border-end-end-radius: var(--_neu-grp-ee, var(--_neu-rr, var(--_neu-r)));
   background: var(--_neu-bg);
   color: var(--_neu-fg);
-  box-shadow: var(--_neu-raised);
+  box-shadow: var(--_neu-grp-shadow, var(--_neu-raised));
   transition: box-shadow var(--_neu-dur) ease, color var(--_neu-dur) ease;
 }
-:host([size='sm']) .base { box-shadow: var(--_neu-raised-sm); }
+:host([size='sm']) .base { box-shadow: var(--_neu-grp-shadow, var(--_neu-raised-sm)); }
 :host([variant='primary']) .base { color: var(--_neu-accent-c); }
 :host([variant='flat']) .base { box-shadow: none; }
 :host([variant='flat']:hover:not(:disabled):not([disabled])) .base { box-shadow: var(--_neu-raised-sm); }
 :host(:active:not(:disabled):not([disabled]):not([loading])) .base, :host(:state(pressed)) .base { box-shadow: var(--_neu-inset-sm); }
-:host(:focus-visible) .base { box-shadow: var(--_neu-raised), var(--_neu-focus); }
+:host(:focus-visible) .base { box-shadow: var(--_neu-grp-shadow, var(--_neu-raised)), var(--_neu-focus); }
 :host(:disabled) .base, :host([disabled]) .base { box-shadow: none; color: var(--_neu-fg-muted); }
 `;
 

@@ -24,6 +24,12 @@ const cases: Case[] = [
     light: '',
     ref: 'input',
   },
+  {
+    tag: 'neu-button-group',
+    attrs: { label: 'Align', orientation: 'vertical' },
+    light: '<neu-button>A</neu-button><neu-button>B</neu-button>',
+    ref: '.base',
+  },
   { tag: 'neu-icon', attrs: { name: 'check', label: 'Done' }, light: '', ref: '.box' },
   { tag: 'neu-icon-button', attrs: { icon: 'x', label: 'Close' }, light: '', ref: '.icon' },
 ];
@@ -77,7 +83,7 @@ describe('SSR parity', () => {
   test('server-rendered disabled controls look disabled before their definitions run', () => {
     // The same server markup under tag names that are never defined, so nothing upgrades.
     const looks = cases
-      .filter((c) => c.tag !== 'neu-icon')
+      .filter((c) => c.tag !== 'neu-icon' && c.tag !== 'neu-button-group')
       .map((c) => {
         const markup = ssrMarkup({ ...c, attrs: { ...c.attrs, disabled: '' } });
         const probe = `${c.tag}-not-defined`;
@@ -122,6 +128,7 @@ describe('SSR parity', () => {
   test('definitions lists the registered tags', () => {
     expect([...definitions.keys()].sort()).toEqual([
       'neu-button',
+      'neu-button-group',
       'neu-icon',
       'neu-icon-button',
       'neu-switch',
@@ -132,6 +139,7 @@ describe('SSR parity', () => {
   test('formDefaultProp names the property that holds a form control default', () => {
     expect([...definitions.values()].map((def) => [def.tag, formDefaultProp(def)])).toEqual([
       ['neu-button', undefined],
+      ['neu-button-group', undefined],
       ['neu-icon', undefined],
       ['neu-icon-button', undefined],
       ['neu-switch', 'defaultChecked'],
