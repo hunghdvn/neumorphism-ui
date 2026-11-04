@@ -270,28 +270,7 @@
               "description": "The rendered SVG element."
             }
           ],
-          "cssProperties": [
-            {
-              "name": "--neu-bg",
-              "description": "Surface colour; shadows and text are derived from it."
-            },
-            {
-              "name": "--neu-accent",
-              "description": "Accent colour."
-            },
-            {
-              "name": "--neu-distance",
-              "description": "Shadow distance for the md size."
-            },
-            {
-              "name": "--neu-intensity",
-              "description": "Shadow strength multiplier."
-            },
-            {
-              "name": "--neu-radius",
-              "description": "Corner radius for the md size."
-            }
-          ]
+          "cssProperties": []
         }
       ],
       "exports": [

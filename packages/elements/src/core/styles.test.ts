@@ -50,3 +50,11 @@ test.each([...definitions.values()].map((def) => [def.tag, def.styles]))(
     expect([...names].filter((name) => !name.startsWith('--_neu-'))).toEqual([]);
   },
 );
+
+test.each([...definitions.values()].map((def) => [def.tag, def.styles]))(
+  '%s styles undo the placeholder visibility and honour [hidden]',
+  (_tag, styles) => {
+    expect(styles).toContain(':host(:not(:defined)) { visibility: inherit !important;');
+    expect(styles).toContain(':host([hidden]) { display: none !important; }');
+  },
+);

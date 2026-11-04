@@ -1,6 +1,5 @@
 import { defineComponent } from '../../core/define.js';
 import { html, unsafeHTML } from '../../core/html.js';
-import { themeCssProperties } from '../../core/styles.js';
 import { iconStyles } from './icon.styles.js';
 import { systemIconSvg } from './system-icons.js';
 
@@ -21,6 +20,6 @@ export const iconDef = defineComponent({
     events: [],
     slots: [],
     parts: [{ name: 'svg', description: 'The rendered SVG element.' }],
-    cssProperties: themeCssProperties,
+    cssProperties: [],
   },
 });

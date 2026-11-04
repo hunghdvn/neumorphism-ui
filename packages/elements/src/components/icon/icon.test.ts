@@ -1,7 +1,7 @@
 import { afterEach, describe, expect, test, vi } from 'vitest';
 import { NeuIcon } from '../../icon.js';
 import { registerIconLibrary } from '../../icons.js';
-import { axeViolations, internalsOf, mount } from '../../test-utils/helpers.js';
+import { axeViolations, internalsOf, mount, tick } from '../../test-utils/helpers.js';
 import { systemIconSvg } from './system-icons.js';
 
 afterEach(() => {
@@ -10,8 +10,8 @@ afterEach(() => {
 });
 
 const DIRTY_SVG =
-  '<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 24 24" onload="x()">' +
-  '<script>alert(1)</script><foreignObject><div>hi</div></foreignObject>' +
+  '<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 24 24" onload="x()" ONLOAD="x()">' +
+  '<script>alert(1)</script><SCRIPT>alert(1)</SCRIPT><foreignObject><div>hi</div></foreignObject>' +
   '<a href="javascript:x"><path onclick="y()" d="M1 1h4"/></a>' +
   '<a xlink:href=" JavaScript:x"><circle cx="1" cy="1" r="1"/></a>' +
   '<path id="keep" d="M2 2h4"/></svg>';
@@ -27,6 +27,20 @@ function stubFetch(body: string | ((url: string) => Promise<Response>)) {
 const box = (el: Element) => el.shadowRoot!.querySelector('.box')!;
 const svgOf = (el: Element) => box(el).querySelector('svg');
 const settle = () => new Promise<void>((resolve) => setTimeout(resolve, 30));
+
+const HIT = '__neuIconHit';
+const NS = 'xmlns="http://www.w3.org/2000/svg"';
+const hit = `onerror="window.${HIT}=1"`;
+const PAYLOADS: Record<string, string> = {
+  'empty-comment breakout': `<svg ${NS}><!--></svg><img src="x" ${hit}>--></svg>`,
+  'processing instruction': `<svg ${NS}><?x > <img src="x" ${hit}> ?></svg>`,
+  'CDATA in html element': `<svg ${NS}><p><![CDATA[><img src="x" ${hit}>]]></p></svg>`,
+  'iframe srcdoc': `<svg ${NS}><p><iframe srcdoc="&lt;script&gt;window.${HIT}=1&lt;/script&gt;"/></p></svg>`,
+  'SMIL set': `<svg ${NS}><a><set attributeName="href" to="javascript:window.${HIT}=1"/></a><path d="M1 1"/></svg>`,
+  'SMIL animate': `<svg ${NS}><path d="M1 1"><animate attributeName="d" to="M2 2"/></path></svg>`,
+  'external use': `<svg ${NS}><use href="data:image/svg+xml,&lt;svg/&gt;"/><use href="#ok"/></svg>`,
+  'no-namespace root': `<svg><style>*{}</style><image href="x"/><path d="M1 1"/></svg>`,
+};
 
 describe('neu-icon', () => {
   test('renders the system icon in the template', () => {
@@ -182,5 +196,45 @@ describe('neu-icon', () => {
     );
     await settle();
     for (const el of els) expect(box(el).childNodes.length).toBe(0);
+  });
+
+  test.each(Object.entries(PAYLOADS))(
+    'hostile markup (%s) never yields active content',
+    async (_name, markup) => {
+      registerIconLibrary('t-evil', { resolve: () => markup });
+      const el = mount<NeuIcon>('<neu-icon library="t-evil" name="a"></neu-icon>');
+      await tick();
+      await tick();
+      const root = box(el);
+      expect(
+        root.querySelector('img, iframe, set, animate, style, image, script, foreignObject, p, a'),
+      ).toBeNull();
+      for (const use of root.querySelectorAll('use')) {
+        expect(use.getAttribute('href') ?? '#').toMatch(/^#/);
+      }
+      for (const node of root.querySelectorAll('*')) {
+        expect(node.namespaceURI).toBe('http://www.w3.org/2000/svg');
+      }
+      expect((window as unknown as Record<string, unknown>)[HIT]).toBeUndefined();
+    },
+  );
+
+  test('markup without xmlns still renders', async () => {
+    registerIconLibrary('t-nons', {
+      resolve: () => '<svg viewBox="0 0 24 24"><path d="M1 1"/></svg>',
+    });
+    const el = mount<NeuIcon>('<neu-icon library="t-nons" name="a"></neu-icon>');
+    await vi.waitFor(() => expect(svgOf(el)?.querySelector('path')).not.toBeNull());
+  });
+
+  test('a null resolve result or an empty name does not fetch and leaves the icon empty', async () => {
+    const fetchMock = stubFetch('<svg/>');
+    registerIconLibrary('t-null', { resolve: () => null as unknown as string });
+    registerIconLibrary('t-empty', { resolve: () => '/x.svg' });
+    const a = mount<NeuIcon>('<neu-icon library="t-null" name="a"></neu-icon>');
+    const b = mount<NeuIcon>('<neu-icon library="t-empty"></neu-icon>');
+    await settle();
+    expect(fetchMock).not.toHaveBeenCalled();
+    expect(box(a).childNodes.length + box(b).childNodes.length).toBe(0);
   });
 });

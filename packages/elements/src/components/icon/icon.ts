@@ -9,6 +9,7 @@ export class NeuIcon extends NeuElement {
   declare library: string;
   declare label: string;
   private unsubscribe: (() => void) | undefined;
+  private wasRemoved = false;
 
   private draw(): void {
     const box = this.ref('box');
@@ -31,11 +32,12 @@ export class NeuIcon extends NeuElement {
       if (library === this.props.library) this.draw();
     });
     // Back in the page after a removal: a library may have changed meanwhile.
-    this.draw();
+    if (this.wasRemoved) this.draw();
   }
 
   protected override disconnected(): void {
     this.unsubscribe?.();
     this.unsubscribe = undefined;
+    this.wasRemoved = true;
   }
 }
