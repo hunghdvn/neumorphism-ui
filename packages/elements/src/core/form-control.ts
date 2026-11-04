@@ -11,11 +11,14 @@ export function markSubmitAttempt(form: HTMLFormElement): void {
   setTimeout(() => submitAttempts.delete(form), 0);
 }
 
-/** A button that submits its form when activated: native submit buttons and neu-button type=submit. */
+/** A button that submits its form when activated: native submit buttons and neu-button / neu-icon-button type=submit. */
 export function isSubmitButton(el: Element): boolean {
   if (el instanceof HTMLButtonElement) return el.type === 'submit';
   if (el instanceof HTMLInputElement) return el.type === 'submit' || el.type === 'image';
-  return el.localName === 'neu-button' && (el as Element & { type?: unknown }).type === 'submit';
+  return (
+    /^neu-(icon-)?button$/.test(el.localName) &&
+    (el as Element & { type?: unknown }).type === 'submit'
+  );
 }
 
 /** The form owner of a control (its `form` property), which also covers form="id" association. */
