@@ -1,5 +1,7 @@
 import { afterEach, describe, expect, test, vi } from 'vitest';
 import { userEvent } from 'vitest/browser';
+import '../../button.js';
+import '../../text-field.js';
 import { NeuIconButton } from '../../icon-button.js';
 import { registerIconLibrary } from '../../icons.js';
 import { renderDSD } from '../../ssr.js';
@@ -92,14 +94,14 @@ describe('neu-icon-button', () => {
 
   test('type=submit submits its form', async () => {
     const form = mountForm('<neu-icon-button icon="check" type="submit"></neu-icon-button>');
-    let submitter: unknown;
+    let submits = 0;
     form.addEventListener('submit', (event) => {
       event.preventDefault();
-      submitter = (event as SubmitEvent).submitter;
+      submits++;
     });
     await userEvent.click(form.querySelector('neu-icon-button')!);
     await tick();
-    expect(submitter).toBe(form.querySelector('neu-icon-button'));
+    expect(submits).toBe(1);
   });
 
   test('a disabled icon button emits no click', async () => {
@@ -138,6 +140,68 @@ describe('neu-icon-button', () => {
       resolve: () => '<svg viewBox="0 0 24 24"><path d="M3 3"/></svg>',
     });
     await vi.waitFor(() => expect(d()).toBe('M3 3'));
+  });
+
+  test('a library SVG that covers the viewport does not hijack clicks elsewhere', async () => {
+    registerIconLibrary('t-ib-fixed', {
+      resolve: () =>
+        '<svg viewBox="0 0 24 24" style="position:fixed;inset:0;opacity:0"><path d="M1 1"/></svg>',
+    });
+    const el = mount<NeuIconButton>(
+      '<neu-icon-button icon="a" library="t-ib-fixed"></neu-icon-button>',
+    );
+    await tick();
+    const rect = el.getBoundingClientRect();
+    const far = document.elementFromPoint(rect.left + 300, rect.top + 300);
+    expect(far).not.toBe(el);
+    let clicks = 0;
+    el.addEventListener('click', () => clicks++);
+    far?.dispatchEvent(new MouseEvent('click', { bubbles: true, composed: true }));
+    expect(clicks).toBe(0);
+  });
+
+  test('a stray loading attribute does not change the cursor', () => {
+    const el = mount<NeuIconButton>('<neu-icon-button icon="x"></neu-icon-button>');
+    expect(getComputedStyle(el).cursor).toBe('pointer');
+    el.setAttribute('loading', '');
+    expect(getComputedStyle(el).cursor).toBe('pointer');
+    el.setAttribute('disabled', '');
+    expect(getComputedStyle(el).cursor).toBe('not-allowed');
+  });
+
+  describe('implicit submission', () => {
+    async function enterIn(form: HTMLFormElement): Promise<number> {
+      let submitted = 0;
+      form.addEventListener('submit', (event) => {
+        event.preventDefault();
+        submitted++;
+      });
+      form.querySelector<HTMLElement>('neu-text-field, input')!.focus();
+      await userEvent.keyboard('{Enter}');
+      await tick();
+      return submitted;
+    }
+
+    test('Enter in a two-field form submits through the icon button and fires its click', async () => {
+      const form = mountForm(
+        '<neu-text-field name="a" label="A"></neu-text-field><neu-text-field name="b" label="B"></neu-text-field>' +
+          '<neu-icon-button icon="check" type="submit"></neu-icon-button>',
+      );
+      const clicks = countClicks(form.querySelector('neu-icon-button')!);
+      expect(await enterIn(form)).toBe(1);
+      expect(clicks()).toBe(1);
+    });
+
+    test('an icon button before a neu-button is the default button', async () => {
+      const form = mountForm(
+        '<neu-text-field name="a" label="A"></neu-text-field>' +
+          '<neu-icon-button icon="check" type="submit"></neu-icon-button><neu-button type="submit">Go</neu-button>',
+      );
+      const icon = countClicks(form.querySelector('neu-icon-button')!);
+      const button = countClicks(form.querySelector('neu-button')!);
+      expect(await enterIn(form)).toBe(1);
+      expect([icon(), button()]).toEqual([1, 0]);
+    });
   });
 
   test('shape and size change the box', () => {

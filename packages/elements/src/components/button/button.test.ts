@@ -154,54 +154,35 @@ describe('neu-button', () => {
     expect(events).toEqual(['submit', 'reset']);
   });
 
-  test('submit triggered by a neu-button exposes it as SubmitEvent.submitter', async () => {
+  test('a neu-button submit reports no submitter, so new FormData(form, submitter) works', async () => {
     const form = mountForm('<neu-button type="submit">Go</neu-button>');
-    const button = form.querySelector('neu-button') as NeuButton;
     const submitters: unknown[] = [];
     form.addEventListener('submit', (event) => {
       event.preventDefault();
-      submitters.push((event as SubmitEvent).submitter);
+      const { submitter } = event as SubmitEvent;
+      submitters.push(submitter);
+      // React 19 form actions do exactly this.
+      expect(() => new FormData(form, submitter)).not.toThrow();
     });
-    await userEvent.click(button);
-    expect(submitters).toEqual([button]);
+    await userEvent.click(form.querySelector('neu-button')!);
+    expect(submitters).toEqual([null]);
   });
 
-  test('a submit click on an invalid form leaves no submitter claim behind', async () => {
-    const form = mountForm(
-      '<neu-text-field label="Q" name="q" required></neu-text-field><neu-button type="submit">Go</neu-button>' +
-        '<button type="submit" id="native">Native</button>',
-    );
-    const button = form.querySelector('neu-button') as NeuButton;
-    const submitters: unknown[] = [];
-    form.addEventListener('submit', (event) => {
-      event.preventDefault();
-      submitters.push((event as SubmitEvent).submitter);
-    });
-    await userEvent.click(button);
-    await tick();
-    expect(submitters).toEqual([]);
-    (form.querySelector('neu-text-field') as NeuTextField).value = 'x';
-    const native = form.querySelector('#native') as HTMLButtonElement;
-    form.requestSubmit(native);
-    expect(submitters).toEqual([native]);
-    form.requestSubmit();
-    expect(submitters[1]).toBeNull();
-  });
-
-  test('implicit submission from a text field exposes the default button as submitter', async () => {
+  test('implicit submission from a text field reports no submitter', async () => {
     const form = mountForm(
       '<neu-text-field label="Q" name="q"></neu-text-field><neu-button type="submit">Go</neu-button>',
     );
-    const button = form.querySelector('neu-button') as NeuButton;
     const submitters: unknown[] = [];
     form.addEventListener('submit', (event) => {
       event.preventDefault();
-      submitters.push((event as SubmitEvent).submitter);
+      const { submitter } = event as SubmitEvent;
+      submitters.push(submitter);
+      expect(() => new FormData(form, submitter)).not.toThrow();
     });
     (form.querySelector('neu-text-field') as NeuTextField).focus();
     await userEvent.keyboard('{Enter}');
     await tick();
-    expect(submitters).toEqual([button]);
+    expect(submitters).toEqual([null]);
   });
 
   test('el.click() on a submit button submits before it returns', () => {
