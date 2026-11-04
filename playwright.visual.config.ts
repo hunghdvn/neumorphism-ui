@@ -1,5 +1,8 @@
 import { defineConfig, devices } from '@playwright/test';
 
+// Local override for machines where 4173 is taken; CI keeps the default.
+const port = Number(process.env.VISUAL_PORT ?? 4173);
+
 export default defineConfig({
   testDir: 'e2e',
   testMatch: 'visual.spec.ts',
@@ -14,7 +17,7 @@ export default defineConfig({
     },
   },
   use: {
-    baseURL: 'http://localhost:4173',
+    baseURL: `http://localhost:${port}`,
     viewport: { width: 1000, height: 900 },
     deviceScaleFactor: 1,
   },
@@ -34,7 +37,8 @@ export default defineConfig({
   ],
   webServer: {
     command: 'node scripts/serve-static.mjs',
-    url: 'http://localhost:4173/',
+    url: `http://localhost:${port}/`,
+    env: { PORT: String(port) },
     reuseExistingServer: !process.env.CI,
   },
 });

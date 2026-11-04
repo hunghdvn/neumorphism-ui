@@ -55,6 +55,78 @@
         ></neu-text-field>
         <neu-text-field label="Small" size="sm" placeholder="sm"></neu-text-field>
       </div>
+      <div class="row">
+        <neu-icon name="check"></neu-icon>
+        <neu-icon name="chevron-down"></neu-icon>
+        <neu-icon name="chevron-up"></neu-icon>
+        <neu-icon name="plus"></neu-icon>
+        <neu-icon name="minus"></neu-icon>
+        <neu-icon name="x"></neu-icon>
+        <neu-icon name="alert-circle"></neu-icon>
+        <neu-icon name="user"></neu-icon>
+        <neu-icon name="check" label="Done"></neu-icon>
+      </div>
+      <div class="row">
+        <neu-icon-button icon="plus" label="Add"></neu-icon-button>
+        <neu-icon-button icon="check" label="Confirm" variant="primary"></neu-icon-button>
+        <neu-icon-button icon="x" label="Close" variant="flat"></neu-icon-button>
+        <neu-icon-button icon="plus" label="Add disabled" disabled></neu-icon-button>
+        <neu-icon-button icon="plus" label="Add square" shape="square"></neu-icon-button>
+        <neu-icon-button icon="plus" label="Add small" size="sm"></neu-icon-button>
+        <neu-icon-button icon="plus" label="Add large" size="lg"></neu-icon-button>
+      </div>
+      <div class="row">
+        <neu-button-group label="Actions">
+          <neu-button>One</neu-button>
+          <neu-button>Two</neu-button>
+          <neu-button>Three</neu-button>
+        </neu-button-group>
+        <neu-button-group label="Stepper" orientation="vertical">
+          <neu-icon-button icon="chevron-up" label="Up"></neu-icon-button>
+          <neu-icon-button icon="chevron-down" label="Down"></neu-icon-button>
+        </neu-button-group>
+      </div>
+      <div class="row">
+        <neu-surface>Raised</neu-surface>
+        <neu-surface shape="inset">Inset</neu-surface>
+        <neu-surface shape="flat">Flat</neu-surface>
+        <neu-surface shape="convex">Convex</neu-surface>
+        <neu-surface shape="concave">Concave</neu-surface>
+        <neu-surface elevation="sm">Low</neu-surface>
+        <neu-surface elevation="md">Mid</neu-surface>
+        <neu-surface elevation="lg">High</neu-surface>
+        <neu-surface radius="full">Full</neu-surface>
+      </div>
+      <div class="row">
+        <neu-divider style="inline-size: 160px"></neu-divider>
+        <span>Before</span>
+        <neu-divider orientation="vertical"></neu-divider>
+        <span>After</span>
+      </div>
+      <div class="row">
+        <neu-badge>Neutral</neu-badge>
+        <neu-badge variant="accent">Accent</neu-badge>
+        <neu-badge variant="success">Success</neu-badge>
+        <neu-badge variant="warning">Warning</neu-badge>
+        <neu-badge variant="danger">Danger</neu-badge>
+        <neu-badge pill>Pill</neu-badge>
+      </div>
+      <div class="row">
+        <neu-avatar
+          label="Photo"
+          src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3E%3Crect width='8' height='8' fill='%23c2185b'/%3E%3Ccircle cx='4' cy='4' r='2' fill='%23fff'/%3E%3C/svg%3E"
+        ></neu-avatar>
+        <neu-avatar label="Hung Do" initials="HD"></neu-avatar>
+        <neu-avatar label="Guest"></neu-avatar>
+        <neu-avatar label="Rounded" initials="RD" shape="rounded"></neu-avatar>
+        <neu-avatar label="Small" initials="SM" size="sm"></neu-avatar>
+        <neu-avatar label="Large" initials="LG" size="lg"></neu-avatar>
+      </div>
+      <div class="row">
+        <neu-spinner size="sm"></neu-spinner>
+        <neu-spinner></neu-spinner>
+        <neu-spinner size="lg"></neu-spinner>
+      </div>
     </template>
     <script type="module">
       const states = document.getElementById('states');
