@@ -124,6 +124,22 @@ describe('neu-button-group', () => {
     expect(shadow).toContain('3px');
   });
 
+  test('the focused button is stacked above its neighbours so the ring is not painted over', async () => {
+    const el = three();
+    const [a, b, c] = [...el.children] as NeuButton[];
+    const stacking = (item: Element) => {
+      const s = getComputedStyle(item);
+      return [s.position, s.zIndex];
+    };
+    expect(stacking(b!)).toEqual(['static', 'auto']);
+    await userEvent.tab();
+    await userEvent.tab();
+    expect(document.activeElement).toBe(b);
+    expect(stacking(b!)).toEqual(['relative', '1']);
+    expect(stacking(a!)).toEqual(['static', 'auto']);
+    expect(stacking(c!)).toEqual(['static', 'auto']);
+  });
+
   test('buttons outside a group keep their own shadow and corners', () => {
     const el = mount<NeuButton>('<neu-button>Solo</neu-button>');
     const s = style(el);
