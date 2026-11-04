@@ -38,6 +38,7 @@ const components = [
   ['neu-divider', './divider.js', 'NeuDivider'],
   ['neu-icon', './icon.js', 'NeuIcon'],
   ['neu-icon-button', './icon-button.js', 'NeuIconButton'],
+  ['neu-spinner', './spinner.js', 'NeuSpinner'],
   ['neu-surface', './surface.js', 'NeuSurface'],
   ['neu-switch', './switch.js', 'NeuSwitch'],
   ['neu-text-field', './text-field.js', 'NeuTextField'],

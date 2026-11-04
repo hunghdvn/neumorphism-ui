@@ -44,6 +44,10 @@
       "types": "./dist/icons.d.ts",
       "default": "./dist/icons.js"
     },
+    "./spinner.js": {
+      "types": "./dist/spinner.d.ts",
+      "default": "./dist/spinner.js"
+    },
     "./surface.js": {
       "types": "./dist/surface.d.ts",
       "default": "./dist/surface.js"
@@ -75,6 +79,7 @@
     "./dist/divider.js",
     "./dist/icon.js",
     "./dist/icon-button.js",
+    "./dist/spinner.js",
     "./dist/surface.js",
     "./dist/switch.js",
     "./dist/text-field.js",

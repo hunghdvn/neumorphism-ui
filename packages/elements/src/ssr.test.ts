@@ -40,6 +40,7 @@ const cases: Case[] = [
   { tag: 'neu-divider', attrs: { orientation: 'vertical' }, light: '', ref: '.base' },
   { tag: 'neu-icon', attrs: { name: 'check', label: 'Done' }, light: '', ref: '.box' },
   { tag: 'neu-icon-button', attrs: { icon: 'x', label: 'Close' }, light: '', ref: '.icon' },
+  { tag: 'neu-spinner', attrs: { label: 'Saving', size: 'lg' }, light: '', ref: '.indicator' },
 ];
 
 function attributeText(attrs: Record<string, string>): string {
@@ -141,6 +142,7 @@ describe('SSR parity', () => {
       'neu-divider',
       'neu-icon',
       'neu-icon-button',
+      'neu-spinner',
       'neu-surface',
       'neu-switch',
       'neu-text-field',
@@ -155,6 +157,7 @@ describe('SSR parity', () => {
       ['neu-divider', undefined],
       ['neu-icon', undefined],
       ['neu-icon-button', undefined],
+      ['neu-spinner', undefined],
       ['neu-surface', undefined],
       ['neu-switch', 'defaultChecked'],
       ['neu-text-field', 'defaultValue'],

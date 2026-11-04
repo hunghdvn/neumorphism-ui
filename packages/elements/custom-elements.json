@@ -822,6 +822,115 @@
     },
     {
       "kind": "javascript-module",
+      "path": "dist/spinner.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "NeuSpinner",
+          "tagName": "neu-spinner",
+          "customElement": true,
+          "description": "A rotating indicator for work in progress.",
+          "attributes": [
+            {
+              "name": "label",
+              "fieldName": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Loading'"
+            },
+            {
+              "name": "size",
+              "fieldName": "size",
+              "type": {
+                "text": "'sm' | 'md' | 'lg'"
+              },
+              "default": "'md'"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Loading'",
+              "attribute": "label",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "size",
+              "type": {
+                "text": "'sm' | 'md' | 'lg'"
+              },
+              "default": "'md'",
+              "attribute": "size",
+              "reflects": true
+            }
+          ],
+          "events": [],
+          "slots": [],
+          "cssParts": [
+            {
+              "name": "base",
+              "description": "The sized wrapper."
+            },
+            {
+              "name": "track",
+              "description": "The inset ring behind the indicator."
+            },
+            {
+              "name": "indicator",
+              "description": "The rotating arc."
+            }
+          ],
+          "cssProperties": [
+            {
+              "name": "--neu-bg",
+              "description": "Surface colour; shadows and text are derived from it."
+            },
+            {
+              "name": "--neu-accent",
+              "description": "Accent colour."
+            },
+            {
+              "name": "--neu-distance",
+              "description": "Shadow distance for the md size."
+            },
+            {
+              "name": "--neu-intensity",
+              "description": "Shadow strength multiplier."
+            },
+            {
+              "name": "--neu-radius",
+              "description": "Corner radius for the md size."
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "NeuSpinner",
+          "declaration": {
+            "name": "NeuSpinner",
+            "module": "dist/spinner.js"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "neu-spinner",
+          "declaration": {
+            "name": "NeuSpinner",
+            "module": "dist/spinner.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "dist/surface.js",
       "declarations": [
         {

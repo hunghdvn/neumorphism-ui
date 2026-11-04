@@ -162,6 +162,7 @@
   neu-divider:not(:defined),
   neu-icon:not(:defined),
   neu-icon-button:not(:defined),
+  neu-spinner:not(:defined),
   neu-switch:not(:defined),
   neu-text-field:not(:defined) {
     visibility: hidden;
@@ -193,6 +194,11 @@
     display: inline-block;
     inline-size: 1em;
     block-size: 1em;
+  }
+  neu-spinner:not(:defined) {
+    display: inline-block;
+    inline-size: 1.5rem;
+    block-size: 1.5rem;
   }
   neu-switch:not(:defined) {
     display: inline-flex;

@@ -73,6 +73,7 @@ describe('buildManifest', () => {
       'neu-divider',
       'neu-icon',
       'neu-icon-button',
+      'neu-spinner',
       'neu-surface',
       'neu-switch',
       'neu-text-field',
