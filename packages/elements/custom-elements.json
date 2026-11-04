@@ -625,6 +625,148 @@
     },
     {
       "kind": "javascript-module",
+      "path": "dist/surface.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "NeuSurface",
+          "tagName": "neu-surface",
+          "customElement": true,
+          "description": "A neumorphic container with its own shape, elevation, radius and padding.",
+          "attributes": [
+            {
+              "name": "shape",
+              "fieldName": "shape",
+              "type": {
+                "text": "'raised' | 'inset' | 'flat' | 'convex' | 'concave'"
+              },
+              "default": "'raised'"
+            },
+            {
+              "name": "elevation",
+              "fieldName": "elevation",
+              "type": {
+                "text": "'sm' | 'md' | 'lg'"
+              },
+              "default": "'md'"
+            },
+            {
+              "name": "radius",
+              "fieldName": "radius",
+              "type": {
+                "text": "'sm' | 'md' | 'lg' | 'full'"
+              },
+              "default": "'md'"
+            },
+            {
+              "name": "padding",
+              "fieldName": "padding",
+              "type": {
+                "text": "'none' | 'sm' | 'md' | 'lg'"
+              },
+              "default": "'md'"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "shape",
+              "type": {
+                "text": "'raised' | 'inset' | 'flat' | 'convex' | 'concave'"
+              },
+              "default": "'raised'",
+              "attribute": "shape",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "elevation",
+              "type": {
+                "text": "'sm' | 'md' | 'lg'"
+              },
+              "default": "'md'",
+              "attribute": "elevation",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "radius",
+              "type": {
+                "text": "'sm' | 'md' | 'lg' | 'full'"
+              },
+              "default": "'md'",
+              "attribute": "radius",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "padding",
+              "type": {
+                "text": "'none' | 'sm' | 'md' | 'lg'"
+              },
+              "default": "'md'",
+              "attribute": "padding",
+              "reflects": true
+            }
+          ],
+          "events": [],
+          "slots": [
+            {
+              "name": "",
+              "description": "The content of the surface."
+            }
+          ],
+          "cssParts": [
+            {
+              "name": "base",
+              "description": "The surface itself."
+            }
+          ],
+          "cssProperties": [
+            {
+              "name": "--neu-bg",
+              "description": "Surface colour; shadows and text are derived from it."
+            },
+            {
+              "name": "--neu-accent",
+              "description": "Accent colour."
+            },
+            {
+              "name": "--neu-distance",
+              "description": "Shadow distance for the md size."
+            },
+            {
+              "name": "--neu-intensity",
+              "description": "Shadow strength multiplier."
+            },
+            {
+              "name": "--neu-radius",
+              "description": "Corner radius for the md size."
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "NeuSurface",
+          "declaration": {
+            "name": "NeuSurface",
+            "module": "dist/surface.js"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "neu-surface",
+          "declaration": {
+            "name": "NeuSurface",
+            "module": "dist/surface.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "dist/switch.js",
       "declarations": [
         {

@@ -36,6 +36,10 @@
       "types": "./dist/icons.d.ts",
       "default": "./dist/icons.js"
     },
+    "./surface.js": {
+      "types": "./dist/surface.d.ts",
+      "default": "./dist/surface.js"
+    },
     "./switch.js": {
       "types": "./dist/switch.d.ts",
       "default": "./dist/switch.js"
@@ -61,6 +65,7 @@
     "./dist/button-group.js",
     "./dist/icon.js",
     "./dist/icon-button.js",
+    "./dist/surface.js",
     "./dist/switch.js",
     "./dist/text-field.js",
     "./dist/all.js",

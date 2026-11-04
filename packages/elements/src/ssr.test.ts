@@ -30,6 +30,12 @@ const cases: Case[] = [
     light: '<neu-button>A</neu-button><neu-button>B</neu-button>',
     ref: '.base',
   },
+  {
+    tag: 'neu-surface',
+    attrs: { shape: 'inset', elevation: 'lg', radius: 'full', padding: 'sm' },
+    light: '<p>Inside</p>',
+    ref: '.base',
+  },
   { tag: 'neu-icon', attrs: { name: 'check', label: 'Done' }, light: '', ref: '.box' },
   { tag: 'neu-icon-button', attrs: { icon: 'x', label: 'Close' }, light: '', ref: '.icon' },
 ];
@@ -83,7 +89,9 @@ describe('SSR parity', () => {
   test('server-rendered disabled controls look disabled before their definitions run', () => {
     // The same server markup under tag names that are never defined, so nothing upgrades.
     const looks = cases
-      .filter((c) => c.tag !== 'neu-icon' && c.tag !== 'neu-button-group')
+      .filter(
+        (c) => c.tag !== 'neu-icon' && c.tag !== 'neu-button-group' && c.tag !== 'neu-surface',
+      )
       .map((c) => {
         const markup = ssrMarkup({ ...c, attrs: { ...c.attrs, disabled: '' } });
         const probe = `${c.tag}-not-defined`;
@@ -131,6 +139,7 @@ describe('SSR parity', () => {
       'neu-button-group',
       'neu-icon',
       'neu-icon-button',
+      'neu-surface',
       'neu-switch',
       'neu-text-field',
     ]);
@@ -142,6 +151,7 @@ describe('SSR parity', () => {
       ['neu-button-group', undefined],
       ['neu-icon', undefined],
       ['neu-icon-button', undefined],
+      ['neu-surface', undefined],
       ['neu-switch', 'defaultChecked'],
       ['neu-text-field', 'defaultValue'],
     ]);

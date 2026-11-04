@@ -83,6 +83,18 @@ describe('derived values (§5.2, §5.3)', () => {
     expect(b).not.toBe(a);
   });
 
+  test('token utility classes inside a neu-surface re-derive', () => {
+    document.documentElement.setAttribute('data-neu-theme', 'light');
+    const host = mount(
+      '<div class="neu-raised" id="a">a</div>' +
+        '<neu-surface style="--neu-bg: #f5d0d8"><div class="neu-raised" id="b">b</div></neu-surface>',
+    );
+    const a = getComputedStyle(host.querySelector('#a')!).boxShadow;
+    const b = getComputedStyle(host.querySelector('#b')!).boxShadow;
+    expect(b).not.toBe('none');
+    expect(b).not.toBe(a);
+  });
+
   test('--neu-intensity scales the dark shadow and is clamped at 100%', () => {
     const host = mount(
       '<div class="neu-surface" style="--neu-intensity: 50"><i style="display:block;background-color: var(--_neu-sd)"></i></div>',

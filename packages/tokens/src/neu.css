@@ -60,7 +60,8 @@
   /* §5.3: custom properties inherit computed values, so derive again wherever --neu-bg may change. */
   :root,
   [data-neu-theme],
-  .neu-surface {
+  .neu-surface,
+  neu-surface {
     --_neu-sd: var(
       --neu-shadow-dark,
       color-mix(
@@ -169,6 +170,9 @@
   }
   neu-button-group:not(:defined) {
     display: inline-flex;
+  }
+  neu-surface:not(:defined) {
+    display: block;
   }
   neu-icon-button:not(:defined) {
     display: inline-block;

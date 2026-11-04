@@ -36,6 +36,7 @@ const components = [
   ['neu-button-group', './button-group.js', 'NeuButtonGroup'],
   ['neu-icon', './icon.js', 'NeuIcon'],
   ['neu-icon-button', './icon-button.js', 'NeuIconButton'],
+  ['neu-surface', './surface.js', 'NeuSurface'],
   ['neu-switch', './switch.js', 'NeuSwitch'],
   ['neu-text-field', './text-field.js', 'NeuTextField'],
 ];

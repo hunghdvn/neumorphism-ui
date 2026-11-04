@@ -2,6 +2,7 @@ import { buttonDef } from './components/button/button.def.js';
 import { buttonGroupDef } from './components/button-group/button-group.def.js';
 import { iconDef } from './components/icon/icon.def.js';
 import { iconButtonDef } from './components/icon-button/icon-button.def.js';
+import { surfaceDef } from './components/surface/surface.def.js';
 import { switchDef } from './components/switch/switch.def.js';
 import { textFieldDef } from './components/text-field/text-field.def.js';
 import type { ComponentDef } from './core/define.js';
@@ -27,6 +28,7 @@ export const definitions: ReadonlyMap<string, ComponentDef> = /* @__PURE__ */ ne
   [buttonGroupDef.tag, buttonGroupDef],
   [iconDef.tag, iconDef],
   [iconButtonDef.tag, iconButtonDef],
+  [surfaceDef.tag, surfaceDef],
   [switchDef.tag, switchDef],
   [textFieldDef.tag, textFieldDef],
 ]);

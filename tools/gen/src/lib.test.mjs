@@ -71,6 +71,7 @@ describe('buildManifest', () => {
       'neu-button-group',
       'neu-icon',
       'neu-icon-button',
+      'neu-surface',
       'neu-switch',
       'neu-text-field',
     ]);
