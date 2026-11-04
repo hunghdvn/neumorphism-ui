@@ -36,6 +36,7 @@ const cases: Case[] = [
     light: '<p>Inside</p>',
     ref: '.base',
   },
+  { tag: 'neu-badge', attrs: { variant: 'success', pill: '' }, light: 'New', ref: '.base' },
   { tag: 'neu-divider', attrs: { orientation: 'vertical' }, light: '', ref: '.base' },
   { tag: 'neu-icon', attrs: { name: 'check', label: 'Done' }, light: '', ref: '.box' },
   { tag: 'neu-icon-button', attrs: { icon: 'x', label: 'Close' }, light: '', ref: '.icon' },
@@ -134,6 +135,7 @@ describe('SSR parity', () => {
 
   test('definitions lists the registered tags', () => {
     expect([...definitions.keys()].sort()).toEqual([
+      'neu-badge',
       'neu-button',
       'neu-button-group',
       'neu-divider',
@@ -147,6 +149,7 @@ describe('SSR parity', () => {
 
   test('formDefaultProp names the property that holds a form control default', () => {
     expect([...definitions.values()].map((def) => [def.tag, formDefaultProp(def)])).toEqual([
+      ['neu-badge', undefined],
       ['neu-button', undefined],
       ['neu-button-group', undefined],
       ['neu-divider', undefined],

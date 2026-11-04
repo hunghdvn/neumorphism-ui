@@ -4,6 +4,120 @@
   "modules": [
     {
       "kind": "javascript-module",
+      "path": "dist/badge.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "NeuBadge",
+          "tagName": "neu-badge",
+          "customElement": true,
+          "description": "A small raised label for status or counts.",
+          "attributes": [
+            {
+              "name": "variant",
+              "fieldName": "variant",
+              "type": {
+                "text": "'neutral' | 'accent' | 'success' | 'warning' | 'danger'"
+              },
+              "default": "'neutral'"
+            },
+            {
+              "name": "pill",
+              "fieldName": "pill",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "variant",
+              "type": {
+                "text": "'neutral' | 'accent' | 'success' | 'warning' | 'danger'"
+              },
+              "default": "'neutral'",
+              "attribute": "variant",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "pill",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "pill",
+              "reflects": true
+            }
+          ],
+          "events": [],
+          "slots": [
+            {
+              "name": "",
+              "description": "The badge text."
+            }
+          ],
+          "cssParts": [
+            {
+              "name": "base",
+              "description": "The badge itself."
+            }
+          ],
+          "cssProperties": [
+            {
+              "name": "--neu-bg",
+              "description": "Surface colour; shadows and text are derived from it."
+            },
+            {
+              "name": "--neu-accent",
+              "description": "Accent colour."
+            },
+            {
+              "name": "--neu-distance",
+              "description": "Shadow distance for the md size."
+            },
+            {
+              "name": "--neu-intensity",
+              "description": "Shadow strength multiplier."
+            },
+            {
+              "name": "--neu-radius",
+              "description": "Corner radius for the md size."
+            },
+            {
+              "name": "--neu-success",
+              "description": "Colour of the success variant."
+            },
+            {
+              "name": "--neu-warning",
+              "description": "Colour of the warning variant."
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "NeuBadge",
+          "declaration": {
+            "name": "NeuBadge",
+            "module": "dist/badge.js"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "neu-badge",
+          "declaration": {
+            "name": "NeuBadge",
+            "module": "dist/badge.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "dist/button.js",
       "declarations": [
         {

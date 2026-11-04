@@ -16,6 +16,10 @@
   ],
   "customElements": "custom-elements.json",
   "exports": {
+    "./badge.js": {
+      "types": "./dist/badge.d.ts",
+      "default": "./dist/badge.js"
+    },
     "./button.js": {
       "types": "./dist/button.d.ts",
       "default": "./dist/button.js"
@@ -65,6 +69,7 @@
     "./package.json": "./package.json"
   },
   "sideEffects": [
+    "./dist/badge.js",
     "./dist/button.js",
     "./dist/button-group.js",
     "./dist/divider.js",

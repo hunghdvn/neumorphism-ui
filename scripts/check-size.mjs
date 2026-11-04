@@ -32,6 +32,7 @@ const core = [
 ].join('\n');
 
 const components = [
+  ['neu-badge', './badge.js', 'NeuBadge'],
   ['neu-button', './button.js', 'NeuButton'],
   ['neu-button-group', './button-group.js', 'NeuButtonGroup'],
   ['neu-divider', './divider.js', 'NeuDivider'],
