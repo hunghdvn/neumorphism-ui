@@ -166,6 +166,28 @@ describe('neu-button', () => {
     expect(submitters).toEqual([button]);
   });
 
+  test('a submit click on an invalid form leaves no submitter claim behind', async () => {
+    const form = mountForm(
+      '<neu-text-field label="Q" name="q" required></neu-text-field><neu-button type="submit">Go</neu-button>' +
+        '<button type="submit" id="native">Native</button>',
+    );
+    const button = form.querySelector('neu-button') as NeuButton;
+    const submitters: unknown[] = [];
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+      submitters.push((event as SubmitEvent).submitter);
+    });
+    await userEvent.click(button);
+    await tick();
+    expect(submitters).toEqual([]);
+    (form.querySelector('neu-text-field') as NeuTextField).value = 'x';
+    const native = form.querySelector('#native') as HTMLButtonElement;
+    form.requestSubmit(native);
+    expect(submitters).toEqual([native]);
+    form.requestSubmit();
+    expect(submitters[1]).toBeNull();
+  });
+
   test('implicit submission from a text field exposes the default button as submitter', async () => {
     const form = mountForm(
       '<neu-text-field label="Q" name="q"></neu-text-field><neu-button type="submit">Go</neu-button>',
