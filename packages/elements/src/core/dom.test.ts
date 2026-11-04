@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, test } from 'vitest';
-import { afterDispatch } from './dom.js';
+import { afterDispatch, isActiveInRoot } from './dom.js';
 
 const tick = () => new Promise<void>((resolve) => setTimeout(resolve, 0));
 
@@ -66,5 +66,23 @@ describe('afterDispatch', () => {
     });
     outer.dispatchEvent(new Event('ping', { bubbles: true }));
     expect(order).toEqual(['nested done', 'run']);
+  });
+});
+
+describe('isActiveInRoot', () => {
+  test('is true for the active element of its own tree, inside a shadow root too', () => {
+    const host = document.body.appendChild(document.createElement('div'));
+    const inner = host.attachShadow({ mode: 'open' }).appendChild(document.createElement('button'));
+    const outer = document.body.appendChild(document.createElement('button'));
+    expect([isActiveInRoot(inner), isActiveInRoot(outer)]).toEqual([false, false]);
+    inner.focus();
+    // The document sees the host as its active element; the shadow root sees the inner button.
+    expect([isActiveInRoot(inner), isActiveInRoot(host), isActiveInRoot(outer)]).toEqual([
+      true,
+      true,
+      false,
+    ]);
+    outer.focus();
+    expect([isActiveInRoot(inner), isActiveInRoot(outer)]).toEqual([false, true]);
   });
 });

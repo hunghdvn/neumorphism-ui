@@ -176,6 +176,28 @@ describe('lifecycle', () => {
     expect(el.shadowRoot?.querySelector('[part=label]')?.textContent).toBe('Early');
     expect(Object.prototype.hasOwnProperty.call(el, 'label')).toBe(false);
   });
+
+  test('formDisabledCallback runs willUpdate before update', () => {
+    class NeuProbeForm extends NeuElement {
+      static override def = { ...probeDef, tag: 'neu-probe-form' };
+      static formAssociated = true;
+      readonly calls: string[] = [];
+      protected override willUpdate(changed: ReadonlySet<string>): void {
+        this.calls.push(...[...changed].map((key) => `willUpdate:${key}`));
+      }
+      protected override update(changed: ReadonlySet<string>): void {
+        this.calls.push(...[...changed].map((key) => `update:${key}`));
+      }
+    }
+    NeuProbeForm.define();
+    const fieldset = mount<HTMLFieldSetElement>(
+      '<fieldset><neu-probe-form></neu-probe-form></fieldset>',
+    );
+    const el = fieldset.firstElementChild as NeuProbeForm;
+    el.calls.length = 0;
+    fieldset.disabled = true;
+    expect(el.calls).toEqual(['willUpdate:disabled', 'update:disabled']);
+  });
 });
 
 describe('declarative shadow DOM', () => {
@@ -264,6 +286,26 @@ describe('declarative shadow DOM', () => {
       el.append('light');
       await Promise.resolve();
       expect(el.renders).toBe(1);
+    });
+  });
+
+  test('while loading, an incomplete declarative root is not adopted', async () => {
+    await whileLoading(async () => {
+      const el = document.createElement('neu-probe') as NeuProbe;
+      document.body.append(el);
+      // The parser has attached the declarative root, but its data-ref nodes are still streaming.
+      const root = el.attachShadow({ mode: 'open' });
+      root.innerHTML = '<b>partial</b>';
+      document.body.append(document.createElement('p'));
+      await Promise.resolve();
+      expect(el.renders).toBe(0);
+      const label = document.createElement('span');
+      label.dataset.ref = 'label';
+      root.append(label);
+      await Promise.resolve();
+      expect(el.renders).toBe(1);
+      expect(el.shadowRoot!.querySelector('[data-ref=label]')).toBe(label);
+      expect(label.textContent).toBe('hi');
     });
   });
 });

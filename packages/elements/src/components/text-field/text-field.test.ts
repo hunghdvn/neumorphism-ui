@@ -374,6 +374,33 @@ describe('neu-text-field', () => {
     expect(el.validity.valueMissing).toBe(true);
   });
 
+  test('rendered() tolerates a root without the input', () => {
+    // A listener's exception is reported to window rather than thrown out of dispatchEvent().
+    const errors: unknown[] = [];
+    const onError = (event: ErrorEvent) => errors.push(event.error);
+    window.addEventListener('error', onError);
+    Object.defineProperty(document, 'readyState', { configurable: true, get: () => 'loading' });
+    let el: NeuTextField;
+    try {
+      el = document.createElement('neu-text-field') as NeuTextField;
+      document.body.append(el);
+      // A declarative root that never got its <input data-ref="input">.
+      const root = el.attachShadow({ mode: 'open', delegatesFocus: true });
+      root.innerHTML = '<span data-ref="label-text"></span>';
+      document.dispatchEvent(new Event('DOMContentLoaded'));
+    } finally {
+      delete (document as { readyState?: unknown }).readyState;
+      window.removeEventListener('error', onError);
+    }
+    expect(errors).toEqual([]);
+    // The root was adopted all the same.
+    expect(el.shadowRoot!.adoptedStyleSheets).toHaveLength(1);
+    expect(() => {
+      el.value = 'typed';
+    }).not.toThrow();
+    expect(el.value).toBe('typed');
+  });
+
   test('an untouched SSR field whose value the browser sanitized still follows its value attribute', () => {
     const attrs = { label: 'Email', type: 'email', value: ' a@b.co ' };
     const doc = document.implementation.createHTMLDocument('');

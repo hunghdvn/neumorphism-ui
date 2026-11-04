@@ -1,4 +1,4 @@
-import { afterDispatch, hasFocusWithinTree } from '../../core/dom.js';
+import { afterDispatch, isActiveInRoot } from '../../core/dom.js';
 import { markSubmitAttempt } from '../../core/form-control.js';
 import { NeuElement } from '../../core/neu-element.js';
 import { buttonDef } from './button.def.js';
@@ -22,8 +22,10 @@ export class NeuButton extends NeuElement {
     this.addEventListener('keyup', (event) => this.onKeyUp(event));
     // Disarm when focus moves away, not when only the window loses focus.
     this.addEventListener('blur', () => {
-      if (!hasFocusWithinTree(this)) this.toggleState('pressed', false);
+      if (!isActiveInRoot(this)) this.toggleState('pressed', false);
     });
+    // Focus coming back means Space may have been released while it was away.
+    this.addEventListener('focus', () => this.toggleState('pressed', false));
   }
 
   get form(): HTMLFormElement | null {
@@ -62,10 +64,14 @@ export class NeuButton extends NeuElement {
       afterDispatch(event, () => {
         if (!event.defaultPrevented && !this.inactive) this.click();
       });
-    } else if (event.key === ' ' && !event.defaultPrevented) {
-      // An earlier listener that cancelled the keydown has claimed the key: do not arm.
-      event.preventDefault();
-      this.toggleState('pressed', true);
+    } else if (event.key === ' ') {
+      // Arm after the whole dispatch, so a listener further up can still claim the key. From
+      // window this runs before the default action, so cancelling here still stops the scroll.
+      afterDispatch(event, () => {
+        if (event.defaultPrevented) return;
+        event.preventDefault();
+        this.toggleState('pressed', true);
+      });
     }
   }
 

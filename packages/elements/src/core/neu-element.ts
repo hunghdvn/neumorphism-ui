@@ -134,7 +134,7 @@ export abstract class NeuElement extends ServerSafeHTMLElement {
   /** Called by the browser for form-associated subclasses inside a disabled fieldset. */
   formDisabledCallback(disabled: boolean): void {
     this.formDisabled = disabled;
-    if (this.hasConnected) this.update(new Set(['disabled']));
+    this.propChanged('disabled');
   }
 
   protected get def(): ComponentDef {
@@ -163,9 +163,7 @@ export abstract class NeuElement extends ServerSafeHTMLElement {
     if (!decl || Object.is(this.props[key], value)) return;
     this.props[key] = value;
     if (!fromAttribute && decl.reflect) this.reflect(key, decl, value);
-    const changed = new Set([key]);
-    this.willUpdate(changed);
-    if (this.hasConnected) this.update(changed);
+    this.propChanged(key);
   }
 
   protected toggleState(name: string, on: boolean): void {
@@ -209,6 +207,13 @@ export abstract class NeuElement extends ServerSafeHTMLElement {
     return new Set(Object.keys(this.def.props));
   }
 
+  /** willUpdate, then update once connected, with the same one-key set. */
+  private propChanged(key: string): void {
+    const changed = new Set([key]);
+    this.willUpdate(changed);
+    if (this.hasConnected) this.update(changed);
+  }
+
   private reflect(key: string, decl: PropDecl, value: PropValue): void {
     const attribute = serializeAttribute(decl, value);
     const name = attributeName(key, decl);
@@ -232,15 +237,16 @@ export abstract class NeuElement extends ServerSafeHTMLElement {
     }
   }
 
-  private ensureRoot(): void {
+  /** `loaded`: DOMContentLoaded fired, so the parser is done and nothing is left to wait for. */
+  private ensureRoot(loaded?: Event): void {
     if (this.root) return;
     const existing = this.internals.shadowRoot;
-    if (existing) {
-      this.adoptRoot(existing);
+    if (!loaded && document.readyState === 'loading' && this.parsing(existing)) {
+      this.waitForParser(existing);
       return;
     }
-    if (document.readyState === 'loading' && this.parserMayAttachRoot()) {
-      this.waitForParser();
+    if (existing) {
+      this.adoptRoot(existing);
       return;
     }
     const root = this.attachShadow({
@@ -252,11 +258,17 @@ export abstract class NeuElement extends ServerSafeHTMLElement {
   }
 
   /**
-   * While the document loads, the parser may not have reached this element's declarative shadow
-   * root yet (spec §8.1). That is only possible while nothing has been parsed inside or after the
-   * element; one created by script in the middle of the page renders at once.
+   * While the document loads, the parser may still be writing this element's declarative shadow
+   * root (spec §8.1). Before the root exists, that is only possible while nothing has been parsed
+   * inside or after the element; one created by script in the middle of the page renders at once.
+   * Once it exists, its contents may still be streaming in: it is unfinished while it has fewer
+   * data-ref nodes than the template, and adopting it then would run rendered() without them.
    */
-  private parserMayAttachRoot(): boolean {
+  private parsing(root: ShadowRoot | null): boolean {
+    if (root) {
+      const refs = this.def.template(this.props).value.split('data-ref="').length - 1;
+      return root.querySelectorAll('[data-ref]').length < refs;
+    }
     if (this.firstChild !== null || this.nextSibling !== null) return false;
     for (let node = this.parentNode; node !== null; node = node.parentNode) {
       if (node.nextSibling !== null) return false;
@@ -265,20 +277,20 @@ export abstract class NeuElement extends ServerSafeHTMLElement {
   }
 
   /**
-   * Resumes as soon as a child or a following node shows the parser has moved past the element,
-   * with DOMContentLoaded as the fallback. A shadow root alone is not enough: its contents may
-   * still be streaming in.
+   * Without a root, watches the document until a child or a following node shows the parser has
+   * moved past the element; with an unfinished root, watches that root until it is complete. Then
+   * ensureRoot() decides again. DOMContentLoaded is the fallback, after which any root is adopted.
    */
-  private waitForParser(): void {
-    const resume = () => {
+  private waitForParser(root: ShadowRoot | null): void {
+    const resume = (loaded?: Event) => {
       observer.disconnect();
       document.removeEventListener('DOMContentLoaded', resume);
-      this.ensureRoot();
+      this.ensureRoot(loaded);
     };
     const observer = new MutationObserver(() => {
-      if (!this.parserMayAttachRoot()) resume();
+      if (!this.parsing(root)) resume();
     });
-    observer.observe(document, { childList: true, subtree: true });
+    observer.observe(root ?? document, { childList: true, subtree: true });
     document.addEventListener('DOMContentLoaded', resume);
   }
 

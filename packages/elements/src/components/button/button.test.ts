@@ -257,6 +257,47 @@ describe('neu-button', () => {
     }
   });
 
+  test('a Space keydown cancelled by an ancestor in the bubble phase does not arm', async () => {
+    const form = mountForm('<neu-button>Save</neu-button>');
+    const el = form.querySelector('neu-button') as NeuButton;
+    const clicks = countClicks(el);
+    form.addEventListener('keydown', (event) => event.preventDefault());
+    keydown(el, ' ');
+    expect(el.matches(':state(pressed)')).toBe(false);
+    keyup(el, ' ');
+    await tick();
+    expect(clicks()).toBe(0);
+  });
+
+  test('Space still arms when an ancestor stops propagation without cancelling', async () => {
+    // Plan ruling 10: the keydown never reaches window, so the button arms a task later.
+    const form = mountForm('<neu-button>Save</neu-button>');
+    const el = form.querySelector('neu-button') as NeuButton;
+    const clicks = countClicks(el);
+    form.addEventListener('keydown', (event) => event.stopPropagation());
+    keydown(el, ' ');
+    await tick();
+    expect(el.matches(':state(pressed)')).toBe(true);
+    keyup(el, ' ');
+    await tick();
+    expect(clicks()).toBe(1);
+  });
+
+  test('pressed is cleared when the element regains focus', async () => {
+    const el = mount<NeuButton>('<neu-button>Save</neu-button>');
+    const clicks = countClicks(el);
+    el.focus();
+    keydown(el, ' ');
+    // The window loses focus (the element stays active), and Space is released elsewhere.
+    el.dispatchEvent(new FocusEvent('blur'));
+    expect(el.matches(':state(pressed)')).toBe(true);
+    el.dispatchEvent(new FocusEvent('focus'));
+    expect(el.matches(':state(pressed)')).toBe(false);
+    keyup(el, ' ');
+    await tick();
+    expect(clicks()).toBe(0);
+  });
+
   test('a keyup listener that calls preventDefault stops the Space activation', async () => {
     const el = mount<NeuButton>('<neu-button>Save</neu-button>');
     const clicks = countClicks(el);

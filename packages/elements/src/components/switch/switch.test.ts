@@ -208,6 +208,31 @@ describe('neu-switch', () => {
     }
   });
 
+  test('a Space keydown cancelled by an ancestor in the bubble phase does not arm', async () => {
+    const form = mountForm('<neu-switch>N</neu-switch>');
+    const el = form.querySelector('neu-switch') as NeuSwitch;
+    form.addEventListener('keydown', (event) => event.preventDefault());
+    keydown(el, ' ');
+    expect(el.matches(':state(pressed)')).toBe(false);
+    keyup(el, ' ');
+    await tick();
+    expect(el.checked).toBe(false);
+  });
+
+  test('pressed is cleared when the element regains focus', async () => {
+    const el = mount<NeuSwitch>('<neu-switch>N</neu-switch>');
+    el.focus();
+    keydown(el, ' ');
+    // The window loses focus (the element stays active), and Space is released elsewhere.
+    el.dispatchEvent(new FocusEvent('blur'));
+    expect(el.matches(':state(pressed)')).toBe(true);
+    el.dispatchEvent(new FocusEvent('focus'));
+    expect(el.matches(':state(pressed)')).toBe(false);
+    keyup(el, ' ');
+    await tick();
+    expect(el.checked).toBe(false);
+  });
+
   test('the window losing focus between Space down and up does not disarm it', async () => {
     const el = mount<NeuSwitch>('<neu-switch>N</neu-switch>');
     el.focus();

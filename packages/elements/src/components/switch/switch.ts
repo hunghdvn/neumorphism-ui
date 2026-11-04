@@ -1,4 +1,4 @@
-import { afterDispatch, dispatch, hasFocusWithinTree } from '../../core/dom.js';
+import { afterDispatch, dispatch, isActiveInRoot } from '../../core/dom.js';
 import { FormControlElement } from '../../core/form-control.js';
 import { requiredCheckboxMessage } from '../../core/validation.js';
 import { switchDef } from './switch.def.js';
@@ -23,8 +23,10 @@ export class NeuSwitch extends FormControlElement {
     this.addEventListener('keyup', (event) => this.onKeyUp(event));
     // Disarm when focus moves away, not when only the window loses focus.
     this.addEventListener('blur', () => {
-      if (!hasFocusWithinTree(this)) this.toggleState('pressed', false);
+      if (!isActiveInRoot(this)) this.toggleState('pressed', false);
     });
+    // Focus coming back means Space may have been released while it was away.
+    this.addEventListener('focus', () => this.toggleState('pressed', false));
   }
 
   get checked(): boolean {
@@ -63,10 +65,13 @@ export class NeuSwitch extends FormControlElement {
 
   private onKeyDown(event: KeyboardEvent): void {
     if (event.key === ' ') {
-      // An earlier listener that cancelled the keydown has claimed the key: do not arm.
-      if (event.defaultPrevented) return;
-      event.preventDefault();
-      this.toggleState('pressed', true);
+      // Arm after the whole dispatch, so a listener further up can still claim the key. From
+      // window this runs before the default action, so cancelling here still stops the scroll.
+      afterDispatch(event, () => {
+        if (event.defaultPrevented) return;
+        event.preventDefault();
+        this.toggleState('pressed', true);
+      });
     } else if (event.key === 'Enter' && !event.repeat) {
       // Not cancelled here, so a handler further up can still cancel the toggle.
       afterDispatch(event, () => {
