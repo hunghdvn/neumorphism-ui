@@ -1,0 +1,41 @@
+{
+  "name": "neumorphism-ui",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@9.15.1",
+  "engines": {
+    "node": ">=22.12"
+  },
+  "scripts": {
+    "build": "pnpm -r --filter \"./packages/*\" run build",
+    "test": "pnpm -r --workspace-concurrency=1 --filter \"./packages/*\" --filter \"./tools/*\" run test",
+    "typecheck": "pnpm -r --filter \"./packages/*\" run typecheck",
+    "lint": "eslint . && prettier --check .",
+    "format": "prettier --write .",
+    "gen": "pnpm --filter @neu-ui/elements build && pnpm --filter @neu-ui/gen run gen",
+    "size": "node scripts/check-size.mjs",
+    "examples:build": "pnpm --filter next-example build && pnpm --filter nuxt-example build",
+    "test:ssr:prod": "playwright test -c playwright.ssr-prod.config.ts",
+    "test:ssr:dev": "playwright test -c playwright.ssr-dev.config.ts",
+    "test:visual": "playwright test -c playwright.visual.config.ts",
+    "measure:ssr": "node scripts/measure-ssr-html.mjs",
+    "changeset": "changeset",
+    "release": "pnpm build && changeset publish"
+  },
+  "devDependencies": {
+    "@changesets/cli": "2.31.1",
+    "@eslint/js": "10.0.1",
+    "@playwright/test": "1.63.0",
+    "@types/node": "24.19.0",
+    "@vitest/browser": "5.0.3",
+    "@vitest/browser-playwright": "5.0.3",
+    "esbuild": "0.28.2",
+    "eslint": "10.11.0",
+    "globals": "17.13.0",
+    "playwright": "1.63.0",
+    "prettier": "3.9.9",
+    "typescript": "6.0.3",
+    "typescript-eslint": "8.71.0",
+    "vitest": "5.0.3"
+  }
+}

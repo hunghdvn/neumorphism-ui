@@ -1,0 +1,37 @@
+{
+  "name": "@neu-ui/tokens",
+  "version": "0.0.0",
+  "description": "Theme tokens for neumorphism-ui",
+  "license": "MIT",
+  "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hunghdvn/neumorphism-ui.git",
+    "directory": "packages/tokens"
+  },
+  "files": [
+    "neu.css",
+    "src/neu.css"
+  ],
+  "style": "neu.css",
+  "exports": {
+    "./neu.css": "./neu.css",
+    "./src/neu.css": "./src/neu.css",
+    "./package.json": "./package.json"
+  },
+  "sideEffects": [
+    "*.css"
+  ],
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "test": "vitest run",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
+  "devDependencies": {
+    "esbuild": "0.28.2"
+  }
+}

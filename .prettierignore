@@ -1,0 +1,12 @@
+pnpm-lock.yaml
+**/dist/
+**/cdn/
+**/.next/
+**/.nuxt/
+**/.output/
+.superpowers/
+docs/superpowers/
+packages/tokens/neu.css
+packages/elements/custom-elements.json
+packages/react/src/generated/
+e2e/__screenshots__/

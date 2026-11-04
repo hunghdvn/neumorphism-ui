@@ -25,3 +25,19 @@ __screenshots__/*-diff.png
 !.env.example
 .DS_Store
 Thumbs.db
+
+# generated build output
+packages/tokens/neu.css
+packages/elements/cdn/
+next-env.d.ts
+.vitest/
+
+# visual baselines are only committed for linux (CI)
+e2e/__screenshots__/win32/
+e2e/__screenshots__/darwin/
+
+ssr-react18.tmp.mjs
+
+# Next regenerates these agent-instruction files
+apps/examples/next/AGENTS.md
+apps/examples/next/CLAUDE.md

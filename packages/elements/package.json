@@ -1,0 +1,63 @@
+{
+  "name": "@neu-ui/elements",
+  "version": "0.0.0",
+  "description": "Neumorphism UI web components",
+  "license": "MIT",
+  "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hunghdvn/neumorphism-ui.git",
+    "directory": "packages/elements"
+  },
+  "files": [
+    "dist",
+    "cdn",
+    "custom-elements.json"
+  ],
+  "customElements": "custom-elements.json",
+  "exports": {
+    "./button.js": {
+      "types": "./dist/button.d.ts",
+      "default": "./dist/button.js"
+    },
+    "./switch.js": {
+      "types": "./dist/switch.d.ts",
+      "default": "./dist/switch.js"
+    },
+    "./text-field.js": {
+      "types": "./dist/text-field.d.ts",
+      "default": "./dist/text-field.js"
+    },
+    "./all.js": {
+      "types": "./dist/all.d.ts",
+      "default": "./dist/all.js"
+    },
+    "./ssr.js": {
+      "types": "./dist/ssr.d.ts",
+      "default": "./dist/ssr.js"
+    },
+    "./cdn/neu.min.js": "./cdn/neu.min.js",
+    "./custom-elements.json": "./custom-elements.json",
+    "./package.json": "./package.json"
+  },
+  "sideEffects": [
+    "./dist/button.js",
+    "./dist/switch.js",
+    "./dist/text-field.js",
+    "./dist/all.js",
+    "./cdn/neu.min.js"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json && node scripts/build-cdn.mjs",
+    "test": "vitest run",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
+  "devDependencies": {
+    "axe-core": "4.13.0",
+    "esbuild": "0.28.2"
+  }
+}

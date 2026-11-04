@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en" data-neu-theme="light">
+  <head>
+    <meta charset="utf-8" />
+    <title>Visual states</title>
+    <link rel="icon" href="data:," />
+    <link rel="stylesheet" href="/tokens/neu.css" />
+    <script type="module" src="/elements/cdn/neu.min.js"></script>
+    <style>
+      body { margin: 0; font-family: system-ui, sans-serif; }
+      section { padding: 24px; display: grid; gap: 20px; }
+      .row { display: flex; gap: 20px; align-items: center; flex-wrap: wrap; }
+      .fields { display: grid; grid-template-columns: repeat(3, 240px); gap: 20px; }
+      * { caret-color: transparent; }
+    </style>
+  </head>
+  <body>
+    <section id="light" class="neu-surface" data-neu-theme="light"></section>
+    <section id="dark" data-neu-theme="dark"></section>
+    <section
+      id="custom"
+      class="neu-surface"
+      style="--neu-bg: #f5d0d8; --neu-accent: #c2185b"
+    ></section>
+
+    <template id="states">
+      <div class="row">
+        <neu-button>Default</neu-button>
+        <neu-button variant="primary">Primary</neu-button>
+        <neu-button variant="flat">Flat</neu-button>
+        <neu-button disabled>Disabled</neu-button>
+        <neu-button loading>Loading</neu-button>
+        <neu-button size="sm">Small</neu-button>
+        <neu-button size="lg">Large</neu-button>
+      </div>
+      <div class="row">
+        <neu-switch>Off</neu-switch>
+        <neu-switch checked>On</neu-switch>
+        <neu-switch disabled>Disabled off</neu-switch>
+        <neu-switch disabled checked>Disabled on</neu-switch>
+        <neu-switch size="sm" checked>Small</neu-switch>
+        <neu-switch size="lg" checked>Large</neu-switch>
+      </div>
+      <div class="fields">
+        <neu-text-field label="Empty" placeholder="you@example.com"></neu-text-field>
+        <neu-text-field label="Filled" value="hung@example.com"></neu-text-field>
+        <neu-text-field label="With help" help-text="We never share it"></neu-text-field>
+        <neu-text-field label="Disabled" value="locked" disabled></neu-text-field>
+        <neu-text-field
+          data-state="invalid"
+          label="Invalid"
+          type="email"
+          required
+          error-text="Enter an email"
+        ></neu-text-field>
+        <neu-text-field label="Small" size="sm" placeholder="sm"></neu-text-field>
+      </div>
+    </template>
+    <script type="module">
+      const states = document.getElementById('states');
+      for (const section of document.querySelectorAll('section')) {
+        section.append(states.content.cloneNode(true));
+      }
+    </script>
+  </body>
+</html>
