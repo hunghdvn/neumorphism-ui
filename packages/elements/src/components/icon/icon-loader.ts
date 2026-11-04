@@ -67,7 +67,7 @@ function load(url: string): Promise<Element | null> {
     entry = (async () => {
       try {
         const response = await fetch(url);
-        return response.ok ? sanitize(await response.text()) : null;
+        return response.ok ? sanitize((await response.text()).trim()) : null;
       } catch {
         return null;
       }
@@ -103,6 +103,8 @@ export function renderIconInto(container: Element, library: string, name: string
   } catch {
     return show(null);
   }
+  // fetch('') would request the current page.
+  if (!source) return show(null);
   if (source.startsWith('<')) {
     try {
       return show(sanitize(source));

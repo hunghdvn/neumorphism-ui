@@ -237,4 +237,37 @@ describe('neu-icon', () => {
     expect(fetchMock).not.toHaveBeenCalled();
     expect(box(a).childNodes.length + box(b).childNodes.length).toBe(0);
   });
+
+  test('a blank resolve result does not fetch the current page', async () => {
+    const fetchMock = stubFetch('<svg/>');
+    registerIconLibrary('t-blank', { resolve: (name) => (name === 'ws' ? '  \n ' : '') });
+    const els = ['ws', 'empty'].map((name) =>
+      mount<NeuIcon>(`<neu-icon library="t-blank" name="${name}"></neu-icon>`),
+    );
+    await settle();
+    expect(fetchMock).not.toHaveBeenCalled();
+    expect(els.map((el) => box(el).childNodes.length)).toEqual([0, 0]);
+  });
+
+  test('fetched text with leading whitespace before the XML declaration still parses', async () => {
+    stubFetch(
+      '\n  <?xml version="1.0"?>\n<svg xmlns="http://www.w3.org/2000/svg"><path d="M5 5"/></svg>\n',
+    );
+    registerIconLibrary('t-xml', { resolve: () => '/icons/xml.svg' });
+    const el = mount<NeuIcon>('<neu-icon library="t-xml" name="a"></neu-icon>');
+    await vi.waitFor(() =>
+      expect(svgOf(el)?.querySelector('path')?.getAttribute('d')).toBe('M5 5'),
+    );
+  });
+
+  test('an SVG that covers the viewport cannot reach outside the icon', () => {
+    registerIconLibrary('t-fixed', {
+      resolve: () =>
+        '<svg viewBox="0 0 24 24" style="position:fixed;inset:0;opacity:0"><path d="M1 1"/></svg>',
+    });
+    const el = mount<NeuIcon>('<neu-icon library="t-fixed" name="a"></neu-icon>');
+    const target = document.elementFromPoint(window.innerWidth - 20, window.innerHeight - 20);
+    expect(target).not.toBe(el);
+    expect(getComputedStyle(box(el)).contain).toContain('paint');
+  });
 });

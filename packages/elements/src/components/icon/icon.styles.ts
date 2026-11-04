@@ -3,4 +3,5 @@ export const iconStyles = `
 :host(:not(:defined)) { visibility: inherit !important; min-block-size: auto !important; }
 :host([hidden]) { display: none !important; }
 .box, svg { display: block; inline-size: 100%; block-size: 100%; }
+.box { contain: paint; }
 `;
