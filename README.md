@@ -50,9 +50,16 @@ render on the server with declarative shadow DOM, and take part in native `<form
 | `<neu-badge>`        | `NeuBadge`       | Status label: neutral, accent, success, warning or danger                                          |
 | `<neu-avatar>`       | `NeuAvatar`      | Picture, with initials or an icon as fallback                                                      |
 | `<neu-spinner>`      | `NeuSpinner`     | Loading indicator that screen readers announce                                                     |
+| `<neu-textarea>`     | `NeuTextarea`    | Form-associated multi-line input that can grow with its content                                    |
+| `<neu-number-field>` | `NeuNumberField` | Form-associated number input with stepper buttons, min, max and step                               |
+| `<neu-checkbox>`     | `NeuCheckbox`    | Form-associated checkbox with an indeterminate state                                               |
+| `<neu-radio-group>`  | `NeuRadioGroup`  | Form-associated group of radios with one value and arrow-key navigation                            |
+| `<neu-radio>`        | `NeuRadio`       | One choice inside a radio group                                                                    |
+| `<neu-slider>`       | `NeuSlider`      | Form-associated horizontal slider for a number                                                     |
+| `<neu-select>`       | `NeuSelect`      | Form-associated select with a popover listbox; the selected label is server-rendered               |
+| `<neu-option>`       | `NeuOption`      | One choice of a select, written as a child element                                                 |
 
-Six more components are planned for v1: Textarea, Checkbox, Radio with RadioGroup, Slider,
-NumberField, and Select with Option.
+The v1 component set is complete. Phase 4 is the documentation site.
 
 ## Quick start
 

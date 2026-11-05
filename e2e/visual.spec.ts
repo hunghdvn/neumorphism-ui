@@ -15,6 +15,14 @@ test.beforeEach(async ({ page }) => {
       'neu-badge',
       'neu-avatar',
       'neu-spinner',
+      'neu-textarea',
+      'neu-number-field',
+      'neu-checkbox',
+      'neu-radio-group',
+      'neu-radio',
+      'neu-slider',
+      'neu-select',
+      'neu-option',
     ].every((tag) => customElements.get(tag)),
   );
   await page.evaluate(() => document.fonts.ready);
@@ -43,3 +51,15 @@ test('keyboard focus ring', async ({ page }) => {
   await expect(page.locator('#light neu-button').first()).toBeFocused();
   await expect(page.locator('#light .row').first()).toHaveScreenshot('focus.png');
 });
+
+for (const theme of ['light', 'dark', 'custom']) {
+  test(`${theme} open select`, async ({ page }) => {
+    const select = page.locator(`#${theme} neu-select[label="Filled"]`);
+    await select.scrollIntoViewIfNeeded();
+    await select.locator('[part="combobox"]').click();
+    await expect(select.locator('[part="listbox"]')).toBeVisible();
+    await expect(page).toHaveScreenshot(`select-open-${theme}.png`);
+    await page.keyboard.press('Escape');
+    await expect(select.locator('[part="listbox"]')).toBeHidden();
+  });
+}
