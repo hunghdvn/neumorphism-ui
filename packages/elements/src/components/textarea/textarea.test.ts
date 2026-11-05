@@ -157,6 +157,48 @@ describe('neu-textarea', () => {
     expect(area.getBoundingClientRect().height).toBeGreaterThan(base);
   });
 
+  const frame = () => new Promise<void>((resolve) => requestAnimationFrame(() => resolve()));
+  const TEN = Array.from({ length: 10 }, (_, i) => `line ${i}`).join('\n');
+  const fits = (area: HTMLTextAreaElement) => area.clientHeight >= area.scrollHeight;
+
+  test('resize=auto grows when first laid out inside a closed dialog', async () => {
+    const dialog = mount<HTMLDialogElement>(
+      `<dialog><neu-textarea label="A" resize="auto" rows="2"></neu-textarea></dialog>`,
+    );
+    const el = dialog.querySelector('neu-textarea') as NeuTextarea;
+    el.value = TEN;
+    dialog.show();
+    await frame();
+    await frame();
+    expect(fits(areaOf(el))).toBe(true);
+    expect(areaOf(el).clientHeight).toBeGreaterThan(100);
+  });
+
+  test('resize=auto re-measures when the width changes', async () => {
+    const wrap = mount<HTMLDivElement>(
+      `<div style="inline-size: 600px"><neu-textarea label="A" resize="auto" rows="2"></neu-textarea></div>`,
+    );
+    const el = wrap.querySelector('neu-textarea') as NeuTextarea;
+    el.value = 'word '.repeat(60);
+    await frame();
+    const wide = areaOf(el).clientHeight;
+    wrap.style.inlineSize = '200px';
+    await frame();
+    await frame();
+    expect(fits(areaOf(el))).toBe(true);
+    expect(areaOf(el).clientHeight).toBeGreaterThan(wide);
+  });
+
+  test('resize=auto grows on first layout for a value present at mount', async () => {
+    const dialog = mount<HTMLDialogElement>(
+      `<dialog><neu-textarea label="A" resize="auto" rows="2" value="${TEN}"></neu-textarea></dialog>`,
+    );
+    dialog.show();
+    await frame();
+    await frame();
+    expect(fits(areaOf(dialog.querySelector('neu-textarea') as NeuTextarea))).toBe(true);
+  });
+
   test('resize=auto leaves the height alone when resize changes away from it', () => {
     const el = mount<NeuTextarea>('<neu-textarea label="A" resize="auto"></neu-textarea>');
     el.value = 'a\nb\nc\nd\ne\nf';

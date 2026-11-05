@@ -32,10 +32,35 @@ export class NeuTextarea extends TextControlElement {
     return probe;
   }
 
+  private sizeWatch: ResizeObserver | undefined;
+  private lastWidth = -1;
+
+  /**
+   * Re-fits when the width changes or the box first gets a layout (it was hidden, or server
+   * rendered); its own height changes keep the width, so they do not loop.
+   */
+  private watchSize(area: HTMLTextAreaElement, on: boolean): void {
+    if (!on) {
+      this.sizeWatch?.disconnect();
+      this.sizeWatch = undefined;
+      return;
+    }
+    if (this.sizeWatch) return;
+    this.lastWidth = -1;
+    this.sizeWatch = new ResizeObserver(([entry]) => {
+      const width = entry?.contentRect.width ?? 0;
+      if (width === this.lastWidth) return;
+      this.lastWidth = width;
+      this.grow();
+    });
+    this.sizeWatch.observe(area);
+  }
+
   /** resize="auto": fit the height to the content, never below the rows height. */
   private grow(): void {
     const area = this.input as HTMLTextAreaElement | null;
     if (!area) return;
+    this.watchSize(area, this.isConnected && this.tp.resize === 'auto');
     if (this.tp.resize !== 'auto') {
       area.style.blockSize = '';
       return;
@@ -45,6 +70,17 @@ export class NeuTextarea extends TextControlElement {
     const fit = area.scrollHeight;
     // Not laid out (disconnected or hidden): keep the rows height.
     if (fit) area.style.blockSize = `${fit}px`;
+  }
+
+  protected override connected(): void {
+    super.connected();
+    this.grow();
+  }
+
+  protected override disconnected(): void {
+    super.disconnected();
+    this.sizeWatch?.disconnect();
+    this.sizeWatch = undefined;
   }
 
   protected override rendered(): void {
