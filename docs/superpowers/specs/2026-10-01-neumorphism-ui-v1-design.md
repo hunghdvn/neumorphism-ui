@@ -608,7 +608,8 @@ Ngân sách (min+gzip), kiểm bằng `size-limit` trong CI, vượt thì CI fai
 - Trong lúc xây: mỗi giai đoạn publish `1.0.0-next.x` với dist-tag `next`. Bản `1.0.0` ra khi
   giai đoạn 4 xong.
 - CI (GitHub Actions) trên mỗi PR: lint → typecheck → unit test 3 trình duyệt → visual →
-  SSR e2e → size. Release từ `main` bằng Changesets action, publish kèm **npm provenance**.
+  SSR e2e → size. Release từ `main` bằng Changesets action, publish kèm **npm provenance**,
+  xác thực bằng npm trusted publishing (OIDC) nên không lưu npm token nào.
 - Scope `@neu-ui` đã có người khác dùng, nên ngày 2026-11-05 đã tạo org `neumorphism-ui` trên
   npmjs.com và đổi tên các gói sang `@neumorphism-ui/*`. Tên thẻ vẫn giữ prefix `neu-`.
 
