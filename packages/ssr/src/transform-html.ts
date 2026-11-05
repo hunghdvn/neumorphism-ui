@@ -1,4 +1,9 @@
-import { definitions, renderDSD, type OptionData } from '@neumorphism-ui/elements/ssr.js';
+import {
+  definitions,
+  optionLabel,
+  renderDSD,
+  type OptionData,
+} from '@neumorphism-ui/elements/ssr.js';
 
 const RAW_TEXT = new Set(['script', 'style', 'textarea', 'title']);
 const NAMED_ENTITIES: Readonly<Record<string, string>> = {
@@ -143,9 +148,7 @@ function scanOptions(
       findTag(html, `</${optionTag}`, tag.end, cache),
       findTag(html, `<${optionTag}`, tag.end, cache),
     );
-    const label = decodeEntities(html.slice(tag.end, end).replace(/<[^<>]*>/g, ''))
-      .replace(/\s+/g, ' ')
-      .trim();
+    const label = optionLabel(decodeEntities(html.slice(tag.end, end).replace(/<[^<>]*>/g, '')));
     options.push({
       value: Object.hasOwn(tag.attrs, 'value') ? tag.attrs.value! : label,
       label,

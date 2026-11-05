@@ -1,7 +1,7 @@
 import { hostTheme } from '../../core/styles.js';
 
 export const sliderStyles = `${hostTheme}
-:host { display: block; min-block-size: 1.25rem; touch-action: none; cursor: pointer; user-select: none; }
+:host { display: block; min-block-size: 1.25rem; touch-action: pan-y; cursor: pointer; user-select: none; }
 :host(:disabled), :host([disabled]) { cursor: not-allowed; }
 .base { position: relative; display: flex; align-items: center; block-size: 1.25rem; padding-inline: 0.625rem; }
 .track { position: relative; flex: 1; block-size: 0.5rem; border-radius: 999px; background: var(--_neu-bg); box-shadow: var(--_neu-inset-sm); }

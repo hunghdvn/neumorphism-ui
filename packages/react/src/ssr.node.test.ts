@@ -41,6 +41,20 @@ test('NeuSelect renders the label of the NeuOption matching value or defaultValu
   expect(none).toContain('data-ref="display">Pick</span>');
 });
 
+test('NeuSelect keeps a no-break space in the option label, as the client does', () => {
+  const html = renderToString(h(NeuSelect, { value: 'A  B' }, h(NeuOption, null, 'A  B')));
+  expect(html).toContain('data-ref="display">A  B</span>');
+});
+
+test('NeuSelect leaves the display empty when its options are unreadable', () => {
+  const Custom = () => h(NeuOption, { value: 'x' }, 'X');
+  const html = renderToString(h(NeuSelect, { value: 'x', placeholder: 'Pick' }, h(Custom, null)));
+  expect(html).toContain('data-ref="display"></span>');
+  expect(html).not.toContain('>Pick</span>');
+  const empty = renderToString(h(NeuSelect, { placeholder: 'Pick' }, h(Custom, null)));
+  expect(empty).toContain('data-ref="display">Pick</span>');
+});
+
 test('a text field escapes a hostile label', () => {
   const html = renderToString(h(NeuTextField, { label: '"><script>x</script>' }));
   expect(html).toContain('&lt;script&gt;');

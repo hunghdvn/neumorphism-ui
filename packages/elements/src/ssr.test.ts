@@ -204,6 +204,18 @@ describe('SSR parity', () => {
     expect(renderDSD('neu-option', {})).not.toContain('shadowrootdelegatesfocus');
   });
 
+  test('a select with a value and no readable options renders an empty display, not the placeholder', () => {
+    const attrs = { value: 'b', placeholder: 'Pick' };
+    const unread = renderDSD('neu-select', attrs, { options: [] });
+    expect(unread).toContain('class="display" data-ref="display"></span>');
+    expect(unread).not.toContain('Pick');
+    const noValue = renderDSD('neu-select', { placeholder: 'Pick' }, { options: [] });
+    expect(noValue).toContain('class="display placeholder" data-ref="display">Pick</span>');
+    // Readable options without a match keep the placeholder, as the client does.
+    const miss = renderDSD('neu-select', attrs, { options: [{ value: 'a', label: 'Alpha' }] });
+    expect(miss).toContain('>Pick</span>');
+  });
+
   test('a template context reaches the template: the select shows the matching option label', () => {
     const options = [{ value: 'b', label: 'Beta' }];
     expect(renderDSD('neu-select', { value: 'b' }, { options })).toContain('>Beta</span>');

@@ -189,11 +189,17 @@ describe('neu-select', () => {
     expect(chosen.querySelector('.label')!.textContent).toBe('Plan');
     expect(chosen.querySelector('.listbox')!.children).toHaveLength(0);
 
-    for (const ctx of [{ options }, { options: [] }, {}, undefined]) {
+    for (const ctx of [{ options }, {}, undefined]) {
       const none = serverRoot(renderDSD('neu-select', { value: 'z', placeholder: 'Pick' }, ctx));
       expect(none.querySelector('.display')!.textContent).toBe('Pick');
       expect(none.querySelector('.display')!.className).toBe('display placeholder');
     }
+    // Nothing readable on the server (spec §8.4): a set value leaves the display empty instead.
+    const unread = serverRoot(
+      renderDSD('neu-select', { value: 'z', placeholder: 'Pick' }, { options: [] }),
+    );
+    expect(unread.querySelector('.display')!.textContent).toBe('');
+    expect(unread.querySelector('.display')!.className).toBe('display');
     // Labels are text, never markup.
     const hostile = serverRoot(
       renderDSD('neu-select', { value: 'x' }, { options: [{ value: 'x', label: '<b>x</b>' }] }),
@@ -980,6 +986,13 @@ describe('neu-select', () => {
     press(el, 'ArrowDown');
     expect(optionsOf(el)[0]!.textContent).toBe('<b>bold</b>');
     expect(el.shadowRoot!.querySelector('b, i, img')).toBeNull();
+  });
+
+  test('an option without value keeps a no-break space in its label and value', async () => {
+    const el = select('', '<neu-option>A  B</neu-option>');
+    await tick();
+    el.value = 'A  B';
+    expect(display(el).textContent).toBe('A  B');
   });
 
   test('Enter on a select does not mark untouched fields user-invalid', async () => {

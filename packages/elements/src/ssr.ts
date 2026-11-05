@@ -29,6 +29,7 @@ export type {
   TemplateContext,
 } from './core/define.js';
 export { formDefaultProp } from './core/define.js';
+export { optionLabel } from './components/option/option-data.js';
 export type { InferProps, PropDecl, PropsSchema, PropValue } from './core/props.js';
 export {
   attributeName,

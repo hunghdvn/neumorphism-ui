@@ -3,6 +3,7 @@ import {
   attributeName,
   coerceProperty,
   formDefaultProp,
+  optionLabel,
   renderShadowContents,
   serializeAttribute,
   type ComponentDef,
@@ -56,7 +57,7 @@ function collectOptions(children: React.ReactNode, optionTag: string): OptionDat
       if (type !== optionTag && (typeof type === 'string' || type?.displayName !== optionTag)) {
         return;
       }
-      const label = textOf(props.children).replace(/\s+/g, ' ').trim();
+      const label = optionLabel(textOf(props.children));
       options.push({
         value: props.value === undefined || props.value === null ? label : String(props.value),
         label,

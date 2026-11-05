@@ -198,6 +198,13 @@ describe('transformHtml with neu-select', () => {
     );
   });
 
+  test('a no-break space is kept in the label and value, as on the client', () => {
+    for (const text of ['A  B', 'A&nbsp;&nbsp;B']) {
+      const out = transformHtml(select('value="A  B"', `<neu-option>${text}</neu-option>`));
+      expect(out).toContain('data-ref="display">A  B</span>');
+    }
+  });
+
   test('no match renders the placeholder', () => {
     const out = transformHtml(
       select('placeholder="Pick"', '<neu-option value="a" disabled>A</neu-option>'),
