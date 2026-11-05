@@ -272,6 +272,18 @@ describe('neu-slider', () => {
       expect(wide.value).toBe(150);
     });
 
+    test('a step of 0 or less steps by 1', () => {
+      const zero = slider('step="0" value="50"');
+      keydown(zero, 'ArrowRight');
+      expect(zero.value).toBe(51);
+      const negative = slider('step="-3" value="50"');
+      keydown(negative, 'ArrowRight');
+      expect(negative.value).toBe(51);
+      keydown(negative, 'ArrowLeft');
+      keydown(negative, 'ArrowLeft');
+      expect(negative.value).toBe(49);
+    });
+
     test('other keys are left alone', () => {
       const el = slider();
       const event = keydown(el, 'a');

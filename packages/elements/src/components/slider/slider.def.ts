@@ -3,6 +3,9 @@ import { html } from '../../core/html.js';
 import { themeCssProperties } from '../../core/styles.js';
 import { sliderStyles } from './slider.styles.js';
 
+/** The step a slider really uses: a step of 0 or less is 1. */
+export const sliderUnit = (step: number): number => (step > 0 ? step : 1);
+
 /** Decimal places of a number as written, exponent notation included. */
 function decimals(n: number): number {
   const [, fraction = '', exponent = '0'] = /(?:\.(\d+))?(?:e([+-]\d+))?$/.exec(String(n)) ?? [];
@@ -16,7 +19,7 @@ function decimals(n: number): number {
  */
 export function sliderValue(raw: number, min: number, max: number, step: number): number {
   const hi = Math.max(min, max);
-  const unit = step > 0 ? step : 1;
+  const unit = sliderUnit(step);
   const wanted = Number.isNaN(raw) ? min + (hi - min) / 2 : raw;
   let steps = Math.round((wanted - min) / unit);
   // Rounding up may pass max: the largest step that fits is the answer. The epsilon absorbs
@@ -28,7 +31,7 @@ export function sliderValue(raw: number, min: number, max: number, step: number)
 
 /** What PageUp and PageDown move by: a tenth of the range in whole steps, at least one step. */
 export function sliderBigStep(min: number, max: number, step: number): number {
-  const unit = step > 0 ? step : 1;
+  const unit = sliderUnit(step);
   const tenth = Math.round((Math.max(min, max) - min) / 10 / unit) * unit;
   return Number(Math.max(unit, tenth).toFixed(decimals(unit)));
 }

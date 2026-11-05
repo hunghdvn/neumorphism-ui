@@ -1,6 +1,6 @@
 import { dispatch } from '../../core/dom.js';
 import { FormControlElement } from '../../core/form-control.js';
-import { sliderBigStep, sliderDef, sliderStyle, sliderValue } from './slider.def.js';
+import { sliderBigStep, sliderDef, sliderStyle, sliderUnit, sliderValue } from './slider.def.js';
 
 export class NeuSlider extends FormControlElement {
   static override def = sliderDef;
@@ -93,7 +93,8 @@ export class NeuSlider extends FormControlElement {
 
   private onKey(event: KeyboardEvent): void {
     if (this.isDisabled || event.altKey || event.ctrlKey || event.metaKey) return;
-    const { min, max, step } = this.props as { min: number; max: number; step: number };
+    const { min, max } = this.props as { min: number; max: number };
+    const step = sliderUnit(this.props.step as number);
     const direction = this.matches(':dir(rtl)') ? -1 : 1;
     const big = sliderBigStep(min, max, step);
     const wanted: Record<string, number> = {
