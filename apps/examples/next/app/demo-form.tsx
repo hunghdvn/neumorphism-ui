@@ -1,5 +1,5 @@
 'use client';
-import { NeuButton, NeuSwitch, NeuTextField } from '@neumorphism-ui/react';
+import { NeuButton, NeuOption, NeuSelect, NeuSwitch, NeuTextField } from '@neumorphism-ui/react';
 import { useState, type FormEvent } from 'react';
 
 export function DemoForm() {
@@ -24,6 +24,10 @@ export function DemoForm() {
       <NeuSwitch data-testid="notify" name="notify" defaultChecked>
         Notifications
       </NeuSwitch>
+      <NeuSelect data-testid="plan" name="plan" label="Plan" defaultValue="pro">
+        <NeuOption value="free">Free</NeuOption>
+        <NeuOption value="pro">Pro</NeuOption>
+      </NeuSelect>
       <NeuButton data-testid="save" type="submit" variant="primary">
         Save
       </NeuButton>

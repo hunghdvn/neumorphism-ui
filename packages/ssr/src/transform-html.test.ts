@@ -80,6 +80,68 @@ describe('transformHtml', () => {
   });
 });
 
+describe('transformHtml with neu-select', () => {
+  const options = (list: { value: string; label: string; disabled?: boolean }[]) => ({
+    options: list,
+  });
+  const select = (attrs: string, body: string) => `<neu-select ${attrs}>${body}</neu-select>`;
+
+  test("neu-select gets the selected option's label", () => {
+    const out = transformHtml(
+      select(
+        'value="pro"',
+        '<neu-option value="free">Free</neu-option><neu-option value="pro">Pro plan</neu-option>',
+      ),
+    );
+    expect(out).toContain(
+      renderDSD(
+        'neu-select',
+        { value: 'pro' },
+        options([
+          { value: 'free', label: 'Free' },
+          { value: 'pro', label: 'Pro plan' },
+        ]),
+      ),
+    );
+    expect(out).toContain('Pro plan');
+  });
+
+  test('entities in option text are decoded', () => {
+    const out = transformHtml(
+      select('value="a"', '<neu-option value="a">Tom &amp; <b>Jerry</b>\n  &lt;3 </neu-option>'),
+    );
+    expect(out).toContain(
+      renderDSD('neu-select', { value: 'a' }, options([{ value: 'a', label: 'Tom & Jerry <3' }])),
+    );
+  });
+
+  test('an option without value uses its label', () => {
+    const out = transformHtml(select('value="Pro"', '<neu-option>Pro</neu-option>'));
+    expect(out).toContain(
+      renderDSD('neu-select', { value: 'Pro' }, options([{ value: 'Pro', label: 'Pro' }])),
+    );
+  });
+
+  test('no match renders the placeholder', () => {
+    const out = transformHtml(
+      select('placeholder="Pick"', '<neu-option value="a" disabled>A</neu-option>'),
+    );
+    expect(out).toContain(
+      renderDSD(
+        'neu-select',
+        { placeholder: 'Pick' },
+        options([{ value: 'a', label: 'A', disabled: true }]),
+      ),
+    );
+    expect(out).toContain('Pick');
+  });
+
+  test('transforming twice is a no-op', () => {
+    const once = transformHtml(select('value="a"', '<neu-option value="a">A</neu-option>'));
+    expect(transformHtml(once)).toBe(once);
+  });
+});
+
 describe('readStartTag', () => {
   test('parses quoted, unquoted and boolean attributes; the first duplicate wins', () => {
     const html = `<neu-switch a="1" b='2' c=3 d d="x">`;

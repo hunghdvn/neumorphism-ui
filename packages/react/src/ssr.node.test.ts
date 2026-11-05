@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { renderToString } from 'react-dom/server';
 import { expect, test } from 'vitest';
-import { NeuButton, NeuSwitch, NeuTextField } from './index.js';
+import { NeuButton, NeuOption, NeuSelect, NeuSwitch, NeuTextField } from './index.js';
 
 const h = React.createElement;
 
@@ -20,6 +20,25 @@ test('a text field delegates focus and pre-fills its input', () => {
   expect(html).toContain('shadowrootdelegatesfocus');
   expect(html).toContain('value="a@b.co"');
   expect(html).toContain('>Email</span>');
+});
+
+test('NeuSelect renders the label of the NeuOption matching value or defaultValue', () => {
+  const options = [
+    h(NeuOption, { key: 'f', value: 'free' }, 'Free'),
+    h(React.Fragment, { key: 'g' }, [
+      h(NeuOption, { key: 'p', value: 'pro' }, 'Pro ', h('b', null, 'plan'), 2),
+      h('neu-option', { key: 'l' }, ' Lite  tier '),
+    ]),
+  ];
+  const byDefault = renderToString(
+    h(NeuSelect, { defaultValue: 'pro', placeholder: 'Pick' }, ...options),
+  );
+  expect(byDefault).toContain('data-ref="display">Pro plan2</span>');
+  expect(byDefault).not.toContain('>Pick</span>');
+  const byValue = renderToString(h(NeuSelect, { value: 'Lite tier' }, ...options));
+  expect(byValue).toContain('data-ref="display">Lite tier</span>');
+  const none = renderToString(h(NeuSelect, { value: 'nope', placeholder: 'Pick' }, ...options));
+  expect(none).toContain('data-ref="display">Pick</span>');
 });
 
 test('a text field escapes a hostile label', () => {

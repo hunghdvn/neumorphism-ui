@@ -19,6 +19,10 @@ function onSubmit(event: Event) {
     >
       <neu-text-field data-testid="email" name="email" label="Email" type="email" value="a@b.co" />
       <neu-switch data-testid="notify" name="notify" checked>Notifications</neu-switch>
+      <neu-select data-testid="plan" name="plan" label="Plan" value="pro">
+        <neu-option value="free">Free</neu-option>
+        <neu-option value="pro">Pro</neu-option>
+      </neu-select>
       <neu-button data-testid="save" type="submit" variant="primary">Save</neu-button>
       <pre data-testid="result">{{ result }}</pre>
     </form>

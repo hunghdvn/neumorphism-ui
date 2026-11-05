@@ -1,6 +1,6 @@
 import { expect, test, type Page } from '@playwright/test';
 
-const TAGS = ['neu-text-field', 'neu-switch', 'neu-button'] as const;
+const TAGS = ['neu-text-field', 'neu-switch', 'neu-select', 'neu-button'] as const;
 
 const target = () => test.info().project.metadata.target as 'next' | 'nuxt';
 
@@ -55,13 +55,17 @@ test('2. server HTML renders the components without JavaScript, with the same la
         shadow: tags.map((tag) => !!document.querySelector(`form ${tag}`)?.shadowRoot),
         trackOn: sw.shadowRoot?.querySelector('.track')?.classList.contains('on') ?? false,
         trackShadow: getComputedStyle(sw.shadowRoot!.querySelector('.track')!).boxShadow,
+        selectDisplay:
+          document.querySelector('form neu-select')!.shadowRoot?.querySelector('.display')
+            ?.textContent ?? '',
         buttonVisibility: getComputedStyle(document.querySelector('form neu-button')!).visibility,
       };
     },
     [...TAGS],
   );
   expect(state.defined).toBe(false);
-  expect(state.shadow).toEqual([true, true, true]);
+  expect(state.shadow).toEqual([true, true, true, true]);
+  expect(state.selectDisplay).toContain('Pro');
   expect(state.trackOn).toBe(true);
   expect(state.trackShadow).not.toBe('none');
   expect(state.buttonVisibility).toBe('visible');
@@ -124,10 +128,12 @@ test('4. interaction and form submission work after hydration', async ({ page })
   await page.keyboard.type('x@y.zz');
   await page.getByTestId('notify').click();
   await page.getByTestId('save').click();
-  await expect(page.getByTestId('result')).toHaveText('{"email":"x@y.zz"}');
+  await expect(page.getByTestId('result')).toHaveText('{"email":"x@y.zz","plan":"pro"}');
   await page.getByTestId('notify').click();
   await page.getByTestId('save').click();
-  await expect(page.getByTestId('result')).toHaveText('{"email":"x@y.zz","notify":"on"}');
+  await expect(page.getByTestId('result')).toHaveText(
+    '{"email":"x@y.zz","notify":"on","plan":"pro"}',
+  );
 });
 
 test('roles from ElementInternals reach the accessibility tree (Chromium)', async ({

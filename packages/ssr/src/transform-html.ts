@@ -1,4 +1,4 @@
-import { definitions, renderDSD } from '@neumorphism-ui/elements/ssr.js';
+import { definitions, renderDSD, type OptionData } from '@neumorphism-ui/elements/ssr.js';
 
 const RAW_TEXT = new Set(['script', 'style', 'textarea', 'title']);
 const NAMED_ENTITIES: Readonly<Record<string, string>> = {
@@ -82,6 +82,39 @@ function closeTagIndex(html: string, name: string, from: number): number {
   return pattern.exec(html)?.index ?? -1;
 }
 
+/**
+ * Reads the option elements between a host's start tag and its first closing tag, the way the
+ * client does: label is the whitespace-collapsed text, value falls back to the label.
+ * Nested hosts are not supported; the scan stops at the first closing tag.
+ */
+function scanOptions(html: string, host: string, optionTag: string, from: number): OptionData[] {
+  const close = closeTagIndex(html, host, from);
+  const stop = close === -1 ? html.length : close;
+  const options: OptionData[] = [];
+  let i = from;
+  while (i < stop) {
+    const lt = html.indexOf('<', i);
+    if (lt === -1 || lt >= stop) break;
+    const tag = readStartTag(html, lt);
+    if (!tag || tag.name !== optionTag) {
+      i = lt + 1;
+      continue;
+    }
+    const textEnd = closeTagIndex(html, optionTag, tag.end);
+    const end = textEnd === -1 || textEnd > stop ? stop : textEnd;
+    const label = decodeEntities(html.slice(tag.end, end).replace(/<[^>]*>/g, ''))
+      .replace(/\s+/g, ' ')
+      .trim();
+    options.push({
+      value: Object.hasOwn(tag.attrs, 'value') ? tag.attrs.value! : label,
+      label,
+      disabled: Object.hasOwn(tag.attrs, 'disabled'),
+    });
+    i = end;
+  }
+  return options;
+}
+
 function startsWithDeclarativeRoot(html: string, from: number): boolean {
   let i = from;
   while (isSpace(html[i])) i++;
@@ -128,8 +161,13 @@ export function transformHtml(html: string): string {
       i = stop;
       continue;
     }
-    if (definitions.has(tag.name) && !startsWithDeclarativeRoot(html, i)) {
-      out += renderDSD(tag.name, tag.attrs);
+    const def = definitions.get(tag.name);
+    if (def && !startsWithDeclarativeRoot(html, i)) {
+      out += def.optionsFrom
+        ? renderDSD(tag.name, tag.attrs, {
+            options: scanOptions(html, tag.name, def.optionsFrom, i),
+          })
+        : renderDSD(tag.name, tag.attrs);
     }
   }
   return out;

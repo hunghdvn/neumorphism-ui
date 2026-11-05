@@ -6,6 +6,7 @@ import {
   renderShadowContents,
   serializeAttribute,
   type ComponentDef,
+  type OptionData,
 } from '@neumorphism-ui/elements/ssr.js';
 import * as React from 'react';
 
@@ -31,6 +32,41 @@ interface ElementClass<E extends HTMLElement> {
 const isServer = typeof window === 'undefined';
 const useIsomorphicLayoutEffect = isServer ? React.useEffect : React.useLayoutEffect;
 const needsClassAttribute = Number.parseInt(React.version, 10) < 19;
+
+function textOf(node: React.ReactNode): string {
+  if (typeof node === 'string' || typeof node === 'number') return String(node);
+  if (Array.isArray(node)) return node.map(textOf).join('');
+  if (React.isValidElement(node))
+    return textOf((node.props as { children?: React.ReactNode }).children);
+  return '';
+}
+
+/** Option elements among the children, looking through fragments and arrays (spec §8.4). */
+function collectOptions(children: React.ReactNode, optionTag: string): OptionData[] {
+  const options: OptionData[] = [];
+  const walk = (node: React.ReactNode) => {
+    React.Children.forEach(node, (child) => {
+      if (!React.isValidElement(child)) return;
+      const props = child.props as Record<string, unknown> & { children?: React.ReactNode };
+      if (child.type === React.Fragment) {
+        walk(props.children);
+        return;
+      }
+      const type = child.type as string | { displayName?: string };
+      if (type !== optionTag && (typeof type === 'string' || type?.displayName !== optionTag)) {
+        return;
+      }
+      const label = textOf(props.children).replace(/\s+/g, ' ').trim();
+      options.push({
+        value: props.value === undefined || props.value === null ? label : String(props.value),
+        label,
+        disabled: !!props.disabled,
+      });
+    });
+  };
+  walk(children);
+  return options;
+}
 
 export function createComponent<P extends object, E extends HTMLElement>(
   elementClass: ElementClass<E>,
@@ -158,7 +194,13 @@ export function createComponent<P extends object, E extends HTMLElement>(
       }
       const templateProps: Record<string, unknown> = {
         shadowrootmode: 'open',
-        dangerouslySetInnerHTML: { __html: renderShadowContents(def, serverAttributes) },
+        dangerouslySetInnerHTML: {
+          __html: def.optionsFrom
+            ? renderShadowContents(def, serverAttributes, {
+                options: collectOptions(children, def.optionsFrom),
+              })
+            : renderShadowContents(def, serverAttributes),
+        },
       };
       if (def.delegatesFocus) templateProps.shadowrootdelegatesfocus = '';
       template = React.createElement('template', templateProps);
