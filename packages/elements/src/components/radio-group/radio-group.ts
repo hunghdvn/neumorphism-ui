@@ -86,7 +86,8 @@ export class NeuRadioGroup extends FormControlElement {
   private onKey(event: KeyboardEvent): void {
     if (event.defaultPrevented || event.altKey || event.ctrlKey || event.metaKey) return;
     const radio = this.radioAt(event);
-    if (!radio || this.isDisabled) return;
+    // A key pressed inside a disabled radio (say, a link in its label) is not a choice.
+    if (!radio || this.isDisabled || radio.hasAttribute('disabled')) return;
     if (event.key === ' ') {
       event.preventDefault();
       this.choose(radio);
@@ -138,7 +139,8 @@ export class NeuRadioGroup extends FormControlElement {
       const tabindex = radio === this.stop ? '0' : '-1';
       if (radio.getAttribute('tabindex') !== tabindex) radio.setAttribute('tabindex', tabindex);
     }
-    setText(this.ref('mark'), markRule(this.current));
+    const rule = markRule(this.current);
+    setText(this.ref('mark'), rule === '' ? '' : rule.value);
     this.commit();
   }
 

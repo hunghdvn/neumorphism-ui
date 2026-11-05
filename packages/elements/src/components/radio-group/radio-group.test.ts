@@ -108,6 +108,11 @@ describe('neu-radio-group', () => {
     );
     await tick();
     expect(checkedOf(el)).toEqual([true, false]);
+    // After upgrade only :state(checked) shows the dot, so the duplicate stays empty.
+    const dots = radiosOf(el).map(
+      (radio) => getComputedStyle(radio.shadowRoot!.querySelector('.indicator')!).transform,
+    );
+    expect(dots[0]).not.toBe(dots[1]);
   });
 
   test('a radio in a nested group belongs to the nested group only', async () => {
@@ -256,6 +261,13 @@ describe('neu-radio-group', () => {
     expect(checkedOf(el)).toEqual([false, false]);
     expect(new FormData(form).has('g')).toBe(false);
     expect(tabindexes(el)).toEqual(['0', '-1']);
+
+    // The requested value is kept: a radio with the same value selects again.
+    el.insertAdjacentHTML('beforeend', '<neu-radio value="c">C</neu-radio>');
+    await tick();
+    expect(el.value).toBe('c');
+    expect(internalsOf(radiosOf(el)[2]!).ariaChecked).toBe('true');
+    expect(new FormData(form).get('g')).toBe('c');
   });
 
   test('a radio whose value attribute changes is matched again', async () => {
@@ -322,7 +334,9 @@ describe('neu-radio-group', () => {
     const mark = el.shadowRoot!.querySelector('style')!;
     expect(mark.textContent).toBe('');
     el.value = 'b';
-    expect(mark.textContent).toBe('::slotted(neu-radio[value="b"]){--_neu-radio-on:1}');
+    expect(mark.textContent).toBe(
+      '::slotted(neu-radio:not(:defined)[value="b"]){--_neu-radio-on:1}',
+    );
   });
 
   test('a disabled group (attribute or fieldset) disables every radio and emits nothing', async () => {
@@ -369,6 +383,54 @@ describe('neu-radio-group', () => {
     radiosOf(el)[1]!.click();
     await tick();
     expect([events, el.value]).toEqual([[], '']);
+    el.addEventListener('input', () => events.push('input'));
+    radiosOf(el)[0]!.focus();
+    await userEvent.keyboard('{ArrowDown}');
+    expect([events, el.value, document.activeElement]).toEqual([
+      ['input', 'change'],
+      'a',
+      radiosOf(el)[0],
+    ]);
+  });
+
+  test('keys pressed inside a disabled radio (a link in its label) select nothing', async () => {
+    const el = group(
+      'value="a"',
+      '<neu-radio value="a">A</neu-radio><neu-radio value="b" disabled>B <a href="#details">details</a></neu-radio>',
+    );
+    await tick();
+    const events: string[] = [];
+    for (const type of ['input', 'change']) el.addEventListener(type, () => events.push(type));
+    const link = el.querySelector('a')!;
+    link.focus();
+    expect(keydown(link, ' ').defaultPrevented).toBe(false);
+    expect(keydown(link, 'ArrowDown').defaultPrevented).toBe(false);
+    expect(keydown(link, 'ArrowUp').defaultPrevented).toBe(false);
+    expect([el.value, events]).toEqual(['a', []]);
+  });
+
+  test('the mark rule only reaches radios that are not defined yet', async () => {
+    const el = group('value="b"');
+    await tick();
+    expect(el.shadowRoot!.querySelector('style')!.textContent).toContain(':not(:defined)');
+  });
+
+  test('a value cannot inject markup through the server template or the live mark', async () => {
+    const value = '</style><b>x</b>';
+    const holder = document.createElement('div');
+    holder.setHTMLUnsafe(
+      `<neu-radio-group-ssr>${renderDSD('neu-radio-group', { value })}</neu-radio-group-ssr>`,
+    );
+    const ssr = holder.firstElementChild!.shadowRoot!;
+    expect(ssr.querySelector('b')).toBeNull();
+    expect(ssr.querySelector('style[data-ref="mark"]')!.textContent).toContain(cssString(value));
+    const el = group();
+    el.value = value;
+    expect(el.shadowRoot!.querySelector('b')).toBeNull();
+    expect(el.shadowRoot!.querySelector('style')!.textContent).toContain(cssString(value));
+    expect(el.shadowRoot!.querySelector('style')!.textContent).toBe(
+      ssr.querySelector('style[data-ref="mark"]')!.textContent,
+    );
   });
 
   test('a disabled group looks disabled, also inside a fieldset', () => {
