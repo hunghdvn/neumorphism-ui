@@ -221,8 +221,9 @@ export class NeuSelect extends FormControlElement {
 
   /**
    * Jumps to the next option whose label starts with the characters typed within TYPEAHEAD_MS.
-   * One character searches from the option after the active one; a longer buffer refines the
-   * search, so it starts at the active option; a repeated letter cycles through that letter.
+   * A buffer of one letter (typed once or repeated) searches that letter from the option after
+   * the active one, so repeating it cycles; any other buffer refines the search and starts at the
+   * active option, which may still match.
    */
   private typeahead(char: string): void {
     clearTimeout(this.typedTimer);
@@ -238,8 +239,11 @@ export class NeuSelect extends FormControlElement {
       }
       return -1;
     };
-    let found = find(typed, typed.length > 1 ? Math.max(active, 0) : active + 1);
-    if (found < 0 && [...typed].every((c) => c === typed[0])) found = find(typed[0]!, active + 1);
+    // Ruling R-8: one letter, typed once or repeated, moves on from the active option, so labels
+    // that start with a doubled letter ("AA Battery") cannot hold the cycle.
+    const found = [...typed].every((c) => c === typed[0])
+      ? find(typed[0]!, active + 1)
+      : find(typed, Math.max(active, 0));
     if (found >= 0) this.activate(found);
   }
 

@@ -425,6 +425,34 @@ describe('neu-select', () => {
       expect(el.value).toBe('');
     });
 
+    test('a repeated letter cycles from the active option even past labels with a doubled initial', async () => {
+      const el = select(
+        '',
+        '<neu-option>A4 paper</neu-option><neu-option>AA Battery</neu-option><neu-option>AAA Battery</neu-option><neu-option>Apple</neu-option>',
+      );
+      await tick();
+      // Opens on A4 paper (the first option); every further 'a' moves on, never stalling on AA.
+      press(el, 'a');
+      expect(active(el)).toBe('option-1');
+      press(el, 'a');
+      expect(active(el)).toBe('option-2');
+      press(el, 'a');
+      expect(active(el)).toBe('option-3');
+      press(el, 'a');
+      expect(active(el)).toBe('option-0');
+      await wait(600);
+      press(el, 'Escape');
+      // From a selected option the cycle starts after it, wrapping.
+      el.value = 'AAA Battery';
+      press(el, 'a');
+      expect(active(el)).toBe('option-3');
+      press(el, 'a');
+      expect(active(el)).toBe('option-0');
+      press(el, 'a');
+      expect(active(el)).toBe('option-1');
+      expect(el.value).toBe('AAA Battery');
+    });
+
     test('the active option is scrolled into view inside the listbox', async () => {
       const el = select('', many(30));
       await tick();
@@ -824,6 +852,9 @@ describe('neu-select', () => {
       'false',
       null,
     ]);
+    // Ruling R-9: the close that disabling causes still pairs the open, exactly once.
+    await wait(50);
+    expect(events).toEqual(['neu-open', 'neu-close']);
   });
 
   test('server markup for a disabled or required select carries the state before JS runs', () => {
