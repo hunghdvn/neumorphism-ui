@@ -6,7 +6,7 @@ import {
   renderShadowContents,
   serializeAttribute,
   type ComponentDef,
-} from '@neu-ui/elements/ssr.js';
+} from '@neumorphism-ui/elements/ssr.js';
 import * as React from 'react';
 
 export type WrapperProps<K extends PropertyKey = never> = Omit<

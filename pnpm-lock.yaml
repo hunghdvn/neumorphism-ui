@@ -53,13 +53,13 @@ importers:
 
   apps/examples/next:
     dependencies:
-      '@neu-ui/elements':
+      '@neumorphism-ui/elements':
         specifier: workspace:*
         version: link:../../../packages/elements
-      '@neu-ui/react':
+      '@neumorphism-ui/react':
         specifier: workspace:*
         version: link:../../../packages/react
-      '@neu-ui/tokens':
+      '@neumorphism-ui/tokens':
         specifier: workspace:*
         version: link:../../../packages/tokens
       next:
@@ -84,13 +84,13 @@ importers:
 
   apps/examples/nuxt:
     dependencies:
-      '@neu-ui/elements':
+      '@neumorphism-ui/elements':
         specifier: workspace:*
         version: link:../../../packages/elements
-      '@neu-ui/ssr':
+      '@neumorphism-ui/ssr':
         specifier: workspace:*
         version: link:../../../packages/ssr
-      '@neu-ui/tokens':
+      '@neumorphism-ui/tokens':
         specifier: workspace:*
         version: link:../../../packages/tokens
       nuxt:
@@ -111,7 +111,7 @@ importers:
 
   packages/react:
     dependencies:
-      '@neu-ui/elements':
+      '@neumorphism-ui/elements':
         specifier: workspace:*
         version: link:../elements
     devDependencies:
@@ -139,7 +139,7 @@ importers:
 
   packages/ssr:
     dependencies:
-      '@neu-ui/elements':
+      '@neumorphism-ui/elements':
         specifier: workspace:*
         version: link:../elements
     devDependencies:
@@ -158,7 +158,7 @@ importers:
 
   tools/gen:
     dependencies:
-      '@neu-ui/elements':
+      '@neumorphism-ui/elements':
         specifier: workspace:*
         version: link:../../packages/elements
 

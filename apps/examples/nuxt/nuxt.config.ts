@@ -1,8 +1,8 @@
 export default defineNuxtConfig({
   compatibilityDate: '2026-10-01',
   devtools: { enabled: false },
-  modules: ['@neu-ui/ssr/nuxt'],
-  css: ['@neu-ui/tokens/neu.css'],
+  modules: ['@neumorphism-ui/ssr/nuxt'],
+  css: ['@neumorphism-ui/tokens/neu.css'],
   app: {
     head: {
       title: 'neu-ui SSR gate (Nuxt)',

@@ -1,4 +1,4 @@
-import { definitions, renderDSD } from '@neu-ui/elements/ssr.js';
+import { definitions, renderDSD } from '@neumorphism-ui/elements/ssr.js';
 
 const RAW_TEXT = new Set(['script', 'style', 'textarea', 'title']);
 const NAMED_ENTITIES: Readonly<Record<string, string>> = {

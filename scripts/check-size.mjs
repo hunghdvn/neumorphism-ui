@@ -48,7 +48,7 @@ const components = [
 const coreSize = gz(await bundled(core));
 const rows = [
   ['cdn/neu.min.js (all components)', gz(readFileSync(`${elements}/cdn/neu.min.js`, 'utf8')), 25],
-  ['@neu-ui/tokens neu.css', gz(readFileSync(`${root}packages/tokens/neu.css`, 'utf8')), 4],
+  ['@neumorphism-ui/tokens neu.css', gz(readFileSync(`${root}packages/tokens/neu.css`, 'utf8')), 4],
   ['core (base + form + html)', coreSize, 4],
 ];
 for (const [tag, file, name] of components) {

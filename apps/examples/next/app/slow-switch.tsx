@@ -1,4 +1,4 @@
-import { NeuSwitch } from '@neu-ui/react';
+import { NeuSwitch } from '@neumorphism-ui/react';
 
 /**
  * Streams in after the shell, usually after the element definitions have loaded. 1500 ms keeps the

@@ -2,7 +2,7 @@ import type { DocEntry } from './define.js';
 
 /**
  * Re-declares the derived theme values on every host (spec §5.3). Fallbacks are the light
- * defaults from @neu-ui/tokens so components still look right without the tokens stylesheet;
+ * defaults from @neumorphism-ui/tokens so components still look right without the tokens stylesheet;
  * styles.test.ts keeps the two in sync.
  */
 export const hostTheme = `

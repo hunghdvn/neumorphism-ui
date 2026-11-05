@@ -1,4 +1,4 @@
-import { renderDSD } from '@neu-ui/elements/ssr.js';
+import { renderDSD } from '@neumorphism-ui/elements/ssr.js';
 import { describe, expect, test } from 'vitest';
 import { decodeEntities, readStartTag, transformHtml } from './transform-html.js';
 

@@ -1,4 +1,4 @@
-import { definitions } from '@neu-ui/elements/ssr.js';
+import { definitions } from '@neumorphism-ui/elements/ssr.js';
 import { describe, expect, test } from 'vitest';
 import {
   buildManifest,
@@ -37,7 +37,7 @@ describe('buildReactWrapper', () => {
     const source = buildReactWrapper(switchDef);
     expect(source.split('\n')[1]).toBe("'use client';");
     expect(source).toContain(
-      "import { NeuSwitch as NeuSwitchElement } from '@neu-ui/elements/switch.js';",
+      "import { NeuSwitch as NeuSwitchElement } from '@neumorphism-ui/elements/switch.js';",
     );
     expect(source).toContain('  checked?: boolean;');
     expect(source).toContain('  defaultChecked?: boolean;');

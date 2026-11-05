@@ -1,4 +1,4 @@
-import { renderDSD } from '@neu-ui/elements/ssr.js';
+import { renderDSD } from '@neumorphism-ui/elements/ssr.js';
 import { expect, test } from 'vitest';
 import neuUiNitroPlugin from './server-plugin.js';
 

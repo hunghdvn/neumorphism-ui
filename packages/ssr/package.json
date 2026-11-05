@@ -1,5 +1,5 @@
 {
-  "name": "@neu-ui/ssr",
+  "name": "@neumorphism-ui/ssr",
   "version": "0.0.0",
   "description": "Server-side rendering helpers for neumorphism-ui",
   "license": "MIT",
@@ -26,7 +26,7 @@
   "sideEffects": false,
   "scripts": {
     "build": "tsc -p tsconfig.build.json",
-    "test": "pnpm --filter @neu-ui/elements build && vitest run",
+    "test": "pnpm --filter @neumorphism-ui/elements build && vitest run",
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "publishConfig": {
@@ -34,7 +34,7 @@
     "provenance": true
   },
   "dependencies": {
-    "@neu-ui/elements": "workspace:*"
+    "@neumorphism-ui/elements": "workspace:*"
   },
   "peerDependencies": {
     "@nuxt/kit": "^4.0.0",

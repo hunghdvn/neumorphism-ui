@@ -7,9 +7,9 @@
     "build": "nuxt build"
   },
   "dependencies": {
-    "@neu-ui/elements": "workspace:*",
-    "@neu-ui/ssr": "workspace:*",
-    "@neu-ui/tokens": "workspace:*",
+    "@neumorphism-ui/elements": "workspace:*",
+    "@neumorphism-ui/ssr": "workspace:*",
+    "@neumorphism-ui/tokens": "workspace:*",
     "nuxt": "4.5.2",
     "vue": "3.5.43"
   }

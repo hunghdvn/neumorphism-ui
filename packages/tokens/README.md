@@ -1,4 +1,4 @@
-# @neu-ui/tokens
+# @neumorphism-ui/tokens
 
 Theme tokens for [neumorphism-ui](https://github.com/hunghdvn/neumorphism-ui): one CSS file with
 the light and dark themes as custom properties (`--neu-bg`, `--neu-accent`, `--neu-distance`,
@@ -7,11 +7,11 @@ the light and dark themes as custom properties (`--neu-bg`, `--neu-accent`, `--n
 pick a theme; without it the page follows `prefers-color-scheme`. Pre-release.
 
 ```sh
-npm install @neu-ui/tokens@next
+npm install @neumorphism-ui/tokens@next
 ```
 
 ```css
-@import '@neu-ui/tokens/neu.css';
+@import '@neumorphism-ui/tokens/neu.css';
 
 :root {
   --neu-accent: #0f9d76;

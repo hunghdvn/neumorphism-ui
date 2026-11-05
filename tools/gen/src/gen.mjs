@@ -1,7 +1,7 @@
 import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { definitions } from '@neu-ui/elements/ssr.js';
+import { definitions } from '@neumorphism-ui/elements/ssr.js';
 import {
   buildManifest,
   buildReactIndex,

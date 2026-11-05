@@ -8,9 +8,9 @@
     "start": "next start --port 3100"
   },
   "dependencies": {
-    "@neu-ui/elements": "workspace:*",
-    "@neu-ui/react": "workspace:*",
-    "@neu-ui/tokens": "workspace:*",
+    "@neumorphism-ui/elements": "workspace:*",
+    "@neumorphism-ui/react": "workspace:*",
+    "@neumorphism-ui/tokens": "workspace:*",
     "next": "16.3.8",
     "react": "19.3.0",
     "react-dom": "19.3.0"

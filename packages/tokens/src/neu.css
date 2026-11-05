@@ -1,5 +1,5 @@
 /*
- * @neu-ui/tokens: theme variables for neumorphism-ui (spec §5).
+ * @neumorphism-ui/tokens: theme variables for neumorphism-ui (spec §5).
  * Everything sits in @layer neu, so unlayered author CSS always wins.
  * Optional overrides that are never set here: --neu-fg, --neu-fg-muted,
  * --neu-shadow-dark, --neu-shadow-light. Names starting with --_neu- are private.

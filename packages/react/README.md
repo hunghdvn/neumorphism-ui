@@ -1,4 +1,4 @@
-# @neu-ui/react
+# @neumorphism-ui/react
 
 React 18.3 and 19 wrappers for [neumorphism-ui](https://github.com/hunghdvn/neumorphism-ui):
 `NeuButton`, `NeuSwitch`, `NeuTextField`, `NeuIcon`, `NeuIconButton`, `NeuButtonGroup`,
@@ -8,12 +8,12 @@ React's `<input>`, and server-render declarative shadow roots, so they work with
 streaming. Pre-release.
 
 ```sh
-npm install @neu-ui/react@next @neu-ui/tokens@next
+npm install @neumorphism-ui/react@next @neumorphism-ui/tokens@next
 ```
 
 ```tsx
-import '@neu-ui/tokens/neu.css';
-import { NeuSwitch, NeuTextField } from '@neu-ui/react';
+import '@neumorphism-ui/tokens/neu.css';
+import { NeuSwitch, NeuTextField } from '@neumorphism-ui/react';
 
 <NeuTextField label="Email" value={email} onChange={(e) => setEmail((e.target as HTMLInputElement).value)} />;
 <NeuSwitch name="notify" defaultChecked>Notifications</NeuSwitch>;
@@ -22,10 +22,10 @@ import { NeuSwitch, NeuTextField } from '@neu-ui/react';
 ## Icon libraries
 
 `NeuIcon` and `NeuIconButton` ship the built-in `system` icons. Register your own library with
-`registerIconLibrary`, re-exported here from `@neu-ui/elements` so you need no second import:
+`registerIconLibrary`, re-exported here from `@neumorphism-ui/elements` so you need no second import:
 
 ```tsx
-import { NeuIcon, registerIconLibrary } from '@neu-ui/react';
+import { NeuIcon, registerIconLibrary } from '@neumorphism-ui/react';
 
 registerIconLibrary('brand', { resolve: (name) => `/icons/${name}.svg` });
 
