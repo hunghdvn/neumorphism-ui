@@ -1,6 +1,5 @@
 import { NeuButton } from '../button/button.js';
-import { renderIconInto } from '../icon/icon-loader.js';
-import { onIconLibraryChange } from '../icon/icon-registry.js';
+import { iconDrawer } from '../icon/icon-drawer.js';
 import { iconButtonDef } from './icon-button.def.js';
 
 export class NeuIconButton extends NeuButton {
@@ -9,34 +8,25 @@ export class NeuIconButton extends NeuButton {
   declare library: string;
   declare label: string;
   declare shape: 'circle' | 'square';
-  private unsubscribe: (() => void) | undefined;
-  private wasRemoved = false;
-
-  private draw(): void {
-    const box = this.ref('icon');
-    if (box) renderIconInto(box, String(this.props.library), String(this.props.icon));
-  }
+  private readonly drawer = iconDrawer(
+    () => this.ref('icon'),
+    () => String(this.props.library),
+    () => String(this.props.icon),
+  );
 
   protected override update(changed: ReadonlySet<string>): void {
     super.update(changed);
     if (changed.has('label') || changed.has('icon')) {
       this.internals.ariaLabel = String(this.props.label || this.props.icon) || null;
     }
-    if (changed.has('icon') || changed.has('library')) this.draw();
+    if (changed.has('icon') || changed.has('library')) this.drawer.draw();
   }
 
   protected override connected(): void {
-    if (this.unsubscribe) return;
-    this.unsubscribe = onIconLibraryChange((library) => {
-      if (library === this.props.library) this.draw();
-    });
-    // Back in the page after a removal: a library may have changed meanwhile.
-    if (this.wasRemoved) this.draw();
+    this.drawer.connected();
   }
 
   protected override disconnected(): void {
-    this.unsubscribe?.();
-    this.unsubscribe = undefined;
-    this.wasRemoved = true;
+    this.drawer.disconnected();
   }
 }

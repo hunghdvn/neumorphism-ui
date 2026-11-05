@@ -16,8 +16,18 @@ const tokens = new WeakMap<Element, number>();
 let parser: DOMParser | undefined;
 let counter = 0;
 
+/**
+ * Tested against `name=value` of every attribute: event handlers, style, an href that is not a
+ * local #id, and any value that could make the page send a request (url() other than url(#id),
+ * image-set(), src(), or a CSS escape, which could spell any of them).
+ */
+const UNSAFE = /^on|^style=|href=(?!#)|\\|(?:image-set|src)\(|url\((?![\s'"]*#)/i;
+
 /** Allowlist walk: keeps allowed SVG elements and text, drops everything else. */
 function clean(parent: Element): void {
+  for (const { name, value } of [...parent.attributes]) {
+    if (UNSAFE.test(`${name}=${value}`)) parent.removeAttribute(name);
+  }
   for (const node of [...parent.childNodes]) {
     if (node.nodeType === 3) continue;
     if (
@@ -28,14 +38,7 @@ function clean(parent: Element): void {
       node.remove();
       continue;
     }
-    const el = node as Element;
-    for (const attr of [...el.attributes]) {
-      const name = attr.name.toLowerCase();
-      if (name.startsWith('on') || (/(^|:)href$/.test(name) && !attr.value.startsWith('#'))) {
-        el.removeAttribute(attr.name);
-      }
-    }
-    clean(el);
+    clean(node as Element);
   }
 }
 
@@ -52,9 +55,6 @@ function sanitize(text: string): Element | null {
   }
   clean(svg);
   svg.removeAttribute('xmlns:xlink');
-  for (const attr of [...svg.attributes]) {
-    if (attr.name.toLowerCase().startsWith('on')) svg.removeAttribute(attr.name);
-  }
   svg.setAttribute('part', 'svg');
   svg.setAttribute('aria-hidden', 'true');
   svg.setAttribute('focusable', 'false');
@@ -95,22 +95,13 @@ export function renderIconInto(container: Element, library: string, name: string
     container.innerHTML = systemIconSvg(name) ?? '';
     return;
   }
-  let source: string;
   try {
-    const resolved = name ? getIconLibrary(library)?.resolve(name) : undefined;
-    if (resolved == null) return show(null);
-    source = String(resolved).trim();
+    const source = name ? String(getIconLibrary(library)?.resolve(name) ?? '').trim() : '';
+    if (source.startsWith('<')) show(sanitize(source));
+    // A blank source stays empty: fetch('') would request the current page.
+    else if (source) void load(source).then(show);
+    else show(null);
   } catch {
-    return show(null);
+    show(null);
   }
-  // fetch('') would request the current page.
-  if (!source) return show(null);
-  if (source.startsWith('<')) {
-    try {
-      return show(sanitize(source));
-    } catch {
-      return show(null);
-    }
-  }
-  void load(source).then(show);
 }

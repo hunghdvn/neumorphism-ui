@@ -1,6 +1,7 @@
 import { afterEach, describe, expect, test, vi } from 'vitest';
 import { NeuIcon } from '../../icon.js';
 import { registerIconLibrary } from '../../icons.js';
+import { renderDSD } from '../../ssr.js';
 import { axeViolations, internalsOf, mount, tick } from '../../test-utils/helpers.js';
 import { systemIconSvg } from './system-icons.js';
 
@@ -27,6 +28,26 @@ function stubFetch(body: string | ((url: string) => Promise<Response>)) {
 const box = (el: Element) => el.shadowRoot!.querySelector('.box')!;
 const svgOf = (el: Element) => box(el).querySelector('svg');
 const settle = () => new Promise<void>((resolve) => setTimeout(resolve, 30));
+
+/**
+ * Records changes to the element's icon box from now on; read them with the returned function.
+ * Only the box is watched: adopting a server root also removes its SSR style element.
+ */
+function watch(el: Element): () => MutationRecord[] {
+  const records: MutationRecord[] = [];
+  const observer = new MutationObserver((list) => records.push(...list));
+  observer.observe(box(el), {
+    subtree: true,
+    childList: true,
+    attributes: true,
+    characterData: true,
+  });
+  return () => {
+    records.push(...observer.takeRecords());
+    observer.disconnect();
+    return records;
+  };
+}
 
 const HIT = '__neuIconHit';
 const NS = 'xmlns="http://www.w3.org/2000/svg"';
@@ -146,6 +167,27 @@ describe('neu-icon', () => {
     expect(fetchMock).not.toHaveBeenCalled();
   });
 
+  test('style and non-local url() references are dropped; local url(#id) survives', async () => {
+    const markup =
+      `<svg ${NS} style="background:url(https://t.example/a)" filter="url(https://t.example/f.svg#a)">` +
+      '<defs><linearGradient id="g"><stop offset="0"/></linearGradient><clipPath id="c"><rect width="4" height="4"/></clipPath></defs>' +
+      `<path id="p" d="M1 1h4" style="fill:red" mask="url( 'https://t.example/m.svg#a')" fill="url('#g')" clip-path="url(#c)" cursor="\\75rl(https://t.example/c)" stroke="URL(//t.example/s)"/>` +
+      '<rect id="r" width="1" height="1" fill="-webkit-image-set(&quot;https://t.example/i.png&quot; 1x)"/></svg>';
+    registerIconLibrary('t-url-attrs', { resolve: () => markup });
+    const el = mount<NeuIcon>('<neu-icon library="t-url-attrs" name="a"></neu-icon>');
+    await vi.waitFor(() => expect(svgOf(el)).not.toBeNull());
+    const svg = svgOf(el)!;
+    expect(svg.outerHTML).not.toContain('t.example');
+    expect(svg.hasAttribute('style')).toBe(false);
+    expect(svg.hasAttribute('filter')).toBe(false);
+    const path = svg.querySelector('#p')!;
+    expect(path.hasAttribute('style')).toBe(false);
+    expect(path.getAttribute('fill')).toBe("url('#g')");
+    expect(path.getAttribute('clip-path')).toBe('url(#c)');
+    expect(path.getAttribute('d')).toBe('M1 1h4');
+    expect(svg.querySelector('#r')!.hasAttribute('fill')).toBe(false);
+  });
+
   test('re-registering a library updates icons already rendered', async () => {
     const svg = (d: string) => `<svg viewBox="0 0 24 24"><path d="${d}"/></svg>`;
     const d = (el: Element) => svgOf(el)?.querySelector('path')?.getAttribute('d');
@@ -158,6 +200,39 @@ describe('neu-icon', () => {
     registerIconLibrary('t-rereg', { resolve: () => svg('M3 3') });
     await settle();
     expect(d(el)).toBe('M2 2');
+    // Back in the page it catches up; a plain move afterwards redraws nothing.
+    document.body.append(el);
+    await vi.waitFor(() => expect(d(el)).toBe('M3 3'));
+    const writes = watch(el);
+    mount('<div></div>').append(el);
+    await settle();
+    expect(writes()).toEqual([]);
+  });
+
+  test('registering a library named system is ignored', async () => {
+    const el = mount<NeuIcon>('<neu-icon name="check"></neu-icon>');
+    const writes = watch(el);
+    registerIconLibrary('system', { resolve: () => '<svg><path d="M9 9"/></svg>' });
+    await settle();
+    expect(writes()).toEqual([]);
+    expect(svgOf(el)!.querySelector('path')!.getAttribute('d')).toBe('M5 12.5l4.5 4.5L19 7.5');
+  });
+
+  test('hydration and later moves keep the server-rendered system icon', async () => {
+    const doc = document.implementation.createHTMLDocument('');
+    doc.body.setHTMLUnsafe(
+      `<neu-icon name="check">${renderDSD('neu-icon', { name: 'check' })}</neu-icon>`,
+    );
+    const el = doc.body.firstElementChild as NeuIcon;
+    const server = el.shadowRoot!.querySelector('svg');
+    const writes = watch(el);
+    document.body.append(document.adoptNode(el));
+    expect(el).toBeInstanceOf(NeuIcon);
+    mount('<div></div>').append(el);
+    el.label = 'Done';
+    await settle();
+    expect(svgOf(el)).toBe(server);
+    expect(writes()).toEqual([]);
   });
 
   test('only the latest name wins when responses arrive out of order', async () => {

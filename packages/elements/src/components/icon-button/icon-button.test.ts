@@ -132,6 +132,31 @@ describe('neu-icon-button', () => {
     await vi.waitFor(() => expect(d()).toBe('M2 2'));
   });
 
+  test('hydration and later moves keep the server-rendered icon', async () => {
+    const attrs = { icon: 'x', label: 'Close' };
+    const doc = document.implementation.createHTMLDocument('');
+    doc.body.setHTMLUnsafe(
+      `<neu-icon-button icon="x" label="Close">${renderDSD('neu-icon-button', attrs)}</neu-icon-button>`,
+    );
+    const el = doc.body.firstElementChild as NeuIconButton;
+    const icon = el.shadowRoot!.querySelector('.icon')!;
+    const server = icon.querySelector('svg');
+    const records: MutationRecord[] = [];
+    const observer = new MutationObserver((list) => records.push(...list));
+    observer.observe(icon, { subtree: true, childList: true, attributes: true });
+    document.body.append(document.adoptNode(el));
+    expect(el).toBeInstanceOf(NeuIconButton);
+    mount('<div></div>').append(el);
+    await tick();
+    records.push(...observer.takeRecords());
+    observer.disconnect();
+    expect(icon.querySelector('svg')).toBe(server);
+    expect(records).toEqual([]);
+    // A real change still redraws.
+    el.icon = 'check';
+    expect(icon.querySelector('svg')).not.toBe(server);
+  });
+
   test('a library registered after the button rendered fills it in', async () => {
     const el = mount('<neu-icon-button icon="a" library="t-ib-late"></neu-icon-button>');
     const d = () => el.shadowRoot!.querySelector('.icon path')?.getAttribute('d');
