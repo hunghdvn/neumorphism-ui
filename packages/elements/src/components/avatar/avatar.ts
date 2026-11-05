@@ -1,3 +1,4 @@
+import { setText } from '../../core/dom.js';
 import { NeuElement } from '../../core/neu-element.js';
 import { avatarDef } from './avatar.def.js';
 
@@ -18,7 +19,8 @@ export class NeuAvatar extends NeuElement {
     const img = this.ref<HTMLImageElement>('image');
     if (!img) return;
     img.addEventListener('error', () => this.setBroken(true));
-    // The error event may have fired before this element upgraded; it will not fire again.
+    // The error event may have fired before this element upgraded; it will not fire again. An SVG
+    // without intrinsic size is not caught here: browsers give it a 300x150 (or viewBox) size.
     if (img.hasAttribute('src') && img.complete && img.naturalWidth === 0) this.broken = true;
     this.toggleState('image-error', this.broken);
   }
@@ -31,6 +33,7 @@ export class NeuAvatar extends NeuElement {
       this.internals.ariaLabel = label || null;
       this.internals.ariaHidden = label ? null : 'true';
     }
+    if (changed.has('initials')) setText(this.ref('initials'), String(this.props.initials));
     const img = this.ref<HTMLImageElement>('image');
     if (!img) return;
     const src = String(this.props.src);

@@ -240,20 +240,22 @@ export abstract class NeuElement extends ServerSafeHTMLElement {
   /** `loaded`: DOMContentLoaded fired, so the parser is done and nothing is left to wait for. */
   private ensureRoot(loaded?: Event): void {
     if (this.root) return;
-    const existing = this.internals.shadowRoot;
-    if (!loaded && document.readyState === 'loading' && this.parsing(existing)) {
-      this.waitForParser(existing);
+    let root = this.internals.shadowRoot;
+    // A root is unfinished while it has fewer data-ref nodes than the template renders.
+    const refs = root ? this.def.template(this.props).value.split('data-ref="').length - 1 : 0;
+    if (!loaded && document.readyState === 'loading' && this.parsing(root, refs)) {
+      this.waitForParser(root, refs);
       return;
     }
-    if (existing) {
-      this.adoptRoot(existing);
-      return;
+    // No root yet, or one still unfinished after the parser is done (a truncated response):
+    // render the template, so rendered() and every update() find their nodes.
+    if (!root || this.parsing(root, refs)) {
+      root ??= this.attachShadow({
+        mode: 'open',
+        delegatesFocus: this.def.delegatesFocus ?? false,
+      });
+      root.innerHTML = this.def.template(this.props).value;
     }
-    const root = this.attachShadow({
-      mode: 'open',
-      delegatesFocus: this.def.delegatesFocus ?? false,
-    });
-    root.innerHTML = this.def.template(this.props).value;
     this.adoptRoot(root);
   }
 
@@ -262,13 +264,10 @@ export abstract class NeuElement extends ServerSafeHTMLElement {
    * root (spec §8.1). Before the root exists, that is only possible while nothing has been parsed
    * inside or after the element; one created by script in the middle of the page renders at once.
    * Once it exists, its contents may still be streaming in: it is unfinished while it has fewer
-   * data-ref nodes than the template, and adopting it then would run rendered() without them.
+   * than `refs` data-ref nodes, and adopting it then would run rendered() without them.
    */
-  private parsing(root: ShadowRoot | null): boolean {
-    if (root) {
-      const refs = this.def.template(this.props).value.split('data-ref="').length - 1;
-      return root.querySelectorAll('[data-ref]').length < refs;
-    }
+  private parsing(root: ShadowRoot | null, refs: number): boolean {
+    if (root) return root.querySelectorAll('[data-ref]').length < refs;
     if (this.firstChild !== null || this.nextSibling !== null) return false;
     for (let node = this.parentNode; node !== null; node = node.parentNode) {
       if (node.nextSibling !== null) return false;
@@ -279,16 +278,17 @@ export abstract class NeuElement extends ServerSafeHTMLElement {
   /**
    * Without a root, watches the document until a child or a following node shows the parser has
    * moved past the element; with an unfinished root, watches that root until it is complete. Then
-   * ensureRoot() decides again. DOMContentLoaded is the fallback, after which any root is adopted.
+   * ensureRoot() decides again. DOMContentLoaded is the fallback, after which a root that is still
+   * unfinished is rendered afresh.
    */
-  private waitForParser(root: ShadowRoot | null): void {
+  private waitForParser(root: ShadowRoot | null, refs: number): void {
     const resume = (loaded?: Event) => {
       observer.disconnect();
       document.removeEventListener('DOMContentLoaded', resume);
       this.ensureRoot(loaded);
     };
     const observer = new MutationObserver(() => {
-      if (!this.parsing(root)) resume();
+      if (!this.parsing(root, refs)) resume();
     });
     observer.observe(root ?? document, { childList: true, subtree: true });
     document.addEventListener('DOMContentLoaded', resume);

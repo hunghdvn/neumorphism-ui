@@ -374,7 +374,7 @@ describe('neu-text-field', () => {
     expect(el.validity.valueMissing).toBe(true);
   });
 
-  test('rendered() tolerates a root without the input', () => {
+  test('a server root that never got its input is rendered afresh once the page has loaded', () => {
     // A listener's exception is reported to window rather than thrown out of dispatchEvent().
     const errors: unknown[] = [];
     const onError = (event: ErrorEvent) => errors.push(event.error);
@@ -395,10 +395,13 @@ describe('neu-text-field', () => {
     expect(errors).toEqual([]);
     // The root was adopted all the same.
     expect(el.shadowRoot!.adoptedStyleSheets).toHaveLength(1);
-    expect(() => {
-      el.value = 'typed';
-    }).not.toThrow();
+    el.value = 'typed';
     expect(el.value).toBe('typed');
+    // The input exists now, so the field can be edited.
+    expect(inputOf(el).value).toBe('typed');
+    inputOf(el).value = 'by hand';
+    inputOf(el).dispatchEvent(new Event('input', { bubbles: true, composed: true }));
+    expect(el.value).toBe('by hand');
   });
 
   test('an untouched SSR field whose value the browser sanitized still follows its value attribute', () => {

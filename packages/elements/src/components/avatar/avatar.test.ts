@@ -12,7 +12,11 @@ const PNG =
   'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==';
 const BROKEN = 'data:image/png;base64,AAAA';
 
+/** An SVG with only a viewBox: no intrinsic width, yet a valid picture. */
+const SVG = `data:image/svg+xml,${encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 8 8"><rect width="8" height="8"/></svg>')}`;
+
 const show = (el: Element) => el.shadowRoot!.querySelector('.base')!.getAttribute('data-show');
+const initials = (el: Element) => el.shadowRoot!.querySelector('.initials')!.textContent;
 const image = (el: Element) => el.shadowRoot!.querySelector('img')!;
 const avatar = (attrs = '') => mount<NeuAvatar>(`<neu-avatar${attrs}></neu-avatar>`);
 const failed = (el: Element) =>
@@ -65,7 +69,7 @@ describe('neu-avatar', () => {
     expect(await axeViolations(el)).toEqual([]);
   });
 
-  test('rendered() tolerates a root without the image', () => {
+  test('a server root that never got its image is rendered afresh once the page has loaded', () => {
     const errors: unknown[] = [];
     const onError = (event: ErrorEvent) => errors.push(event.error);
     window.addEventListener('error', onError);
@@ -84,9 +88,11 @@ describe('neu-avatar', () => {
     }
     expect(errors).toEqual([]);
     expect(el.shadowRoot!.adoptedStyleSheets).toHaveLength(1);
-    expect(() => {
-      el.initials = 'HD';
-    }).not.toThrow();
+    // Unfinished once the page has loaded, so it was rendered afresh and works.
+    expect(el.shadowRoot!.querySelector('img')).not.toBeNull();
+    el.initials = 'HD';
+    expect(show(el)).toBe('initials');
+    expect(initials(el)).toBe('HD');
   });
 
   test('falls back image → initials → icon', async () => {
@@ -109,8 +115,18 @@ describe('neu-avatar', () => {
     el.src = '';
     el.initials = 'AB';
     expect(show(el)).toBe('initials');
+    expect(initials(el)).toBe('AB');
     el.initials = '';
     expect(show(el)).toBe('icon');
+  });
+
+  test('initials set after the first render show their text', () => {
+    const el = avatar();
+    el.initials = 'HD';
+    expect(show(el)).toBe('initials');
+    expect(initials(el)).toBe('HD');
+    el.setAttribute('initials', 'AB');
+    expect(initials(el)).toBe('AB');
   });
 
   test('an image that failed before upgrade still falls back', async () => {
@@ -124,18 +140,25 @@ describe('neu-avatar', () => {
         .join('');
       return `<${tag}${text}>${renderDSD('neu-avatar', attrs).replaceAll('neu-avatar', tag)}</${tag}>`;
     };
-    document.body.setHTMLUnsafe(server({ src: BROKEN, initials: 'HD' }) + server({ src: BROKEN }));
-    const [withInitials, bare] = [...document.body.children] as NeuAvatar[];
+    document.body.setHTMLUnsafe(
+      server({ src: BROKEN, initials: 'HD' }) +
+        server({ src: BROKEN }) +
+        server({ src: SVG, initials: 'HD' }),
+    );
+    const [withInitials, bare, svg] = [...document.body.children] as NeuAvatar[];
     expect(withInitials!.shadowRoot).not.toBeNull();
     // The server markup claims the picture; the error event fires before the element is defined.
     expect(show(withInitials!)).toBe('image');
-    await Promise.all([failed(withInitials!), failed(bare!)]);
+    await Promise.all([failed(withInitials!), failed(bare!), image(svg!).decode()]);
 
     Early.define();
     expect(withInitials).toBeInstanceOf(Early);
     expect(show(withInitials!)).toBe('initials');
     expect(show(bare!)).toBe('icon');
     expect(hasErrorState(withInitials!)).toBe(true);
+    // Loaded before upgrade too, and not mistaken for a broken one.
+    expect(show(svg!)).toBe('image');
+    expect(hasErrorState(svg!)).toBe(false);
   });
 
   test('changing src clears the error', async () => {
