@@ -107,6 +107,60 @@ describe('neu-button-group', () => {
     expect(corners(b!)[0]).toBe('0px');
   });
 
+  test('buttons of different widths and sizes fill the group', () => {
+    const rect = (el: Element) => base(el).getBoundingClientRect();
+    const vertical = mount<NeuButtonGroup>(
+      '<neu-button-group label="x" orientation="vertical"><neu-button>Save</neu-button><neu-button>Delete permanently</neu-button></neu-button-group>',
+    );
+    const [save, remove] = vertical.children;
+    expect(rect(save!).width).toBeGreaterThan(0);
+    expect(rect(save!).width).toBeCloseTo(rect(remove!).width, 1);
+    const row = mount<NeuButtonGroup>(
+      '<neu-button-group label="x"><neu-button size="sm">A</neu-button><neu-button size="lg">B</neu-button></neu-button-group>',
+    );
+    const [small, large] = row.children;
+    expect(rect(small!).height).toBeCloseTo(rect(large!).height, 1);
+    expect(rect(small!).height).toBeCloseTo(row.getBoundingClientRect().height, 1);
+    // Outside a group a button keeps its own size.
+    const alone = mount<NeuButton>('<neu-button size="sm">A</neu-button>');
+    expect(rect(alone).height).toBeLessThan(rect(large!).height);
+  });
+
+  test('hidden buttons and templates do not take the outer corners', () => {
+    const el = mount<NeuButtonGroup>(
+      '<neu-button-group label="x"><template></template><neu-button hidden>Undo</neu-button><neu-button>Save</neu-button><neu-button>Cancel</neu-button><neu-button hidden>Redo</neu-button></neu-button-group>',
+    );
+    const [, , save, cancel] = el.children;
+    const radius = style(save!).borderStartStartRadius;
+    expect(radius).not.toBe('0px');
+    expect(corners(save!)).toEqual([radius, '0px', radius, '0px']);
+    expect(corners(cancel!)).toEqual(['0px', radius, '0px', radius]);
+  });
+
+  test('the group does not reveal children that are not rendered', () => {
+    const el = mount<NeuButtonGroup>(
+      '<neu-button-group label="x"><template></template><script type="text/plain">x</script><span hidden>gone</span><neu-button hidden>Undo</neu-button><neu-button>Save</neu-button></neu-button-group>',
+    );
+    const [template, script, span, undo, save] = [...el.children];
+    for (const child of [template, script, span, undo]) {
+      expect(getComputedStyle(child!).display).toBe('none');
+    }
+    expect(getComputedStyle(save!).display).toBe('flex');
+    // Outside a group a button keeps its inline-block host.
+    expect(getComputedStyle(mount('<neu-button>A</neu-button>')).display).toBe('inline-block');
+  });
+
+  test('a flat button inside a group draws no shadow of its own on hover', async () => {
+    const el = mount<NeuButtonGroup>(
+      '<neu-button-group label="x"><neu-button variant="flat">A</neu-button><neu-button>B</neu-button></neu-button-group>',
+    );
+    const flat = el.children[0]!;
+    await userEvent.hover(flat);
+    expect(flat.matches(':hover')).toBe(true);
+    expect(style(flat).boxShadow).toContain(TRANSPARENT);
+    expect(style(flat).boxShadow).not.toMatch(/\d{2,}px/);
+  });
+
   test('a keyboard-focused button inside a group shows the focus ring', async () => {
     const el = three();
     el.style.setProperty('--neu-duration', '0ms');

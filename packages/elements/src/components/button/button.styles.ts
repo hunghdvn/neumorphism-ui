@@ -1,12 +1,15 @@
 import { hostTheme } from '../../core/styles.js';
 
-/** Look and states shared by every button-like component; sizing is each component's own. */
+/**
+ * Look and states shared by every button-like component; sizing is each component's own. A
+ * neu-button-group turns the host into a flex box, and the base grows to fill it edge to edge.
+ */
 /** `loading` is only a thing on neu-button; icon buttons ignore a stray attribute. */
 const shared = (loading: boolean) => `${hostTheme}
 :host { display: inline-block; vertical-align: middle; cursor: pointer; user-select: none; }
 :host(:disabled), :host([disabled])${loading ? ', :host([loading])' : ''} { cursor: not-allowed; }
 .base {
-  display: inline-flex; align-items: center; justify-content: center;
+  display: inline-flex; flex: auto; align-items: center; justify-content: center;
   border-start-start-radius: var(--_neu-grp-ss, var(--_neu-rr, var(--_neu-r))); border-start-end-radius: var(--_neu-grp-se, var(--_neu-rr, var(--_neu-r)));
   border-end-start-radius: var(--_neu-grp-es, var(--_neu-rr, var(--_neu-r))); border-end-end-radius: var(--_neu-grp-ee, var(--_neu-rr, var(--_neu-r)));
   background: var(--_neu-bg);
@@ -17,7 +20,7 @@ const shared = (loading: boolean) => `${hostTheme}
 :host([size='sm']) .base { box-shadow: var(--_neu-grp-shadow, var(--_neu-raised-sm)); }
 :host([variant='primary']) .base { color: var(--_neu-accent-c); }
 :host([variant='flat']) .base { box-shadow: none; }
-:host([variant='flat']:hover:not(:disabled):not([disabled])) .base { box-shadow: var(--_neu-raised-sm); }
+:host([variant='flat']:hover:not(:disabled):not([disabled])) .base { box-shadow: var(--_neu-grp-shadow, var(--_neu-raised-sm)); }
 :host(:active:not(:disabled):not([disabled])${loading ? ':not([loading])' : ''}) .base, :host(:state(pressed)) .base { box-shadow: var(--_neu-inset-sm); }
 :host(:focus-visible) .base { box-shadow: var(--_neu-grp-shadow, var(--_neu-raised)), var(--_neu-focus); }
 :host(:disabled) .base, :host([disabled]) .base { box-shadow: none; color: var(--_neu-fg-muted); }
