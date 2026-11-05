@@ -80,13 +80,13 @@ import '@neumorphism-ui/elements/all.js'; // or one tag at a time: '@neumorphism
 ```html
 <link
   rel="stylesheet"
-  href="https://cdn.jsdelivr.net/npm/@neumorphism-ui/tokens@1.0.0-next.0/neu.css"
+  href="https://cdn.jsdelivr.net/npm/@neumorphism-ui/tokens@1.0.0-next.1/neu.css"
   integrity="sha384-ksGeOVKv90K2fd9BuSvj8vwSalTsN+SjmlCZETnKGu+ZcLbevt+1lSzjLZwkmDxj"
   crossorigin="anonymous"
 />
 <script
   type="module"
-  src="https://cdn.jsdelivr.net/npm/@neumorphism-ui/elements@1.0.0-next.0/cdn/neu.min.js"
+  src="https://cdn.jsdelivr.net/npm/@neumorphism-ui/elements@1.0.0-next.1/cdn/neu.min.js"
   integrity="sha384-mbmZfVEAatU2v/Rc7ify6zpicchvfBlsBJWrPZOARTpz1jFLkaZhIwcRCUhlZ2N8"
   crossorigin="anonymous"
 ></script>
