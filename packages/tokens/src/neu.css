@@ -118,8 +118,11 @@
       inset calc(var(--neu-distance) * -2) calc(var(--neu-distance) * -2)
         calc(var(--neu-distance) * 4) var(--_neu-sl);
 
-    background-color: var(--neu-bg);
     color: var(--_neu-fg);
+  }
+  /* neu-surface paints its own rounded base; a background on the square host would show at the corners. */
+  :is(:root, [data-neu-theme], .neu-surface):not(neu-surface) {
+    background-color: var(--neu-bg);
   }
 
   .neu-raised,

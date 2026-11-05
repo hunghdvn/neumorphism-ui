@@ -95,6 +95,21 @@ describe('derived values (§5.2, §5.3)', () => {
     expect(b).not.toBe(a);
   });
 
+  test('a neu-surface host paints no square background behind its rounded base', () => {
+    document.documentElement.setAttribute('data-neu-theme', 'light');
+    const host = mount(
+      '<neu-surface style="--neu-bg: #f5d0d8">a</neu-surface>' +
+        '<neu-surface data-neu-theme="dark" class="neu-surface">b</neu-surface>' +
+        '<div class="neu-surface" style="--neu-bg: #f5d0d8">c</div>',
+    );
+    const [custom, dark, plain] = [...host.children].map((el) => getComputedStyle(el));
+    expect(custom!.backgroundColor).toBe('rgba(0, 0, 0, 0)');
+    expect(dark!.backgroundColor).toBe('rgba(0, 0, 0, 0)');
+    // Still themed: the text colour follows the surface, and plain .neu-surface paints as before.
+    expect(dark!.color).not.toBe(getComputedStyle(host).color);
+    expect(plain!.backgroundColor).toBe('rgb(245, 208, 216)');
+  });
+
   test('--neu-intensity scales the dark shadow and is clamped at 100%', () => {
     const host = mount(
       '<div class="neu-surface" style="--neu-intensity: 50"><i style="display:block;background-color: var(--_neu-sd)"></i></div>',
