@@ -126,11 +126,11 @@ describe('neu-button-group', () => {
     expect(rect(alone).height).toBeLessThan(rect(large!).height);
   });
 
-  test('hidden buttons and templates do not take the outer corners', () => {
+  test('children that are not rendered do not take the outer corners', () => {
     const el = mount<NeuButtonGroup>(
-      '<neu-button-group label="x"><template></template><neu-button hidden>Undo</neu-button><neu-button>Save</neu-button><neu-button>Cancel</neu-button><neu-button hidden>Redo</neu-button></neu-button-group>',
+      '<neu-button-group label="x"><script type="text/plain">x</script><template></template><neu-button hidden>Undo</neu-button><neu-button>Save</neu-button><neu-button>Cancel</neu-button><neu-button hidden>Redo</neu-button><style></style></neu-button-group>',
     );
-    const [, , save, cancel] = el.children;
+    const [, , , save, cancel] = el.children;
     const radius = style(save!).borderStartStartRadius;
     expect(radius).not.toBe('0px');
     expect(corners(save!)).toEqual([radius, '0px', radius, '0px']);
