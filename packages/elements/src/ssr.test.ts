@@ -31,6 +31,12 @@ const cases: Case[] = [
     ref: 'textarea',
   },
   {
+    tag: 'neu-number-field',
+    attrs: { label: 'Qty', value: '3', min: '0', max: '9', 'help-text': 'Whole units' },
+    light: '',
+    ref: 'input',
+  },
+  {
     tag: 'neu-button-group',
     attrs: { label: 'Align', orientation: 'vertical' },
     light: '<neu-button>A</neu-button><neu-button>B</neu-button>',
@@ -113,6 +119,7 @@ describe('SSR parity', () => {
     'neu-switch': ['.base', 'opacity'],
     'neu-text-field': ['.control', 'opacity'],
     'neu-textarea': ['.control', 'opacity'],
+    'neu-number-field': ['.control', 'opacity'],
   };
 
   test('server-rendered disabled controls look disabled before their definitions run', () => {
@@ -135,6 +142,7 @@ describe('SSR parity', () => {
       ['neu-switch', 'not-allowed', '0.55'],
       ['neu-text-field', 'not-allowed', '0.6'],
       ['neu-textarea', 'not-allowed', '0.6'],
+      ['neu-number-field', 'not-allowed', '0.6'],
       ['neu-icon-button', 'not-allowed', 'none'],
     ]);
   });
@@ -142,6 +150,7 @@ describe('SSR parity', () => {
   test('only the field controls delegate focus', () => {
     expect(renderDSD('neu-text-field', {})).toContain('shadowrootdelegatesfocus');
     expect(renderDSD('neu-textarea', {})).toContain('shadowrootdelegatesfocus');
+    expect(renderDSD('neu-number-field', {})).toContain('shadowrootdelegatesfocus');
     expect(renderDSD('neu-button', {})).not.toContain('shadowrootdelegatesfocus');
   });
 
@@ -170,6 +179,7 @@ describe('SSR parity', () => {
       'neu-divider',
       'neu-icon',
       'neu-icon-button',
+      'neu-number-field',
       'neu-spinner',
       'neu-surface',
       'neu-switch',
@@ -187,6 +197,7 @@ describe('SSR parity', () => {
       ['neu-divider', undefined],
       ['neu-icon', undefined],
       ['neu-icon-button', undefined],
+      ['neu-number-field', 'defaultValue'],
       ['neu-spinner', undefined],
       ['neu-surface', undefined],
       ['neu-switch', 'defaultChecked'],

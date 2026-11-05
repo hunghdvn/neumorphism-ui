@@ -993,6 +993,396 @@
     },
     {
       "kind": "javascript-module",
+      "path": "dist/number-field.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "NeuNumberField",
+          "tagName": "neu-number-field",
+          "customElement": true,
+          "description": "A numeric input with an inset field and stepper buttons. The value attribute is the default value.",
+          "attributes": [
+            {
+              "name": "value",
+              "fieldName": "defaultValue",
+              "type": {
+                "text": "string"
+              },
+              "default": "''"
+            },
+            {
+              "name": "min",
+              "fieldName": "min",
+              "type": {
+                "text": "number"
+              },
+              "default": "NaN"
+            },
+            {
+              "name": "max",
+              "fieldName": "max",
+              "type": {
+                "text": "number"
+              },
+              "default": "NaN"
+            },
+            {
+              "name": "step",
+              "fieldName": "step",
+              "type": {
+                "text": "number"
+              },
+              "default": "1"
+            },
+            {
+              "name": "name",
+              "fieldName": "name",
+              "type": {
+                "text": "string"
+              },
+              "default": "''"
+            },
+            {
+              "name": "label",
+              "fieldName": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "''"
+            },
+            {
+              "name": "placeholder",
+              "fieldName": "placeholder",
+              "type": {
+                "text": "string"
+              },
+              "default": "''"
+            },
+            {
+              "name": "help-text",
+              "fieldName": "helpText",
+              "type": {
+                "text": "string"
+              },
+              "default": "''"
+            },
+            {
+              "name": "error-text",
+              "fieldName": "errorText",
+              "type": {
+                "text": "string"
+              },
+              "default": "''"
+            },
+            {
+              "name": "required",
+              "fieldName": "required",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false"
+            },
+            {
+              "name": "disabled",
+              "fieldName": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false"
+            },
+            {
+              "name": "readonly",
+              "fieldName": "readOnly",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false"
+            },
+            {
+              "name": "size",
+              "fieldName": "size",
+              "type": {
+                "text": "'sm' | 'md' | 'lg'"
+              },
+              "default": "'md'"
+            },
+            {
+              "name": "increment-label",
+              "fieldName": "incrementLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Increase'"
+            },
+            {
+              "name": "decrement-label",
+              "fieldName": "decrementLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Decrease'"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "value",
+              "type": {
+                "text": "string"
+              },
+              "description": "Current value. The value attribute holds the default."
+            },
+            {
+              "kind": "field",
+              "name": "min",
+              "type": {
+                "text": "number"
+              },
+              "default": "NaN",
+              "attribute": "min",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "max",
+              "type": {
+                "text": "number"
+              },
+              "default": "NaN",
+              "attribute": "max",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "step",
+              "type": {
+                "text": "number"
+              },
+              "default": "1",
+              "attribute": "step",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "name",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "name",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "label",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "placeholder",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "placeholder",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "helpText",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "help-text",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "errorText",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "error-text",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "required",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "required",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "disabled",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "readOnly",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "readonly",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "size",
+              "type": {
+                "text": "'sm' | 'md' | 'lg'"
+              },
+              "default": "'md'",
+              "attribute": "size",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "incrementLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Increase'",
+              "attribute": "increment-label",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "decrementLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Decrease'",
+              "attribute": "decrement-label",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "defaultValue",
+              "type": {
+                "text": "string"
+              },
+              "attribute": "value",
+              "reflects": true
+            }
+          ],
+          "events": [
+            {
+              "name": "input",
+              "type": {
+                "text": "Event"
+              },
+              "description": "Fired on every edit and every step (composed)."
+            },
+            {
+              "name": "change",
+              "type": {
+                "text": "Event"
+              },
+              "description": "Fired when an edit is committed, or after each step."
+            }
+          ],
+          "slots": [
+            {
+              "name": "label",
+              "description": "Rich label; replaces the label attribute."
+            },
+            {
+              "name": "help-text",
+              "description": "Rich help text; replaces the help-text attribute."
+            }
+          ],
+          "cssParts": [
+            {
+              "name": "base",
+              "description": "Outer wrapper."
+            },
+            {
+              "name": "label",
+              "description": "The <label> element."
+            },
+            {
+              "name": "control",
+              "description": "The inset field around the input and buttons."
+            },
+            {
+              "name": "input",
+              "description": "The native <input type=\"number\">."
+            },
+            {
+              "name": "decrement",
+              "description": "The button that lowers the value."
+            },
+            {
+              "name": "increment",
+              "description": "The button that raises the value."
+            },
+            {
+              "name": "help-text",
+              "description": "Help or error text area."
+            }
+          ],
+          "cssProperties": [
+            {
+              "name": "--neu-bg",
+              "description": "Surface colour; shadows and text are derived from it."
+            },
+            {
+              "name": "--neu-accent",
+              "description": "Accent colour."
+            },
+            {
+              "name": "--neu-distance",
+              "description": "Shadow distance for the md size."
+            },
+            {
+              "name": "--neu-intensity",
+              "description": "Shadow strength multiplier."
+            },
+            {
+              "name": "--neu-radius",
+              "description": "Corner radius for the md size."
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "NeuNumberField",
+          "declaration": {
+            "name": "NeuNumberField",
+            "module": "dist/number-field.js"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "neu-number-field",
+          "declaration": {
+            "name": "NeuNumberField",
+            "module": "dist/number-field.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "dist/spinner.js",
       "declarations": [
         {

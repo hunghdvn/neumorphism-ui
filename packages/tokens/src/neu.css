@@ -166,6 +166,7 @@
   neu-divider:not(:defined),
   neu-icon:not(:defined),
   neu-icon-button:not(:defined),
+  neu-number-field:not(:defined),
   neu-spinner:not(:defined),
   neu-switch:not(:defined),
   neu-text-field:not(:defined),
@@ -219,6 +220,13 @@
     min-block-size: 2.75rem;
   }
   neu-text-field[label]:not(:defined) {
+    min-block-size: 4.125rem;
+  }
+  neu-number-field:not(:defined) {
+    display: block;
+    min-block-size: 2.75rem;
+  }
+  neu-number-field[label]:not(:defined) {
     min-block-size: 4.125rem;
   }
   neu-textarea:not(:defined) {

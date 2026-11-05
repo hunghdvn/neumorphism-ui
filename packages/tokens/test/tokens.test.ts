@@ -154,6 +154,15 @@ describe('undefined elements (§5.6)', () => {
     expect(el.getBoundingClientRect().height).toBeGreaterThanOrEqual(105);
   });
 
+  test('neu-number-field is hidden too and keeps its measured box', () => {
+    const el = mount('<neu-number-field label="Q"></neu-number-field>').querySelector(
+      'neu-number-field',
+    )!;
+    expect(getComputedStyle(el).visibility).toBe('hidden');
+    expect(getComputedStyle(el).display).toBe('block');
+    expect(el.getBoundingClientRect().height).toBeGreaterThanOrEqual(66);
+  });
+
   test('an element that already has a shadow root can undo the hiding with :host', () => {
     const el = mount('<neu-switch></neu-switch>').querySelector('neu-switch')!;
     el.attachShadow({ mode: 'open' }).innerHTML =

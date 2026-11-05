@@ -6,6 +6,7 @@ export { NeuButtonGroup, type NeuButtonGroupProps } from './button-group.js';
 export { NeuDivider, type NeuDividerProps } from './divider.js';
 export { NeuIcon, type NeuIconProps } from './icon.js';
 export { NeuIconButton, type NeuIconButtonProps } from './icon-button.js';
+export { NeuNumberField, type NeuNumberFieldProps } from './number-field.js';
 export { NeuSpinner, type NeuSpinnerProps } from './spinner.js';
 export { NeuSurface, type NeuSurfaceProps } from './surface.js';
 export { NeuSwitch, type NeuSwitchProps } from './switch.js';
