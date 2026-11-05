@@ -73,6 +73,30 @@ describe('transformHtml', () => {
     expect(elapsed).toBeLessThan(500);
   });
 
+  test('stays linear on many unclosed <neu-select> tags', () => {
+    const html = '<neu-select>'.repeat(20_000);
+    const started = performance.now();
+    const out = transformHtml(html);
+    const elapsed = performance.now() - started;
+    const dsd = renderDSD('neu-select', {}, { options: [] });
+    expect(out.split(dsd).join('')).toBe(html);
+    expect(elapsed).toBeLessThan(500);
+  });
+
+  test.each([
+    ['closed select', '</neu-select>'],
+    ['unclosed select', ''],
+  ])('stays linear on one %s with many unclosed <neu-option> tags', (_label, tail) => {
+    const html = `<neu-select value="x">${'<neu-option value="x">'.repeat(20_000)}${tail}`;
+    const started = performance.now();
+    const out = transformHtml(html);
+    const elapsed = performance.now() - started;
+    expect(out.startsWith('<neu-select value="x">')).toBe(true);
+    expect(out.length).toBeGreaterThanOrEqual(html.length);
+    expect(out.split('<neu-option value="x">').length).toBe(20_001);
+    expect(elapsed).toBeLessThan(500);
+  });
+
   test('uses shadowrootdelegatesfocus for text fields', () => {
     expect(transformHtml('<neu-text-field></neu-text-field>')).toContain(
       'shadowrootdelegatesfocus',

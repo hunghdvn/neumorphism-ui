@@ -76,10 +76,21 @@ export function readStartTag(html: string, pos: number): StartTag | null {
   return null;
 }
 
-function closeTagIndex(html: string, name: string, from: number): number {
+/** Per-call memo of close-tag searches: tag name → last search start and its result. */
+type CloseCache = Map<string, { from: number; index: number }>;
+
+function closeTagIndex(html: string, name: string, from: number, cache?: CloseCache): number {
+  // Searches only move forward, so a miss stays a miss and a hit stays valid until it is passed.
+  // Without this, an unclosed tag repeated N times rescans the rest of the input N times.
+  const known = cache?.get(name);
+  if (known && from >= known.from && (known.index === -1 || from <= known.index)) {
+    return known.index;
+  }
   const pattern = new RegExp(`</${name}[\\s/>]`, 'ig');
   pattern.lastIndex = from;
-  return pattern.exec(html)?.index ?? -1;
+  const index = pattern.exec(html)?.index ?? -1;
+  cache?.set(name, { from, index });
+  return index;
 }
 
 /**
@@ -87,9 +98,17 @@ function closeTagIndex(html: string, name: string, from: number): number {
  * client does: label is the whitespace-collapsed text, value falls back to the label.
  * Nested hosts are not supported; the scan stops at the first closing tag.
  */
-function scanOptions(html: string, host: string, optionTag: string, from: number): OptionData[] {
-  const close = closeTagIndex(html, host, from);
-  const stop = close === -1 ? html.length : close;
+function scanOptions(
+  html: string,
+  host: string,
+  optionTag: string,
+  from: number,
+  cache: CloseCache,
+): OptionData[] {
+  const stop = closeTagIndex(html, host, from, cache);
+  // An unclosed host would make every later unclosed host rescan the same tail, so it gets no
+  // server-rendered label; the client computes it on upgrade.
+  if (stop === -1) return [];
   const options: OptionData[] = [];
   let i = from;
   while (i < stop) {
@@ -100,7 +119,7 @@ function scanOptions(html: string, host: string, optionTag: string, from: number
       i = lt + 1;
       continue;
     }
-    const textEnd = closeTagIndex(html, optionTag, tag.end);
+    const textEnd = closeTagIndex(html, optionTag, tag.end, cache);
     const end = textEnd === -1 || textEnd > stop ? stop : textEnd;
     const label = decodeEntities(html.slice(tag.end, end).replace(/<[^>]*>/g, ''))
       .replace(/\s+/g, ' ')
@@ -126,6 +145,7 @@ function startsWithDeclarativeRoot(html: string, from: number): boolean {
 export function transformHtml(html: string): string {
   let out = '';
   let i = 0;
+  const closeCache: CloseCache = new Map();
   while (i < html.length) {
     const lt = html.indexOf('<', i);
     if (lt === -1) {
@@ -165,7 +185,7 @@ export function transformHtml(html: string): string {
     if (def && !startsWithDeclarativeRoot(html, i)) {
       out += def.optionsFrom
         ? renderDSD(tag.name, tag.attrs, {
-            options: scanOptions(html, tag.name, def.optionsFrom, i),
+            options: scanOptions(html, tag.name, def.optionsFrom, i, closeCache),
           })
         : renderDSD(tag.name, tag.attrs);
     }
