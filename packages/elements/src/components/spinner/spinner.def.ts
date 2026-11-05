@@ -10,8 +10,9 @@ export const spinnerDef = defineComponent({
     size: { type: 'string', default: 'md', values: ['sm', 'md', 'lg'], reflect: true },
   },
   styles: spinnerStyles,
-  template: () =>
-    html`<span part="base" class="base"><span part="track" class="track"></span><span part="indicator" class="indicator"></span></span>`,
+  // The label is also visually hidden text: a live region announces content, not its name.
+  template: (p) =>
+    html`<span part="base" class="base"><span part="track" class="track"></span><span part="indicator" class="indicator"></span><span class="label" data-ref="label">${p.label}</span></span>`,
   docs: {
     summary: 'A rotating indicator for work in progress.',
     events: [],

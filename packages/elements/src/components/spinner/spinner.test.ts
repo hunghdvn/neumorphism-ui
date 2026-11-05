@@ -32,6 +32,19 @@ describe('neu-spinner', () => {
     expect(await axeViolations(el)).toEqual([]);
   });
 
+  test('the live region has the label as visually hidden text to announce', () => {
+    const el = spinner(' label="Saving"');
+    const text = part(el, 'label');
+    expect(text.textContent).toBe('Saving');
+    el.label = 'Uploading';
+    expect(text.textContent).toBe('Uploading');
+    const rect = text.getBoundingClientRect();
+    expect(rect.width).toBeLessThanOrEqual(1);
+    expect(rect.height).toBeLessThanOrEqual(1);
+    expect(getComputedStyle(text).clipPath).toBe('inset(50%)');
+    expect(el.getBoundingClientRect().width).toBe(24);
+  });
+
   test('the three sizes are 1rem, 1.5rem and 2.25rem', () => {
     const rem = parseFloat(getComputedStyle(document.documentElement).fontSize);
     const el = spinner();
