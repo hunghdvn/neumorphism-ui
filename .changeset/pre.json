@@ -9,6 +9,7 @@
   },
   "changesets": [
     "phase-1-foundation",
-    "phase-2-basics"
+    "phase-2-basics",
+    "trusted-publishing"
   ]
 }

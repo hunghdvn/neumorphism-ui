@@ -1,5 +1,13 @@
 # @neumorphism-ui/ssr
 
+## 1.0.0-next.1
+
+### Patch Changes
+
+- e4bb8cb: Releases are published from CI through npm trusted publishing (OIDC), still with provenance. No code changes.
+- Updated dependencies [e4bb8cb]
+  - @neumorphism-ui/elements@1.0.0-next.1
+
 ## 1.0.0-next.0
 
 ### Major Changes

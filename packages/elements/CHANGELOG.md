@@ -1,5 +1,11 @@
 # @neumorphism-ui/elements
 
+## 1.0.0-next.1
+
+### Patch Changes
+
+- e4bb8cb: Releases are published from CI through npm trusted publishing (OIDC), still with provenance. No code changes.
+
 ## 1.0.0-next.0
 
 ### Major Changes
