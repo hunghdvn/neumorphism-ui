@@ -42,6 +42,8 @@ const components = [
   ['neu-icon-button', './icon-button.js', 'NeuIconButton', { base: ['./button.js', 'NeuButton'] }],
   // The shared text-control base is counted in this entry, hence the larger limit.
   ['neu-number-field', './number-field.js', 'NeuNumberField', { limit: 3.5 }],
+  ['neu-radio', './radio.js', 'NeuRadio'],
+  ['neu-radio-group', './radio-group.js', 'NeuRadioGroup'],
   ['neu-spinner', './spinner.js', 'NeuSpinner'],
   ['neu-surface', './surface.js', 'NeuSurface'],
   ['neu-switch', './switch.js', 'NeuSwitch'],

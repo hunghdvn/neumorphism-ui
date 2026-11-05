@@ -70,6 +70,13 @@ const cases: Case[] = [
     light: 'Agree',
     ref: '.control',
   },
+  {
+    tag: 'neu-radio-group',
+    attrs: { label: 'Plan', name: 'plan', value: 'b', orientation: 'horizontal' },
+    light: '<neu-radio value="a">A</neu-radio><neu-radio value="b">B</neu-radio>',
+    ref: '.items',
+  },
+  { tag: 'neu-radio', attrs: { value: 'a' }, light: 'Option A', ref: '.control' },
 ];
 
 function attributeText(attrs: Record<string, string>): string {
@@ -119,7 +126,7 @@ describe('SSR parity', () => {
   });
 
   /** Where a disabled control shows it: the node to read and the style that changes. */
-  const lookOf: Record<string, ['.base' | '.control', 'boxShadow' | 'opacity']> = {
+  const lookOf: Record<string, ['.base' | '.control' | '.items', 'boxShadow' | 'opacity']> = {
     'neu-button': ['.base', 'boxShadow'],
     'neu-icon-button': ['.base', 'boxShadow'],
     'neu-switch': ['.base', 'opacity'],
@@ -127,6 +134,8 @@ describe('SSR parity', () => {
     'neu-text-field': ['.control', 'opacity'],
     'neu-textarea': ['.control', 'opacity'],
     'neu-number-field': ['.control', 'opacity'],
+    'neu-radio-group': ['.items', 'opacity'],
+    'neu-radio': ['.base', 'opacity'],
   };
 
   test('server-rendered disabled controls look disabled before their definitions run', () => {
@@ -152,6 +161,8 @@ describe('SSR parity', () => {
       ['neu-number-field', 'not-allowed', '0.6'],
       ['neu-icon-button', 'not-allowed', 'none'],
       ['neu-checkbox', 'not-allowed', '0.55'],
+      ['neu-radio-group', 'not-allowed', '0.55'],
+      ['neu-radio', 'not-allowed', '0.55'],
     ]);
   });
 
@@ -189,6 +200,8 @@ describe('SSR parity', () => {
       'neu-icon',
       'neu-icon-button',
       'neu-number-field',
+      'neu-radio',
+      'neu-radio-group',
       'neu-spinner',
       'neu-surface',
       'neu-switch',
@@ -208,6 +221,8 @@ describe('SSR parity', () => {
       ['neu-icon', undefined],
       ['neu-icon-button', undefined],
       ['neu-number-field', 'defaultValue'],
+      ['neu-radio', undefined],
+      ['neu-radio-group', 'defaultValue'],
       ['neu-spinner', undefined],
       ['neu-surface', undefined],
       ['neu-switch', 'defaultChecked'],

@@ -56,6 +56,14 @@
       "types": "./dist/number-field.d.ts",
       "default": "./dist/number-field.js"
     },
+    "./radio.js": {
+      "types": "./dist/radio.d.ts",
+      "default": "./dist/radio.js"
+    },
+    "./radio-group.js": {
+      "types": "./dist/radio-group.d.ts",
+      "default": "./dist/radio-group.js"
+    },
     "./spinner.js": {
       "types": "./dist/spinner.d.ts",
       "default": "./dist/spinner.js"
@@ -98,6 +106,8 @@
     "./dist/icon.js",
     "./dist/icon-button.js",
     "./dist/number-field.js",
+    "./dist/radio.js",
+    "./dist/radio-group.js",
     "./dist/spinner.js",
     "./dist/surface.js",
     "./dist/switch.js",
