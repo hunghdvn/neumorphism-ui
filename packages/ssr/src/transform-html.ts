@@ -76,51 +76,73 @@ export function readStartTag(html: string, pos: number): StartTag | null {
   return null;
 }
 
-/** Per-call memo of close-tag searches: tag name → last search start and its result. */
-type CloseCache = Map<string, { from: number; index: number }>;
+/** Per-call memo of tag searches: search key → last search start and its result. */
+type SearchCache = Map<string, { from: number; index: number }>;
 
-function closeTagIndex(html: string, name: string, from: number, cache?: CloseCache): number {
-  // Searches only move forward, so a miss stays a miss and a hit stays valid until it is passed.
-  // Without this, an unclosed tag repeated N times rescans the rest of the input N times.
-  const known = cache?.get(name);
+/**
+ * First match of `prefix` followed by whitespace, '/' or '>' at or after `from`, or -1. Searches
+ * for one key only move forward, so a miss stays a miss and a hit stays valid until it is
+ * passed; the memo keeps a repeated tag from rescanning the rest of the input each time.
+ */
+function findTag(html: string, prefix: string, from: number, cache?: SearchCache): number {
+  const known = cache?.get(prefix);
   if (known && from >= known.from && (known.index === -1 || from <= known.index)) {
     return known.index;
   }
-  const pattern = new RegExp(`</${name}[\\s/>]`, 'ig');
+  const pattern = new RegExp(`${prefix}[\\s/>]`, 'ig');
   pattern.lastIndex = from;
   const index = pattern.exec(html)?.index ?? -1;
-  cache?.set(name, { from, index });
+  cache?.set(prefix, { from, index });
   return index;
 }
 
+const closeTagIndex = (html: string, name: string, from: number) =>
+  findTag(html, `</${name}`, from);
+
+/** Smallest of the given tag positions, or `limit` when none is found. */
+const firstOf = (limit: number, ...indexes: number[]) =>
+  Math.min(limit, ...indexes.filter((index) => index !== -1));
+
 /**
- * Reads the option elements between a host's start tag and its first closing tag, the way the
- * client does: label is the whitespace-collapsed text, value falls back to the label.
- * Nested hosts are not supported; the scan stops at the first closing tag.
+ * Reads the option elements of a host the way the client does: label is the whitespace-collapsed
+ * text, value falls back to the label. Nested hosts are not supported: the window ends at the
+ * host's closing tag or at the next host start tag, whichever comes first, so windows never
+ * overlap and every character is scanned once. An option's text ends at its closing tag, the
+ * next option start or the window end.
  */
 function scanOptions(
   html: string,
   host: string,
   optionTag: string,
   from: number,
-  cache: CloseCache,
+  cache: SearchCache,
 ): OptionData[] {
-  const stop = closeTagIndex(html, host, from, cache);
-  // An unclosed host would make every later unclosed host rescan the same tail, so it gets no
-  // server-rendered label; the client computes it on upgrade.
-  if (stop === -1) return [];
+  const stop = firstOf(
+    html.length,
+    findTag(html, `</${host}`, from, cache),
+    findTag(html, `<${host}`, from, cache),
+  );
   const options: OptionData[] = [];
   let i = from;
   while (i < stop) {
     const lt = html.indexOf('<', i);
     if (lt === -1 || lt >= stop) break;
     const tag = readStartTag(html, lt);
-    if (!tag || tag.name !== optionTag) {
+    if (!tag) {
+      // An unterminated start tag runs to the end of input; retrying at each later '<' is quadratic.
+      if (isAsciiAlpha(html[lt + 1])) break;
       i = lt + 1;
       continue;
     }
-    const textEnd = closeTagIndex(html, optionTag, tag.end, cache);
-    const end = textEnd === -1 || textEnd > stop ? stop : textEnd;
+    if (tag.name !== optionTag) {
+      i = lt + 1;
+      continue;
+    }
+    const end = firstOf(
+      stop,
+      findTag(html, `</${optionTag}`, tag.end, cache),
+      findTag(html, `<${optionTag}`, tag.end, cache),
+    );
     const label = decodeEntities(html.slice(tag.end, end).replace(/<[^>]*>/g, ''))
       .replace(/\s+/g, ' ')
       .trim();
@@ -145,7 +167,7 @@ function startsWithDeclarativeRoot(html: string, from: number): boolean {
 export function transformHtml(html: string): string {
   let out = '';
   let i = 0;
-  const closeCache: CloseCache = new Map();
+  const closeCache: SearchCache = new Map();
   while (i < html.length) {
     const lt = html.indexOf('<', i);
     if (lt === -1) {

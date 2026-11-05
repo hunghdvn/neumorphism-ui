@@ -83,6 +83,32 @@ describe('transformHtml', () => {
     expect(elapsed).toBeLessThan(500);
   });
 
+  test('stays linear on many unclosed <neu-select> tags sharing one close tag', () => {
+    const html = `${'<neu-select>'.repeat(20_000)}</neu-select>`;
+    const started = performance.now();
+    const out = transformHtml(html);
+    const elapsed = performance.now() - started;
+    const dsd = renderDSD('neu-select', {}, { options: [] });
+    expect(out.split(dsd).join('')).toBe(html);
+    expect(elapsed).toBeLessThan(500);
+  });
+
+  test('scans every unclosed <neu-option> of a closed select', () => {
+    const html = `<neu-select value="last">${'<neu-option value="n">X'.repeat(20_000)}<neu-option value="last">Final</neu-option></neu-select>`;
+    const started = performance.now();
+    const out = transformHtml(html);
+    const elapsed = performance.now() - started;
+    expect(out).toContain('data-ref="display">Final</span>');
+    expect(elapsed).toBeLessThan(500);
+  });
+
+  test('an unclosed select still gets its selected label', () => {
+    const out = transformHtml(
+      '<neu-select value="b"><neu-option value="a">A</neu-option><neu-option value="b">B</neu-option>',
+    );
+    expect(out).toContain('data-ref="display">B</span>');
+  });
+
   test.each([
     ['closed select', '</neu-select>'],
     ['unclosed select', ''],
