@@ -38,7 +38,7 @@ const components = [
   ['neu-button-group', './button-group.js', 'NeuButtonGroup'],
   ['neu-divider', './divider.js', 'NeuDivider'],
   ['neu-icon', './icon.js', 'NeuIcon'],
-  ['neu-icon-button', './icon-button.js', 'NeuIconButton'],
+  ['neu-icon-button', './icon-button.js', 'NeuIconButton', { base: ['./button.js', 'NeuButton'] }],
   ['neu-spinner', './spinner.js', 'NeuSpinner'],
   ['neu-surface', './surface.js', 'NeuSurface'],
   ['neu-switch', './switch.js', 'NeuSwitch'],
@@ -51,9 +51,17 @@ const rows = [
   ['@neumorphism-ui/tokens neu.css', gz(readFileSync(`${root}packages/tokens/neu.css`, 'utf8')), 4],
   ['core (base + form + html)', coreSize, 4],
 ];
-for (const [tag, file, name] of components) {
-  const withCore = gz(await bundled(`${core}\nexport { ${name} } from '${file}';`));
-  rows.push([`${tag} (without core)`, withCore - coreSize, 3]);
+// Optional per entry: `base` is a parent class excluded from the measure (spec §10), `limit` is in KB.
+for (const [tag, file, name, { base, limit = 3 } = {}] of components) {
+  const exportOf = (from, cls) => `export { ${cls} } from '${from}';`;
+  if (base) {
+    const baseSize = gz(await bundled(`${core}\n${exportOf(...base)}`));
+    const both = gz(await bundled(`${core}\n${exportOf(...base)}\n${exportOf(file, name)}`));
+    rows.push([`${tag} (without core, ${base[1]})`, both - baseSize, limit]);
+  } else {
+    const withCore = gz(await bundled(`${core}\n${exportOf(file, name)}`));
+    rows.push([`${tag} (without core)`, withCore - coreSize, limit]);
+  }
 }
 
 let failed = false;

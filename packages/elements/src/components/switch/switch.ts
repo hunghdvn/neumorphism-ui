@@ -1,6 +1,7 @@
-import { afterDispatch, dispatch, isActiveInRoot } from '../../core/dom.js';
+import { afterDispatch, dispatch } from '../../core/dom.js';
 import { FormControlElement } from '../../core/form-control.js';
 import { requiredCheckboxMessage } from '../../core/validation.js';
+import { pressable } from '../shared/press.js';
 import { switchDef } from './switch.def.js';
 
 export class NeuSwitch extends FormControlElement {
@@ -19,14 +20,8 @@ export class NeuSwitch extends FormControlElement {
     this.current = this.props.checked === true;
     this.internals.role = 'switch';
     this.addEventListener('click', (event) => this.onClick(event));
-    this.addEventListener('keydown', (event) => this.onKeyDown(event));
-    this.addEventListener('keyup', (event) => this.onKeyUp(event));
-    // Disarm when focus moves away, not when only the window loses focus.
-    this.addEventListener('blur', () => {
-      if (!isActiveInRoot(this)) this.toggleState('pressed', false);
-    });
-    // Focus coming back means Space may have been released while it was away.
-    this.addEventListener('focus', () => this.toggleState('pressed', false));
+    // Like a native checkbox, Space toggles on keyup only after its own keydown.
+    pressable(this, this.internals.states, 'once', () => this.isDisabled);
   }
 
   get checked(): boolean {
@@ -60,30 +55,6 @@ export class NeuSwitch extends FormControlElement {
         dispatch(this, 'input');
         dispatch(this, 'change');
       }
-    });
-  }
-
-  private onKeyDown(event: KeyboardEvent): void {
-    if (event.key === ' ') {
-      if (event.defaultPrevented) return;
-      // Cancelled at once: deferred, an ancestor that stops propagation would let the page scroll.
-      // An ancestor claims Space in the capture phase, or by cancelling the keyup.
-      event.preventDefault();
-      this.toggleState('pressed', true);
-    } else if (event.key === 'Enter' && !event.repeat) {
-      // Not cancelled here, so a handler further up can still cancel the toggle.
-      afterDispatch(event, () => {
-        if (!event.defaultPrevented) this.click();
-      });
-    }
-  }
-
-  /** Like a native checkbox, Space toggles on keyup only after its own keydown. */
-  private onKeyUp(event: KeyboardEvent): void {
-    if (event.key !== ' ' || !this.internals.states.has('pressed')) return;
-    this.toggleState('pressed', false);
-    afterDispatch(event, () => {
-      if (!event.defaultPrevented) this.click();
     });
   }
 
