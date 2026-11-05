@@ -135,7 +135,7 @@ function scanOptions(
       continue;
     }
     if (tag.name !== optionTag) {
-      i = lt + 1;
+      i = tag.end;
       continue;
     }
     const end = firstOf(
@@ -143,7 +143,7 @@ function scanOptions(
       findTag(html, `</${optionTag}`, tag.end, cache),
       findTag(html, `<${optionTag}`, tag.end, cache),
     );
-    const label = decodeEntities(html.slice(tag.end, end).replace(/<[^>]*>/g, ''))
+    const label = decodeEntities(html.slice(tag.end, end).replace(/<[^<>]*>/g, ''))
       .replace(/\s+/g, ' ')
       .trim();
     options.push({

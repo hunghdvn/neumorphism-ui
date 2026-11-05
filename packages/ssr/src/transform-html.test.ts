@@ -102,6 +102,32 @@ describe('transformHtml', () => {
     expect(elapsed).toBeLessThan(500);
   });
 
+  test.each([
+    [
+      'option text of 80 000 "<" with no ">"',
+      `<neu-select><neu-option>${'<'.repeat(80_000)}</neu-option></neu-select>`,
+    ],
+    [
+      '80 000 bytes of "<a" then ">" inside a select',
+      `<neu-select>${'<a'.repeat(40_000)}></neu-select>`,
+    ],
+    [
+      'an attribute holding "<a" x 40 000 on a div in a select',
+      `<neu-select><div title="${'<a'.repeat(40_000)}"></div></neu-select>`,
+    ],
+  ])('stays linear on %s', (_label, html) => {
+    const started = performance.now();
+    transformHtml(html);
+    expect(performance.now() - started).toBeLessThan(500);
+  });
+
+  test('labels with nested tags are stripped as before', () => {
+    const out = transformHtml(
+      '<neu-select value="a b"><neu-option><b>a</b> <i>b</i></neu-option></neu-select>',
+    );
+    expect(out).toContain('data-ref="display">a b</span>');
+  });
+
   test('an unclosed select still gets its selected label', () => {
     const out = transformHtml(
       '<neu-select value="b"><neu-option value="a">A</neu-option><neu-option value="b">B</neu-option>',
