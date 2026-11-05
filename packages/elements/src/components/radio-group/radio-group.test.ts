@@ -12,6 +12,7 @@ import {
   tick,
 } from '../../test-utils/helpers.js';
 import { cssString } from './radio-group.def.js';
+import entrySource from '../../radio-group.ts?raw';
 
 afterEach(() => {
   document.body.innerHTML = '';
@@ -19,6 +20,11 @@ afterEach(() => {
 
 const THREE =
   '<neu-radio value="a">A</neu-radio><neu-radio value="b">B</neu-radio><neu-radio value="c">C</neu-radio>';
+
+// The registry is global, so a second import cannot be isolated here: assert the entry's source.
+test('the radio-group entry imports radio.js so the pair is always defined together', () => {
+  expect(entrySource).toMatch(/import\s+['"]\.\/radio\.js['"]/);
+});
 
 function group(attrs = '', inner = THREE): NeuRadioGroup {
   return mount<NeuRadioGroup>(`<neu-radio-group label="Plan" ${attrs}>${inner}</neu-radio-group>`);
