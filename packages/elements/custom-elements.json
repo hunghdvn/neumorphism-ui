@@ -587,6 +587,236 @@
     },
     {
       "kind": "javascript-module",
+      "path": "dist/checkbox.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "NeuCheckbox",
+          "tagName": "neu-checkbox",
+          "customElement": true,
+          "description": "A checkbox. The checked attribute is the default state; indeterminate is a property whose attribute only sets the initial state.",
+          "attributes": [
+            {
+              "name": "checked",
+              "fieldName": "defaultChecked",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false"
+            },
+            {
+              "name": "indeterminate",
+              "fieldName": "indeterminate",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false"
+            },
+            {
+              "name": "name",
+              "fieldName": "name",
+              "type": {
+                "text": "string"
+              },
+              "default": "''"
+            },
+            {
+              "name": "value",
+              "fieldName": "value",
+              "type": {
+                "text": "string"
+              },
+              "default": "'on'"
+            },
+            {
+              "name": "disabled",
+              "fieldName": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false"
+            },
+            {
+              "name": "required",
+              "fieldName": "required",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false"
+            },
+            {
+              "name": "size",
+              "fieldName": "size",
+              "type": {
+                "text": "'sm' | 'md' | 'lg'"
+              },
+              "default": "'md'"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "checked",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Current checked. The checked attribute holds the default."
+            },
+            {
+              "kind": "field",
+              "name": "indeterminate",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "indeterminate",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "name",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "name",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "value",
+              "type": {
+                "text": "string"
+              },
+              "default": "'on'",
+              "attribute": "value",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "disabled",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "required",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "required",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "size",
+              "type": {
+                "text": "'sm' | 'md' | 'lg'"
+              },
+              "default": "'md'",
+              "attribute": "size",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "defaultChecked",
+              "type": {
+                "text": "boolean"
+              },
+              "attribute": "checked",
+              "reflects": true
+            }
+          ],
+          "events": [
+            {
+              "name": "input",
+              "type": {
+                "text": "Event"
+              },
+              "description": "Fired when the user toggles the checkbox."
+            },
+            {
+              "name": "change",
+              "type": {
+                "text": "Event"
+              },
+              "description": "Fired after input when the user toggles the checkbox."
+            }
+          ],
+          "slots": [
+            {
+              "name": "",
+              "description": "Label; also the accessible name."
+            }
+          ],
+          "cssParts": [
+            {
+              "name": "base",
+              "description": "Wrapper around control and label."
+            },
+            {
+              "name": "control",
+              "description": "The inset box."
+            },
+            {
+              "name": "indicator",
+              "description": "The check or minus mark."
+            },
+            {
+              "name": "label",
+              "description": "Wrapper around the default slot."
+            }
+          ],
+          "cssProperties": [
+            {
+              "name": "--neu-bg",
+              "description": "Surface colour; shadows and text are derived from it."
+            },
+            {
+              "name": "--neu-accent",
+              "description": "Accent colour."
+            },
+            {
+              "name": "--neu-distance",
+              "description": "Shadow distance for the md size."
+            },
+            {
+              "name": "--neu-intensity",
+              "description": "Shadow strength multiplier."
+            },
+            {
+              "name": "--neu-radius",
+              "description": "Corner radius for the md size."
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "NeuCheckbox",
+          "declaration": {
+            "name": "NeuCheckbox",
+            "module": "dist/checkbox.js"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "neu-checkbox",
+          "declaration": {
+            "name": "NeuCheckbox",
+            "module": "dist/checkbox.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "dist/divider.js",
       "declarations": [
         {

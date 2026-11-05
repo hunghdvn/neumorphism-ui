@@ -36,6 +36,7 @@ const components = [
   ['neu-badge', './badge.js', 'NeuBadge'],
   ['neu-button', './button.js', 'NeuButton'],
   ['neu-button-group', './button-group.js', 'NeuButtonGroup'],
+  ['neu-checkbox', './checkbox.js', 'NeuCheckbox'],
   ['neu-divider', './divider.js', 'NeuDivider'],
   ['neu-icon', './icon.js', 'NeuIcon'],
   ['neu-icon-button', './icon-button.js', 'NeuIconButton', { base: ['./button.js', 'NeuButton'] }],

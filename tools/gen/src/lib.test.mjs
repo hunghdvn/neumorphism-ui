@@ -71,6 +71,7 @@ describe('buildManifest', () => {
       'neu-badge',
       'neu-button',
       'neu-button-group',
+      'neu-checkbox',
       'neu-divider',
       'neu-icon',
       'neu-icon-button',

@@ -3,6 +3,7 @@ export { NeuAvatar, type NeuAvatarProps } from './avatar.js';
 export { NeuBadge, type NeuBadgeProps } from './badge.js';
 export { NeuButton, type NeuButtonProps } from './button.js';
 export { NeuButtonGroup, type NeuButtonGroupProps } from './button-group.js';
+export { NeuCheckbox, type NeuCheckboxProps } from './checkbox.js';
 export { NeuDivider, type NeuDividerProps } from './divider.js';
 export { NeuIcon, type NeuIconProps } from './icon.js';
 export { NeuIconButton, type NeuIconButtonProps } from './icon-button.js';

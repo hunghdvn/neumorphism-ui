@@ -2,6 +2,7 @@ import { avatarDef } from './components/avatar/avatar.def.js';
 import { badgeDef } from './components/badge/badge.def.js';
 import { buttonDef } from './components/button/button.def.js';
 import { buttonGroupDef } from './components/button-group/button-group.def.js';
+import { checkboxDef } from './components/checkbox/checkbox.def.js';
 import { dividerDef } from './components/divider/divider.def.js';
 import { iconDef } from './components/icon/icon.def.js';
 import { iconButtonDef } from './components/icon-button/icon-button.def.js';
@@ -34,6 +35,7 @@ export const definitions: ReadonlyMap<string, ComponentDef> = /* @__PURE__ */ ne
   [badgeDef.tag, badgeDef],
   [buttonDef.tag, buttonDef],
   [buttonGroupDef.tag, buttonGroupDef],
+  [checkboxDef.tag, checkboxDef],
   [dividerDef.tag, dividerDef],
   [iconDef.tag, iconDef],
   [iconButtonDef.tag, iconButtonDef],

@@ -64,6 +64,12 @@ const cases: Case[] = [
     ref: '.image',
   },
   { tag: 'neu-spinner', attrs: { label: 'Saving', size: 'lg' }, light: '', ref: '.indicator' },
+  {
+    tag: 'neu-checkbox',
+    attrs: { checked: '', name: 'n' },
+    light: 'Agree',
+    ref: '.control',
+  },
 ];
 
 function attributeText(attrs: Record<string, string>): string {
@@ -117,6 +123,7 @@ describe('SSR parity', () => {
     'neu-button': ['.base', 'boxShadow'],
     'neu-icon-button': ['.base', 'boxShadow'],
     'neu-switch': ['.base', 'opacity'],
+    'neu-checkbox': ['.base', 'opacity'],
     'neu-text-field': ['.control', 'opacity'],
     'neu-textarea': ['.control', 'opacity'],
     'neu-number-field': ['.control', 'opacity'],
@@ -144,6 +151,7 @@ describe('SSR parity', () => {
       ['neu-textarea', 'not-allowed', '0.6'],
       ['neu-number-field', 'not-allowed', '0.6'],
       ['neu-icon-button', 'not-allowed', 'none'],
+      ['neu-checkbox', 'not-allowed', '0.55'],
     ]);
   });
 
@@ -176,6 +184,7 @@ describe('SSR parity', () => {
       'neu-badge',
       'neu-button',
       'neu-button-group',
+      'neu-checkbox',
       'neu-divider',
       'neu-icon',
       'neu-icon-button',
@@ -194,6 +203,7 @@ describe('SSR parity', () => {
       ['neu-badge', undefined],
       ['neu-button', undefined],
       ['neu-button-group', undefined],
+      ['neu-checkbox', 'defaultChecked'],
       ['neu-divider', undefined],
       ['neu-icon', undefined],
       ['neu-icon-button', undefined],

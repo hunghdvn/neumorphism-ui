@@ -163,6 +163,7 @@
   neu-avatar:not(:defined),
   neu-badge:not(:defined),
   neu-button:not(:defined),
+  neu-checkbox:not(:defined),
   neu-divider:not(:defined),
   neu-icon:not(:defined),
   neu-icon-button:not(:defined),
@@ -185,6 +186,10 @@
   neu-button:not(:defined) {
     display: inline-block;
     min-block-size: 2.5rem;
+  }
+  neu-checkbox:not(:defined) {
+    display: inline-flex;
+    min-block-size: 1.25rem;
   }
   neu-button-group:not(:defined) {
     display: inline-flex;

@@ -32,6 +32,10 @@
       "types": "./dist/button-group.d.ts",
       "default": "./dist/button-group.js"
     },
+    "./checkbox.js": {
+      "types": "./dist/checkbox.d.ts",
+      "default": "./dist/checkbox.js"
+    },
     "./icon-button.js": {
       "types": "./dist/icon-button.d.ts",
       "default": "./dist/icon-button.js"
@@ -89,6 +93,7 @@
     "./dist/badge.js",
     "./dist/button.js",
     "./dist/button-group.js",
+    "./dist/checkbox.js",
     "./dist/divider.js",
     "./dist/icon.js",
     "./dist/icon-button.js",

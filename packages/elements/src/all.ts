@@ -2,6 +2,7 @@ export * from './avatar.js';
 export * from './badge.js';
 export * from './button.js';
 export * from './button-group.js';
+export * from './checkbox.js';
 export * from './divider.js';
 export * from './icon.js';
 export * from './icon-button.js';
