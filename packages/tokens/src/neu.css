@@ -220,4 +220,11 @@
   neu-text-field[label]:not(:defined) {
     min-block-size: 4.125rem;
   }
+  neu-textarea:not(:defined) {
+    display: block;
+    min-block-size: 5.1875rem;
+  }
+  neu-textarea[label]:not(:defined) {
+    min-block-size: 6.5625rem;
+  }
 }

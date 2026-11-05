@@ -10,3 +10,4 @@ export { NeuSpinner, type NeuSpinnerProps } from './spinner.js';
 export { NeuSurface, type NeuSurfaceProps } from './surface.js';
 export { NeuSwitch, type NeuSwitchProps } from './switch.js';
 export { NeuTextField, type NeuTextFieldProps } from './text-field.js';
+export { NeuTextarea, type NeuTextareaProps } from './textarea.js';

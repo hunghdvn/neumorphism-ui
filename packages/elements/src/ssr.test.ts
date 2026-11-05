@@ -25,6 +25,12 @@ const cases: Case[] = [
     ref: 'input',
   },
   {
+    tag: 'neu-textarea',
+    attrs: { label: 'Notes', value: '\nA', rows: '4', 'help-text': 'Anything' },
+    light: '',
+    ref: 'textarea',
+  },
+  {
     tag: 'neu-button-group',
     attrs: { label: 'Align', orientation: 'vertical' },
     light: '<neu-button>A</neu-button><neu-button>B</neu-button>',
@@ -100,6 +106,15 @@ describe('SSR parity', () => {
     expect(field.value).toBe('typed early');
   });
 
+  /** Where a disabled control shows it: the node to read and the style that changes. */
+  const lookOf: Record<string, ['.base' | '.control', 'boxShadow' | 'opacity']> = {
+    'neu-button': ['.base', 'boxShadow'],
+    'neu-icon-button': ['.base', 'boxShadow'],
+    'neu-switch': ['.base', 'opacity'],
+    'neu-text-field': ['.control', 'opacity'],
+    'neu-textarea': ['.control', 'opacity'],
+  };
+
   test('server-rendered disabled controls look disabled before their definitions run', () => {
     // The same server markup under tag names that are never defined, so nothing upgrades.
     const looks = cases
@@ -111,21 +126,22 @@ describe('SSR parity', () => {
         const el = document.body.querySelector(probe)!;
         const part = (selector: string) =>
           getComputedStyle(el.shadowRoot!.querySelector(selector)!);
-        const look = c.tag.endsWith('button')
-          ? part('.base').boxShadow
-          : part(c.tag === 'neu-switch' ? '.base' : '.control').opacity;
+        const [selector, property] = lookOf[c.tag]!;
+        const look = part(selector)[property];
         return [c.tag, getComputedStyle(el).cursor, look];
       });
     expect(looks).toEqual([
       ['neu-button', 'not-allowed', 'none'],
       ['neu-switch', 'not-allowed', '0.55'],
       ['neu-text-field', 'not-allowed', '0.6'],
+      ['neu-textarea', 'not-allowed', '0.6'],
       ['neu-icon-button', 'not-allowed', 'none'],
     ]);
   });
 
-  test('only the text field delegates focus', () => {
+  test('only the field controls delegate focus', () => {
     expect(renderDSD('neu-text-field', {})).toContain('shadowrootdelegatesfocus');
+    expect(renderDSD('neu-textarea', {})).toContain('shadowrootdelegatesfocus');
     expect(renderDSD('neu-button', {})).not.toContain('shadowrootdelegatesfocus');
   });
 
@@ -158,6 +174,7 @@ describe('SSR parity', () => {
       'neu-surface',
       'neu-switch',
       'neu-text-field',
+      'neu-textarea',
     ]);
   });
 
@@ -174,6 +191,7 @@ describe('SSR parity', () => {
       ['neu-surface', undefined],
       ['neu-switch', 'defaultChecked'],
       ['neu-text-field', 'defaultValue'],
+      ['neu-textarea', 'defaultValue'],
     ]);
   });
 });

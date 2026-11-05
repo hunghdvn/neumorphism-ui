@@ -78,6 +78,7 @@ describe('buildManifest', () => {
       'neu-surface',
       'neu-switch',
       'neu-text-field',
+      'neu-textarea',
     ]);
     for (const mod of manifest.modules) {
       expect(mod.exports.some((e) => e.kind === 'custom-element-definition')).toBe(true);

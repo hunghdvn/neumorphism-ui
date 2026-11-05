@@ -43,6 +43,7 @@ const components = [
   ['neu-surface', './surface.js', 'NeuSurface'],
   ['neu-switch', './switch.js', 'NeuSwitch'],
   ['neu-text-field', './text-field.js', 'NeuTextField'],
+  ['neu-textarea', './textarea.js', 'NeuTextarea'],
 ];
 
 const coreSize = gz(await bundled(core));

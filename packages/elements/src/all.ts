@@ -10,3 +10,4 @@ export * from './spinner.js';
 export * from './surface.js';
 export * from './switch.js';
 export * from './text-field.js';
+export * from './textarea.js';

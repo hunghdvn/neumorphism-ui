@@ -1887,6 +1887,406 @@
           }
         }
       ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/textarea.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "NeuTextarea",
+          "tagName": "neu-textarea",
+          "customElement": true,
+          "description": "A multi-line text input with an inset field. The value attribute is the default value; resize=\"auto\" grows the field with its content.",
+          "attributes": [
+            {
+              "name": "value",
+              "fieldName": "defaultValue",
+              "type": {
+                "text": "string"
+              },
+              "default": "''"
+            },
+            {
+              "name": "name",
+              "fieldName": "name",
+              "type": {
+                "text": "string"
+              },
+              "default": "''"
+            },
+            {
+              "name": "label",
+              "fieldName": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "''"
+            },
+            {
+              "name": "placeholder",
+              "fieldName": "placeholder",
+              "type": {
+                "text": "string"
+              },
+              "default": "''"
+            },
+            {
+              "name": "help-text",
+              "fieldName": "helpText",
+              "type": {
+                "text": "string"
+              },
+              "default": "''"
+            },
+            {
+              "name": "error-text",
+              "fieldName": "errorText",
+              "type": {
+                "text": "string"
+              },
+              "default": "''"
+            },
+            {
+              "name": "required",
+              "fieldName": "required",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false"
+            },
+            {
+              "name": "disabled",
+              "fieldName": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false"
+            },
+            {
+              "name": "readonly",
+              "fieldName": "readOnly",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false"
+            },
+            {
+              "name": "minlength",
+              "fieldName": "minLength",
+              "type": {
+                "text": "number"
+              },
+              "default": "-1"
+            },
+            {
+              "name": "maxlength",
+              "fieldName": "maxLength",
+              "type": {
+                "text": "number"
+              },
+              "default": "-1"
+            },
+            {
+              "name": "autocomplete",
+              "fieldName": "autocomplete",
+              "type": {
+                "text": "string"
+              },
+              "default": "''"
+            },
+            {
+              "name": "enterkeyhint",
+              "fieldName": "enterKeyHint",
+              "type": {
+                "text": "string"
+              },
+              "default": "''"
+            },
+            {
+              "name": "rows",
+              "fieldName": "rows",
+              "type": {
+                "text": "number"
+              },
+              "default": "3"
+            },
+            {
+              "name": "resize",
+              "fieldName": "resize",
+              "type": {
+                "text": "'none' | 'vertical' | 'auto'"
+              },
+              "default": "'vertical'"
+            },
+            {
+              "name": "size",
+              "fieldName": "size",
+              "type": {
+                "text": "'sm' | 'md' | 'lg'"
+              },
+              "default": "'md'"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "value",
+              "type": {
+                "text": "string"
+              },
+              "description": "Current value. The value attribute holds the default."
+            },
+            {
+              "kind": "field",
+              "name": "name",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "name",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "label",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "placeholder",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "placeholder",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "helpText",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "help-text",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "errorText",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "error-text",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "required",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "required",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "disabled",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "readOnly",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "readonly",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "minLength",
+              "type": {
+                "text": "number"
+              },
+              "default": "-1",
+              "attribute": "minlength",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "maxLength",
+              "type": {
+                "text": "number"
+              },
+              "default": "-1",
+              "attribute": "maxlength",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "autocomplete",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "autocomplete",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "enterKeyHint",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "enterkeyhint",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "rows",
+              "type": {
+                "text": "number"
+              },
+              "default": "3",
+              "attribute": "rows",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "resize",
+              "type": {
+                "text": "'none' | 'vertical' | 'auto'"
+              },
+              "default": "'vertical'",
+              "attribute": "resize",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "size",
+              "type": {
+                "text": "'sm' | 'md' | 'lg'"
+              },
+              "default": "'md'",
+              "attribute": "size",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "defaultValue",
+              "type": {
+                "text": "string"
+              },
+              "attribute": "value",
+              "reflects": true
+            }
+          ],
+          "events": [
+            {
+              "name": "input",
+              "type": {
+                "text": "Event"
+              },
+              "description": "Fired on every edit (the native input event, composed)."
+            },
+            {
+              "name": "change",
+              "type": {
+                "text": "Event"
+              },
+              "description": "Fired when an edit is committed, usually on blur."
+            }
+          ],
+          "slots": [
+            {
+              "name": "label",
+              "description": "Rich label; replaces the label attribute."
+            },
+            {
+              "name": "help-text",
+              "description": "Rich help text; replaces the help-text attribute."
+            }
+          ],
+          "cssParts": [
+            {
+              "name": "base",
+              "description": "Outer wrapper."
+            },
+            {
+              "name": "label",
+              "description": "The <label> element."
+            },
+            {
+              "name": "control",
+              "description": "The inset field around the textarea."
+            },
+            {
+              "name": "textarea",
+              "description": "The native <textarea>."
+            },
+            {
+              "name": "help-text",
+              "description": "Help or error text area."
+            }
+          ],
+          "cssProperties": [
+            {
+              "name": "--neu-bg",
+              "description": "Surface colour; shadows and text are derived from it."
+            },
+            {
+              "name": "--neu-accent",
+              "description": "Accent colour."
+            },
+            {
+              "name": "--neu-distance",
+              "description": "Shadow distance for the md size."
+            },
+            {
+              "name": "--neu-intensity",
+              "description": "Shadow strength multiplier."
+            },
+            {
+              "name": "--neu-radius",
+              "description": "Corner radius for the md size."
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "NeuTextarea",
+          "declaration": {
+            "name": "NeuTextarea",
+            "module": "dist/textarea.js"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "neu-textarea",
+          "declaration": {
+            "name": "NeuTextarea",
+            "module": "dist/textarea.js"
+          }
+        }
+      ]
     }
   ]
 }

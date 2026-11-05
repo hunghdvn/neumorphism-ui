@@ -19,6 +19,18 @@ interface TextControlProps {
   enterKeyHint: string;
 }
 
+/** The props that can change the form value, its restore state or its validity in every text control. */
+export const baseCommitProps = [
+  'value',
+  'required',
+  'disabled',
+  'readOnly',
+  'minLength',
+  'maxLength',
+  'errorText',
+  'autocomplete',
+] as const;
+
 function autocompleteOff(value: string | null | undefined): boolean {
   return (value ?? '').trim().toLowerCase() === 'off';
 }

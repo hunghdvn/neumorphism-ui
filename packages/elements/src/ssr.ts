@@ -9,6 +9,7 @@ import { spinnerDef } from './components/spinner/spinner.def.js';
 import { surfaceDef } from './components/surface/surface.def.js';
 import { switchDef } from './components/switch/switch.def.js';
 import { textFieldDef } from './components/text-field/text-field.def.js';
+import { textareaDef } from './components/textarea/textarea.def.js';
 import type { ComponentDef } from './core/define.js';
 import { parseProps } from './core/props.js';
 
@@ -39,6 +40,7 @@ export const definitions: ReadonlyMap<string, ComponentDef> = /* @__PURE__ */ ne
   [surfaceDef.tag, surfaceDef],
   [switchDef.tag, switchDef],
   [textFieldDef.tag, textFieldDef],
+  [textareaDef.tag, textareaDef],
 ]);
 
 /** Inner HTML of a declarative shadow root: inline styles, then the template. */

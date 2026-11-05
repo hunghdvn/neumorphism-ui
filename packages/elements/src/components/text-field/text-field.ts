@@ -1,5 +1,5 @@
 import { afterDispatch, setOptionalAttribute } from '../../core/dom.js';
-import { TextControlElement } from '../shared/text-control.js';
+import { baseCommitProps, TextControlElement } from '../shared/text-control.js';
 import { implicitSubmit } from './implicit-submit.js';
 import { textFieldDef, type TextFieldProps } from './text-field.def.js';
 
@@ -13,18 +13,7 @@ export class NeuTextField extends TextControlElement {
   declare size: 'sm' | 'md' | 'lg';
   // inputMode and enterKeyHint are inherited from HTMLElement with the right type.
 
-  protected readonly commitProps = [
-    'value',
-    'type',
-    'required',
-    'disabled',
-    'readOnly',
-    'minLength',
-    'maxLength',
-    'pattern',
-    'errorText',
-    'autocomplete',
-  ];
+  protected readonly commitProps = [...baseCommitProps, 'type', 'pattern'];
 
   private get tp(): TextFieldProps {
     return this.props as TextFieldProps;

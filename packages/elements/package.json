@@ -60,6 +60,10 @@
       "types": "./dist/switch.d.ts",
       "default": "./dist/switch.js"
     },
+    "./textarea.js": {
+      "types": "./dist/textarea.d.ts",
+      "default": "./dist/textarea.js"
+    },
     "./text-field.js": {
       "types": "./dist/text-field.d.ts",
       "default": "./dist/text-field.js"
@@ -88,6 +92,7 @@
     "./dist/surface.js",
     "./dist/switch.js",
     "./dist/text-field.js",
+    "./dist/textarea.js",
     "./dist/all.js",
     "./cdn/neu.min.js"
   ],
