@@ -169,6 +169,7 @@
   neu-icon-button:not(:defined),
   neu-number-field:not(:defined),
   neu-radio:not(:defined),
+  neu-select:not(:defined),
   neu-slider:not(:defined),
   neu-spinner:not(:defined),
   neu-switch:not(:defined),
@@ -202,6 +203,17 @@
   }
   neu-radio-group:not(:defined) {
     display: block;
+  }
+  neu-select:not(:defined) {
+    display: block;
+    min-block-size: 2.75rem;
+  }
+  neu-select[label]:not(:defined) {
+    min-block-size: 4.125rem;
+  }
+  /* Options are data for their select; before it is defined their text would show. */
+  neu-option:not(:defined) {
+    display: none;
   }
   neu-slider:not(:defined) {
     display: block;

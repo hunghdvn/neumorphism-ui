@@ -19,16 +19,31 @@ export interface FormDef {
   readonly valueProp: 'value' | 'checked';
 }
 
+/** One option child as the server reads it (spec §8.2): its value, label text and disabled state. */
+export interface OptionData {
+  readonly value: string;
+  readonly label: string;
+  readonly disabled?: boolean;
+}
+
+/** What a server renderer knows beyond the attributes: the option children of a select (§8.3). */
+export interface TemplateContext {
+  readonly options?: readonly OptionData[];
+}
+
 /** The DOM-free half of a component, shared by the element, SSR, React wrappers and docs. */
 export interface ComponentDef<S extends PropsSchema = PropsSchema> {
   readonly tag: string;
   readonly props: S;
   readonly styles: string;
-  template(props: InferProps<S>): RawHtml;
+  /** The client always renders without `ctx`; only a server renderer passes one. */
+  template(props: InferProps<S>, ctx?: TemplateContext): RawHtml;
   readonly delegatesFocus?: boolean;
   readonly form?: FormDef;
   /** Properties set only from JS (no attribute), name to TypeScript type, for wrappers and the manifest. Type-only. */
   readonly properties?: Readonly<Record<string, string>>;
+  /** Tag of the children a server renderer reads into `TemplateContext.options`. */
+  readonly optionsFrom?: string;
   readonly docs: ComponentDocs;
 }
 

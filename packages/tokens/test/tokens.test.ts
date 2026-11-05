@@ -163,6 +163,19 @@ describe('undefined elements (§5.6)', () => {
     expect(el.getBoundingClientRect().height).toBeGreaterThanOrEqual(66);
   });
 
+  test('neu-select is hidden too and keeps its measured box; its options are not shown', () => {
+    const host = mount(
+      '<neu-select><neu-option value="a">Alpha</neu-option></neu-select><neu-select label="Plan"></neu-select>',
+    );
+    const [bare, labelled] = [...host.querySelectorAll('neu-select')];
+    const rem = Number.parseFloat(getComputedStyle(document.documentElement).fontSize);
+    expect(getComputedStyle(bare!).visibility).toBe('hidden');
+    expect(getComputedStyle(bare!).display).toBe('block');
+    expect(bare!.getBoundingClientRect().height).toBe(rem * 2.75);
+    expect(labelled!.getBoundingClientRect().height).toBe(rem * 4.125);
+    expect(getComputedStyle(host.querySelector('neu-option')!).display).toBe('none');
+  });
+
   test('an element that already has a shadow root can undo the hiding with :host', () => {
     const el = mount('<neu-switch></neu-switch>').querySelector('neu-switch')!;
     el.attachShadow({ mode: 'open' }).innerHTML =

@@ -1,7 +1,7 @@
 import { afterEach, describe, expect, test } from 'vitest';
 import './all.js';
 import type { NeuTextField } from './text-field.js';
-import { definitions, formDefaultProp, renderDSD } from './ssr.js';
+import { definitions, formDefaultProp, renderDSD, type TemplateContext } from './ssr.js';
 
 afterEach(() => {
   document.body.innerHTML = '';
@@ -11,6 +11,8 @@ interface Case {
   tag: string;
   attrs: Record<string, string>;
   light: string;
+  /** What the server read from the light DOM (the options of a select); the client reads it itself. */
+  ctx?: TemplateContext;
   /** Selector of a node inside the shadow root that must survive hydration. */
   ref: string;
 }
@@ -83,6 +85,19 @@ const cases: Case[] = [
     light: '',
     ref: '.track',
   },
+  {
+    tag: 'neu-select',
+    attrs: { label: 'Plan', value: 'b' },
+    light: '<neu-option value="a">Alpha</neu-option><neu-option value="b">Beta</neu-option>',
+    ctx: {
+      options: [
+        { value: 'a', label: 'Alpha' },
+        { value: 'b', label: 'Beta' },
+      ],
+    },
+    ref: '.combobox',
+  },
+  { tag: 'neu-option', attrs: { value: 'a' }, light: 'Alpha', ref: 'slot' },
 ];
 
 function attributeText(attrs: Record<string, string>): string {
@@ -99,7 +114,7 @@ function parseDetached(markup: string): Element {
 }
 
 function ssrMarkup(c: Case): string {
-  return `<${c.tag}${attributeText(c.attrs)}>${renderDSD(c.tag, c.attrs)}${c.light}</${c.tag}>`;
+  return `<${c.tag}${attributeText(c.attrs)}>${renderDSD(c.tag, c.attrs, c.ctx)}${c.light}</${c.tag}>`;
 }
 
 describe('SSR parity', () => {
@@ -132,7 +147,10 @@ describe('SSR parity', () => {
   });
 
   /** Where a disabled control shows it: the node to read and the style that changes. */
-  const lookOf: Record<string, ['.base' | '.control' | '.items', 'boxShadow' | 'opacity']> = {
+  const lookOf: Record<
+    string,
+    ['.base' | '.control' | '.items' | '.combobox', 'boxShadow' | 'opacity']
+  > = {
     'neu-button': ['.base', 'boxShadow'],
     'neu-icon-button': ['.base', 'boxShadow'],
     'neu-switch': ['.base', 'opacity'],
@@ -143,12 +161,14 @@ describe('SSR parity', () => {
     'neu-radio-group': ['.items', 'opacity'],
     'neu-radio': ['.base', 'opacity'],
     'neu-slider': ['.base', 'opacity'],
+    'neu-select': ['.combobox', 'opacity'],
   };
 
   test('server-rendered disabled controls look disabled before their definitions run', () => {
     // The same server markup under tag names that are never defined, so nothing upgrades.
+    // neu-option is left out: it is data for its select and never rendered, disabled or not.
     const looks = cases
-      .filter((c) => 'disabled' in definitions.get(c.tag)!.props)
+      .filter((c) => 'disabled' in definitions.get(c.tag)!.props && c.tag !== 'neu-option')
       .map((c) => {
         const markup = ssrMarkup({ ...c, attrs: { ...c.attrs, disabled: '' } });
         const probe = `${c.tag}-not-defined`;
@@ -171,6 +191,7 @@ describe('SSR parity', () => {
       ['neu-radio-group', 'not-allowed', '0.55'],
       ['neu-radio', 'not-allowed', '0.55'],
       ['neu-slider', 'not-allowed', '0.55'],
+      ['neu-select', 'not-allowed', '0.6'],
     ]);
   });
 
@@ -178,7 +199,17 @@ describe('SSR parity', () => {
     expect(renderDSD('neu-text-field', {})).toContain('shadowrootdelegatesfocus');
     expect(renderDSD('neu-textarea', {})).toContain('shadowrootdelegatesfocus');
     expect(renderDSD('neu-number-field', {})).toContain('shadowrootdelegatesfocus');
+    expect(renderDSD('neu-select', {})).toContain('shadowrootdelegatesfocus');
     expect(renderDSD('neu-button', {})).not.toContain('shadowrootdelegatesfocus');
+    expect(renderDSD('neu-option', {})).not.toContain('shadowrootdelegatesfocus');
+  });
+
+  test('a template context reaches the template: the select shows the matching option label', () => {
+    const options = [{ value: 'b', label: 'Beta' }];
+    expect(renderDSD('neu-select', { value: 'b' }, { options })).toContain('>Beta</span>');
+    expect(renderDSD('neu-select', { value: 'b' })).not.toContain('Beta');
+    // Components without options ignore a context.
+    expect(renderDSD('neu-button', {}, { options })).toBe(renderDSD('neu-button', {}));
   });
 
   test('attribute values are escaped in SSR output', () => {
@@ -208,8 +239,10 @@ describe('SSR parity', () => {
       'neu-icon',
       'neu-icon-button',
       'neu-number-field',
+      'neu-option',
       'neu-radio',
       'neu-radio-group',
+      'neu-select',
       'neu-slider',
       'neu-spinner',
       'neu-surface',
@@ -230,8 +263,10 @@ describe('SSR parity', () => {
       ['neu-icon', undefined],
       ['neu-icon-button', undefined],
       ['neu-number-field', 'defaultValue'],
+      ['neu-option', undefined],
       ['neu-radio', undefined],
       ['neu-radio-group', 'defaultValue'],
+      ['neu-select', 'defaultValue'],
       ['neu-slider', 'defaultValue'],
       ['neu-spinner', undefined],
       ['neu-surface', undefined],

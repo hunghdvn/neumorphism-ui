@@ -56,6 +56,10 @@
       "types": "./dist/number-field.d.ts",
       "default": "./dist/number-field.js"
     },
+    "./option.js": {
+      "types": "./dist/option.d.ts",
+      "default": "./dist/option.js"
+    },
     "./radio.js": {
       "types": "./dist/radio.d.ts",
       "default": "./dist/radio.js"
@@ -63,6 +67,10 @@
     "./radio-group.js": {
       "types": "./dist/radio-group.d.ts",
       "default": "./dist/radio-group.js"
+    },
+    "./select.js": {
+      "types": "./dist/select.d.ts",
+      "default": "./dist/select.js"
     },
     "./slider.js": {
       "types": "./dist/slider.d.ts",
@@ -110,8 +118,10 @@
     "./dist/icon.js",
     "./dist/icon-button.js",
     "./dist/number-field.js",
+    "./dist/option.js",
     "./dist/radio.js",
     "./dist/radio-group.js",
+    "./dist/select.js",
     "./dist/slider.js",
     "./dist/spinner.js",
     "./dist/surface.js",
