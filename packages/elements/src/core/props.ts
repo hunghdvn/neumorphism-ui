@@ -8,8 +8,15 @@ export type PropDecl =
     }
   | {
       readonly type: 'string';
+      readonly default: string;
+      readonly values: readonly string[];
+      readonly reflect?: boolean;
+      readonly attribute?: string;
+    }
+  | {
+      readonly type: 'string';
       readonly default?: string;
-      readonly values?: readonly string[];
+      readonly values?: never;
       readonly reflect?: boolean;
       readonly attribute?: string;
     };

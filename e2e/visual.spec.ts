@@ -3,7 +3,19 @@ import { expect, test } from '@playwright/test';
 test.beforeEach(async ({ page }) => {
   await page.goto('/');
   await page.waitForFunction(() =>
-    ['neu-button', 'neu-switch', 'neu-text-field'].every((tag) => customElements.get(tag)),
+    [
+      'neu-button',
+      'neu-switch',
+      'neu-text-field',
+      'neu-icon',
+      'neu-icon-button',
+      'neu-button-group',
+      'neu-surface',
+      'neu-divider',
+      'neu-badge',
+      'neu-avatar',
+      'neu-spinner',
+    ].every((tag) => customElements.get(tag)),
   );
   await page.evaluate(() => document.fonts.ready);
   // Put every "invalid" field into the user-invalid state the way a user would.

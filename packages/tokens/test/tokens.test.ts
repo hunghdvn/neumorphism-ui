@@ -40,6 +40,35 @@ describe('themes (§5.5)', () => {
   });
 });
 
+describe('dark media block', () => {
+  test('the dark media block sets the dark defaults', () => {
+    const rules: CSSStyleRule[] = [];
+    const walk = (list: CSSRuleList, inDark: boolean): void => {
+      for (const rule of Array.from(list)) {
+        if (rule instanceof CSSMediaRule) {
+          walk(rule.cssRules, inDark || rule.conditionText.includes('prefers-color-scheme: dark'));
+        } else if (rule instanceof CSSStyleRule) {
+          if (inDark) rules.push(rule);
+          walk(rule.cssRules, inDark);
+        } else if ('cssRules' in rule) {
+          walk((rule as CSSGroupingRule).cssRules, inDark);
+        }
+      }
+    };
+    for (const sheet of Array.from(document.styleSheets)) walk(sheet.cssRules, false);
+    const root = rules.find((rule) =>
+      /^:root:not\(\[data-neu-theme=.light.\]\)$/.test(rule.selectorText),
+    );
+    expect(root, 'dark :root rule').toBeDefined();
+    const get = (name: string) => root!.style.getPropertyValue(name).trim();
+    expect(get('--neu-bg')).toBe('#2b2f36');
+    expect(get('--_neu-shade')).toBe('45%');
+    expect(get('--_neu-light')).toBe('6%');
+    expect(get('--_neu-fg-mix')).toBe('42%');
+    expect(get('--_neu-fg-muted-mix')).toBe('24%');
+  });
+});
+
 describe('derived values (§5.2, §5.3)', () => {
   test('shadows are recomputed inside .neu-surface with a different background', () => {
     document.documentElement.setAttribute('data-neu-theme', 'light');
@@ -52,6 +81,33 @@ describe('derived values (§5.2, §5.3)', () => {
     expect(a).not.toBe('none');
     expect(b).not.toBe('none');
     expect(b).not.toBe(a);
+  });
+
+  test('token utility classes inside a neu-surface re-derive', () => {
+    document.documentElement.setAttribute('data-neu-theme', 'light');
+    const host = mount(
+      '<div class="neu-raised" id="a">a</div>' +
+        '<neu-surface style="--neu-bg: #f5d0d8"><div class="neu-raised" id="b">b</div></neu-surface>',
+    );
+    const a = getComputedStyle(host.querySelector('#a')!).boxShadow;
+    const b = getComputedStyle(host.querySelector('#b')!).boxShadow;
+    expect(b).not.toBe('none');
+    expect(b).not.toBe(a);
+  });
+
+  test('a neu-surface host paints no square background behind its rounded base', () => {
+    document.documentElement.setAttribute('data-neu-theme', 'light');
+    const host = mount(
+      '<neu-surface style="--neu-bg: #f5d0d8">a</neu-surface>' +
+        '<neu-surface data-neu-theme="dark" class="neu-surface">b</neu-surface>' +
+        '<div class="neu-surface" style="--neu-bg: #f5d0d8">c</div>',
+    );
+    const [custom, dark, plain] = [...host.children].map((el) => getComputedStyle(el));
+    expect(custom!.backgroundColor).toBe('rgba(0, 0, 0, 0)');
+    expect(dark!.backgroundColor).toBe('rgba(0, 0, 0, 0)');
+    // Still themed: the text colour follows the surface, and plain .neu-surface paints as before.
+    expect(dark!.color).not.toBe(getComputedStyle(host).color);
+    expect(plain!.backgroundColor).toBe('rgb(245, 208, 216)');
   });
 
   test('--neu-intensity scales the dark shadow and is clamped at 100%', () => {

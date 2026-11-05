@@ -22,8 +22,21 @@ test('a text field delegates focus and pre-fills its input', () => {
   expect(html).toContain('>Email</span>');
 });
 
+test('a text field escapes a hostile label', () => {
+  const html = renderToString(h(NeuTextField, { label: '"><script>x</script>' }));
+  expect(html).toContain('&lt;script&gt;');
+  expect(html).not.toContain('<script>x');
+});
+
 test('a button forwards its variant and escapes hostile values', () => {
   const html = renderToString(h(NeuButton, { variant: 'primary', title: '"><script>' }, 'Save'));
   expect(html).toContain('variant="primary"');
   expect(html).not.toContain('"><script>');
+});
+
+test('re-exports registerIconLibrary from the elements package', async () => {
+  const elements = await import('@neu-ui/elements/icons.js');
+  const react = await import('./index.js');
+  expect(typeof react.registerIconLibrary).toBe('function');
+  expect(react.registerIconLibrary).toBe(elements.registerIconLibrary);
 });

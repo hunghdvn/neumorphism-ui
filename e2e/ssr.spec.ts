@@ -219,13 +219,16 @@ test('an element mounted by a client effect renders while the stream is still op
       (window as unknown as { __clientMounted: { readyState: string; input: boolean } })
         .__clientMounted,
   );
-  if (atMount.readyState === 'loading') expect(atMount.input).toBe(true);
   if (browserName === 'webkit') {
+    // WebKit hydrates only after the stream ends, so the loading-state mount may not happen there.
     test.info().annotations.push({
       type: 'note',
-      description: `WebKit hydrates only after the stream ends, so the loading-state mount may not occur (at mount: readyState ${atMount.readyState}, shadow input ${atMount.input})`,
+      description: `WebKit at mount: readyState ${atMount.readyState}, shadow input ${atMount.input}`,
     });
+    if (atMount.readyState !== 'loading') return;
   } else {
+    // A hard check: a regression that mounts only after the stream closes must fail, not skip.
     expect(atMount.readyState).toBe('loading');
   }
+  expect(atMount.input).toBe(true);
 });

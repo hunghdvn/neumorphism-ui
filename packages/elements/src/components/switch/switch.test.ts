@@ -208,6 +208,47 @@ describe('neu-switch', () => {
     }
   });
 
+  test('Space is cancelled before an ancestor that stops propagation sees it, so the page cannot scroll', async () => {
+    const form = mountForm('<neu-switch>N</neu-switch>');
+    const el = form.querySelector('neu-switch') as NeuSwitch;
+    let seen: boolean | undefined;
+    form.addEventListener('keydown', (event) => {
+      seen = event.defaultPrevented;
+      event.stopPropagation();
+    });
+    expect(keydown(el, ' ').defaultPrevented).toBe(true);
+    expect(seen).toBe(true);
+    expect(el.matches(':state(pressed)')).toBe(true);
+    keyup(el, ' ');
+    await tick();
+    expect(el.checked).toBe(true);
+  });
+
+  test('an ancestor claims Space by cancelling the keyup', async () => {
+    const form = mountForm('<neu-switch>N</neu-switch>');
+    const el = form.querySelector('neu-switch') as NeuSwitch;
+    form.addEventListener('keyup', (event) => event.preventDefault());
+    keydown(el, ' ');
+    keyup(el, ' ');
+    await tick();
+    expect(el.checked).toBe(false);
+    expect(el.matches(':state(pressed)')).toBe(false);
+  });
+
+  test('pressed is cleared when the element regains focus', async () => {
+    const el = mount<NeuSwitch>('<neu-switch>N</neu-switch>');
+    el.focus();
+    keydown(el, ' ');
+    // The window loses focus (the element stays active), and Space is released elsewhere.
+    el.dispatchEvent(new FocusEvent('blur'));
+    expect(el.matches(':state(pressed)')).toBe(true);
+    el.dispatchEvent(new FocusEvent('focus'));
+    expect(el.matches(':state(pressed)')).toBe(false);
+    keyup(el, ' ');
+    await tick();
+    expect(el.checked).toBe(false);
+  });
+
   test('the window losing focus between Space down and up does not disarm it', async () => {
     const el = mount<NeuSwitch>('<neu-switch>N</neu-switch>');
     el.focus();

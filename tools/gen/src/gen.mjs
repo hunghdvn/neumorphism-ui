@@ -1,8 +1,14 @@
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { definitions } from '@neu-ui/elements/ssr.js';
-import { buildManifest, buildReactIndex, buildReactWrapper, tagToFileBase } from './lib.mjs';
+import {
+  buildManifest,
+  buildReactIndex,
+  buildReactWrapper,
+  findOrphans,
+  tagToFileBase,
+} from './lib.mjs';
 
 const check = process.argv.includes('--check');
 const root = fileURLToPath(new URL('../../../', import.meta.url));
@@ -18,6 +24,7 @@ const outputs = new Map([
 ]);
 
 const stale = [];
+const orphanFiles = [];
 for (const [relative, content] of outputs) {
   const file = join(root, relative);
   if (existsSync(file) && readFileSync(file, 'utf8') === content) continue;
@@ -30,7 +37,19 @@ for (const [relative, content] of outputs) {
   }
 }
 
+const generatedDir = 'packages/react/src/generated';
+if (check && existsSync(join(root, generatedDir))) {
+  const known = new Set(outputs.keys());
+  const orphans = findOrphans(readdirSync(join(root, generatedDir)), generatedDir, known);
+  orphanFiles.push(...orphans);
+  stale.push(...orphans.map((file) => `${file} (not a generated output)`));
+}
+
 if (stale.length > 0) {
-  console.error(`Generated files are out of date:\n  ${stale.join('\n  ')}\nRun: pnpm gen`);
+  const hint =
+    orphanFiles.length > 0
+      ? 'Delete the orphaned file(s) by hand: pnpm gen does not remove them.'
+      : 'Run: pnpm gen';
+  console.error(`Generated files are out of date:\n  ${stale.join('\n  ')}\n${hint}`);
   process.exit(1);
 }

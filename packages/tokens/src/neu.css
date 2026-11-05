@@ -60,7 +60,8 @@
   /* §5.3: custom properties inherit computed values, so derive again wherever --neu-bg may change. */
   :root,
   [data-neu-theme],
-  .neu-surface {
+  .neu-surface,
+  neu-surface {
     --_neu-sd: var(
       --neu-shadow-dark,
       color-mix(
@@ -117,8 +118,11 @@
       inset calc(var(--neu-distance) * -2) calc(var(--neu-distance) * -2)
         calc(var(--neu-distance) * 4) var(--_neu-sl);
 
-    background-color: var(--neu-bg);
     color: var(--_neu-fg);
+  }
+  /* neu-surface paints its own rounded base; a background on the square host would show at the corners. */
+  :is(:root, [data-neu-theme], .neu-surface):not(neu-surface) {
+    background-color: var(--neu-bg);
   }
 
   .neu-raised,
@@ -156,14 +160,54 @@
   }
 
   /* §5.6: hide until registered, but keep the final box. Components undo this from :host. */
+  neu-avatar:not(:defined),
+  neu-badge:not(:defined),
   neu-button:not(:defined),
+  neu-divider:not(:defined),
+  neu-icon:not(:defined),
+  neu-icon-button:not(:defined),
+  neu-spinner:not(:defined),
   neu-switch:not(:defined),
   neu-text-field:not(:defined) {
     visibility: hidden;
   }
+  neu-avatar:not(:defined) {
+    display: inline-block;
+    inline-size: 2.5rem;
+    block-size: 2.5rem;
+  }
+  neu-badge:not(:defined) {
+    display: inline-block;
+    min-block-size: 1.25rem;
+  }
   neu-button:not(:defined) {
     display: inline-block;
     min-block-size: 2.5rem;
+  }
+  neu-button-group:not(:defined) {
+    display: inline-flex;
+  }
+  neu-surface:not(:defined) {
+    display: block;
+  }
+  neu-divider:not(:defined) {
+    display: block;
+    min-block-size: 2px;
+  }
+  neu-icon-button:not(:defined) {
+    display: inline-block;
+    inline-size: 2.5rem;
+    block-size: 2.5rem;
+  }
+  neu-icon:not(:defined) {
+    display: inline-block;
+    inline-size: 1em;
+    block-size: 1em;
+  }
+  neu-spinner:not(:defined) {
+    display: inline-block;
+    inline-size: 1.5rem;
+    block-size: 1.5rem;
   }
   neu-switch:not(:defined) {
     display: inline-flex;

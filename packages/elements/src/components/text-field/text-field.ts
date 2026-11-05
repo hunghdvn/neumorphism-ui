@@ -109,7 +109,9 @@ export class NeuTextField extends FormControlElement {
   }
 
   protected override rendered(): void {
-    const input = this.input!;
+    const input = this.input;
+    // A declarative root adopted without its input (cut short by the parser): nothing to wire up.
+    if (!input) return;
     // An SSR'd input works before JS loads; keep whatever was typed or autofilled meanwhile.
     // Compare with the sanitized default: the browser trims or strips some values by itself.
     if (input.value !== this.probe(this.p.value).value) this.dirty = true;

@@ -11,11 +11,20 @@ export function markSubmitAttempt(form: HTMLFormElement): void {
   setTimeout(() => submitAttempts.delete(form), 0);
 }
 
-/** A button that submits its form when activated: native submit buttons and neu-button type=submit. */
+/**
+ * A static brand on button-like classes whose type="submit" submits their form (NeuButton), so
+ * subclasses count under any tag. Symbol.for: two copies of the library on one page agree.
+ */
+export const SUBMITS = Symbol.for('neu-ui.submits');
+
+/** A button that submits its form when activated: native submit buttons and branded ones with type=submit. */
 export function isSubmitButton(el: Element): boolean {
   if (el instanceof HTMLButtonElement) return el.type === 'submit';
   if (el instanceof HTMLInputElement) return el.type === 'submit' || el.type === 'image';
-  return el.localName === 'neu-button' && (el as Element & { type?: unknown }).type === 'submit';
+  return (
+    (el.constructor as { [SUBMITS]?: unknown })[SUBMITS] === true &&
+    (el as Element & { type?: unknown }).type === 'submit'
+  );
 }
 
 /** The form owner of a control (its `form` property), which also covers form="id" association. */

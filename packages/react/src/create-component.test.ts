@@ -230,3 +230,25 @@ test('button: React onClick works and type=submit submits the form', async () =>
   });
   expect([clicks, submits]).toEqual([1, 1]);
 });
+
+test.skipIf(inject('reactMajor') < 19)(
+  'a React 19 form action runs when a NeuButton submits',
+  async () => {
+    const seen: Array<FormDataEntryValue | null> = [];
+    const action = (data: FormData) => {
+      seen.push(data.get('q'));
+    };
+    await render(
+      h(
+        'form',
+        { action },
+        h('input', { name: 'q', defaultValue: 'hello' }),
+        h(NeuButton, { type: 'submit' }, 'Go'),
+      ),
+    );
+    await act(async () => {
+      (container.querySelector('neu-button') as HTMLElement).click();
+    });
+    await vi.waitFor(() => expect(seen).toEqual(['hello']));
+  },
+);

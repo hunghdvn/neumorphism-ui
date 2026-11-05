@@ -176,6 +176,28 @@ describe('lifecycle', () => {
     expect(el.shadowRoot?.querySelector('[part=label]')?.textContent).toBe('Early');
     expect(Object.prototype.hasOwnProperty.call(el, 'label')).toBe(false);
   });
+
+  test('formDisabledCallback runs willUpdate before update', () => {
+    class NeuProbeForm extends NeuElement {
+      static override def = { ...probeDef, tag: 'neu-probe-form' };
+      static formAssociated = true;
+      readonly calls: string[] = [];
+      protected override willUpdate(changed: ReadonlySet<string>): void {
+        this.calls.push(...[...changed].map((key) => `willUpdate:${key}`));
+      }
+      protected override update(changed: ReadonlySet<string>): void {
+        this.calls.push(...[...changed].map((key) => `update:${key}`));
+      }
+    }
+    NeuProbeForm.define();
+    const fieldset = mount<HTMLFieldSetElement>(
+      '<fieldset><neu-probe-form></neu-probe-form></fieldset>',
+    );
+    const el = fieldset.firstElementChild as NeuProbeForm;
+    el.calls.length = 0;
+    fieldset.disabled = true;
+    expect(el.calls).toEqual(['willUpdate:disabled', 'update:disabled']);
+  });
 });
 
 describe('declarative shadow DOM', () => {
@@ -265,5 +287,55 @@ describe('declarative shadow DOM', () => {
       await Promise.resolve();
       expect(el.renders).toBe(1);
     });
+  });
+
+  test('while loading, an incomplete declarative root is not adopted', async () => {
+    await whileLoading(async () => {
+      const el = document.createElement('neu-probe') as NeuProbe;
+      document.body.append(el);
+      // The parser has attached the declarative root, but its data-ref nodes are still streaming.
+      const root = el.attachShadow({ mode: 'open' });
+      root.innerHTML = '<b>partial</b>';
+      document.body.append(document.createElement('p'));
+      await Promise.resolve();
+      expect(el.renders).toBe(0);
+      const label = document.createElement('span');
+      label.dataset.ref = 'label';
+      root.append(label);
+      await Promise.resolve();
+      expect(el.renders).toBe(1);
+      expect(el.shadowRoot!.querySelector('[data-ref=label]')).toBe(label);
+      expect(label.textContent).toBe('hi');
+    });
+  });
+
+  test('a declarative root still unfinished when the page has loaded is rendered afresh', async () => {
+    await whileLoading(async () => {
+      const el = document.createElement('neu-probe') as NeuProbe;
+      el.setAttribute('label', 'there');
+      document.body.append(el);
+      // A truncated server response: the root never gets its data-ref nodes.
+      const root = el.attachShadow({ mode: 'open' });
+      root.innerHTML = '<b>partial</b><style data-neu-ssr></style>';
+      document.body.append(document.createElement('p'));
+      await Promise.resolve();
+      expect(el.renders).toBe(0);
+      document.dispatchEvent(new Event('DOMContentLoaded'));
+      expect(el.renders).toBe(1);
+      expect(el.shadowRoot).toBe(root);
+      expect(root.querySelector('b')).toBeNull();
+      expect(root.querySelector('[data-ref=label]')!.textContent).toBe('there');
+      expect(root.adoptedStyleSheets).toHaveLength(1);
+    });
+  });
+
+  test('a finished declarative root is adopted as it is, without rendering the template again', async () => {
+    const el = document.createElement('neu-probe') as NeuProbe;
+    const root = el.attachShadow({ mode: 'open' });
+    root.innerHTML = '<span data-ref="label" part="label">hi</span>';
+    const label = root.firstElementChild;
+    document.body.append(el);
+    expect(el.renders).toBe(1);
+    expect(root.firstElementChild).toBe(label);
   });
 });

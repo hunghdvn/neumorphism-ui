@@ -1,6 +1,7 @@
 import { afterEach, describe, expect, test } from 'vitest';
 import { userEvent } from 'vitest/browser';
 import { NeuButton } from '../../button.js';
+import { NeuTextField } from '../../text-field.js';
 import {
   axeViolations,
   internalsOf,
@@ -153,6 +154,60 @@ describe('neu-button', () => {
     expect(events).toEqual(['submit', 'reset']);
   });
 
+  test('a neu-button submit reports no submitter, so new FormData(form, submitter) works', async () => {
+    const form = mountForm('<neu-button type="submit">Go</neu-button>');
+    const submitters: unknown[] = [];
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+      const { submitter } = event as SubmitEvent;
+      submitters.push(submitter);
+      // React 19 form actions do exactly this.
+      expect(() => new FormData(form, submitter)).not.toThrow();
+    });
+    await userEvent.click(form.querySelector('neu-button')!);
+    expect(submitters).toEqual([null]);
+  });
+
+  test('implicit submission from a text field reports no submitter', async () => {
+    const form = mountForm(
+      '<neu-text-field label="Q" name="q"></neu-text-field><neu-button type="submit">Go</neu-button>',
+    );
+    const submitters: unknown[] = [];
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+      const { submitter } = event as SubmitEvent;
+      submitters.push(submitter);
+      expect(() => new FormData(form, submitter)).not.toThrow();
+    });
+    (form.querySelector('neu-text-field') as NeuTextField).focus();
+    await userEvent.keyboard('{Enter}');
+    await tick();
+    expect(submitters).toEqual([null]);
+  });
+
+  test('a NeuButton subclass under another tag is the default button too', async () => {
+    class AppButton extends NeuButton {
+      static override def = { ...NeuButton.def, tag: 'app-submit-button' };
+    }
+    AppButton.define();
+    const form = mountForm(
+      '<neu-text-field label="Q" name="q"></neu-text-field><neu-text-field label="R" name="r"></neu-text-field>' +
+        '<app-submit-button type="submit">Go</app-submit-button>',
+    );
+    const button = form.querySelector('app-submit-button') as AppButton;
+    const clicks = countClicks(button);
+    let submitted = 0;
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+      submitted++;
+    });
+    // Two fields: without a default button, Enter would not submit at all.
+    (form.querySelector('neu-text-field') as NeuTextField).focus();
+    await userEvent.keyboard('{Enter}');
+    await tick();
+    expect([clicks(), submitted]).toEqual([1, 1]);
+  });
+
   test('el.click() on a submit button submits before it returns', () => {
     const form = mountForm('<neu-button type="submit">Go</neu-button>');
     let submitted = 0;
@@ -255,6 +310,50 @@ describe('neu-button', () => {
     } finally {
       document.removeEventListener('keydown', cancelSpace, { capture: true });
     }
+  });
+
+  test('Space is cancelled before an ancestor that stops propagation sees it, so the page cannot scroll', async () => {
+    const form = mountForm('<neu-button>Save</neu-button>');
+    const el = form.querySelector('neu-button') as NeuButton;
+    const clicks = countClicks(el);
+    let seen: boolean | undefined;
+    form.addEventListener('keydown', (event) => {
+      seen = event.defaultPrevented;
+      event.stopPropagation();
+    });
+    expect(keydown(el, ' ').defaultPrevented).toBe(true);
+    expect(seen).toBe(true);
+    expect(el.matches(':state(pressed)')).toBe(true);
+    keyup(el, ' ');
+    await tick();
+    expect(clicks()).toBe(1);
+  });
+
+  test('an ancestor claims Space by cancelling the keyup', async () => {
+    const form = mountForm('<neu-button>Save</neu-button>');
+    const el = form.querySelector('neu-button') as NeuButton;
+    const clicks = countClicks(el);
+    form.addEventListener('keyup', (event) => event.preventDefault());
+    keydown(el, ' ');
+    keyup(el, ' ');
+    await tick();
+    expect(clicks()).toBe(0);
+    expect(el.matches(':state(pressed)')).toBe(false);
+  });
+
+  test('pressed is cleared when the element regains focus', async () => {
+    const el = mount<NeuButton>('<neu-button>Save</neu-button>');
+    const clicks = countClicks(el);
+    el.focus();
+    keydown(el, ' ');
+    // The window loses focus (the element stays active), and Space is released elsewhere.
+    el.dispatchEvent(new FocusEvent('blur'));
+    expect(el.matches(':state(pressed)')).toBe(true);
+    el.dispatchEvent(new FocusEvent('focus'));
+    expect(el.matches(':state(pressed)')).toBe(false);
+    keyup(el, ' ');
+    await tick();
+    expect(clicks()).toBe(0);
   });
 
   test('a keyup listener that calls preventDefault stops the Space activation', async () => {

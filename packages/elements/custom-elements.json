@@ -4,6 +4,291 @@
   "modules": [
     {
       "kind": "javascript-module",
+      "path": "dist/avatar.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "NeuAvatar",
+          "tagName": "neu-avatar",
+          "customElement": true,
+          "description": "A user picture that falls back to initials, then to a generic user icon. With `label` it is an image named by it; without, it is decorative and hidden from assistive technology.",
+          "attributes": [
+            {
+              "name": "src",
+              "fieldName": "src",
+              "type": {
+                "text": "string"
+              },
+              "default": "''"
+            },
+            {
+              "name": "label",
+              "fieldName": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "''"
+            },
+            {
+              "name": "initials",
+              "fieldName": "initials",
+              "type": {
+                "text": "string"
+              },
+              "default": "''"
+            },
+            {
+              "name": "size",
+              "fieldName": "size",
+              "type": {
+                "text": "'sm' | 'md' | 'lg'"
+              },
+              "default": "'md'"
+            },
+            {
+              "name": "shape",
+              "fieldName": "shape",
+              "type": {
+                "text": "'circle' | 'rounded'"
+              },
+              "default": "'circle'"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "src",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "src",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "label",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "initials",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "initials",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "size",
+              "type": {
+                "text": "'sm' | 'md' | 'lg'"
+              },
+              "default": "'md'",
+              "attribute": "size",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "shape",
+              "type": {
+                "text": "'circle' | 'rounded'"
+              },
+              "default": "'circle'",
+              "attribute": "shape",
+              "reflects": true
+            }
+          ],
+          "events": [],
+          "slots": [],
+          "cssParts": [
+            {
+              "name": "base",
+              "description": "The sized, raised wrapper."
+            },
+            {
+              "name": "image",
+              "description": "The picture."
+            },
+            {
+              "name": "initials",
+              "description": "The initials shown when there is no picture."
+            },
+            {
+              "name": "icon",
+              "description": "Wrapper around the fallback user icon."
+            },
+            {
+              "name": "svg",
+              "description": "The rendered fallback SVG element."
+            }
+          ],
+          "cssProperties": [
+            {
+              "name": "--neu-bg",
+              "description": "Surface colour; shadows and text are derived from it."
+            },
+            {
+              "name": "--neu-accent",
+              "description": "Accent colour."
+            },
+            {
+              "name": "--neu-distance",
+              "description": "Shadow distance for the md size."
+            },
+            {
+              "name": "--neu-intensity",
+              "description": "Shadow strength multiplier."
+            },
+            {
+              "name": "--neu-radius",
+              "description": "Corner radius for the md size."
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "NeuAvatar",
+          "declaration": {
+            "name": "NeuAvatar",
+            "module": "dist/avatar.js"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "neu-avatar",
+          "declaration": {
+            "name": "NeuAvatar",
+            "module": "dist/avatar.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/badge.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "NeuBadge",
+          "tagName": "neu-badge",
+          "customElement": true,
+          "description": "A small raised label for status or counts.",
+          "attributes": [
+            {
+              "name": "variant",
+              "fieldName": "variant",
+              "type": {
+                "text": "'neutral' | 'accent' | 'success' | 'warning' | 'danger'"
+              },
+              "default": "'neutral'"
+            },
+            {
+              "name": "pill",
+              "fieldName": "pill",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "variant",
+              "type": {
+                "text": "'neutral' | 'accent' | 'success' | 'warning' | 'danger'"
+              },
+              "default": "'neutral'",
+              "attribute": "variant",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "pill",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "pill",
+              "reflects": true
+            }
+          ],
+          "events": [],
+          "slots": [
+            {
+              "name": "",
+              "description": "The badge text."
+            }
+          ],
+          "cssParts": [
+            {
+              "name": "base",
+              "description": "The badge itself."
+            }
+          ],
+          "cssProperties": [
+            {
+              "name": "--neu-bg",
+              "description": "Surface colour; shadows and text are derived from it."
+            },
+            {
+              "name": "--neu-accent",
+              "description": "Accent colour."
+            },
+            {
+              "name": "--neu-distance",
+              "description": "Shadow distance for the md size."
+            },
+            {
+              "name": "--neu-intensity",
+              "description": "Shadow strength multiplier."
+            },
+            {
+              "name": "--neu-radius",
+              "description": "Corner radius for the md size."
+            },
+            {
+              "name": "--neu-success",
+              "description": "Colour of the success variant."
+            },
+            {
+              "name": "--neu-warning",
+              "description": "Colour of the warning variant."
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "NeuBadge",
+          "declaration": {
+            "name": "NeuBadge",
+            "module": "dist/badge.js"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "neu-badge",
+          "declaration": {
+            "name": "NeuBadge",
+            "module": "dist/badge.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "dist/button.js",
       "declarations": [
         {
@@ -190,6 +475,769 @@
           "declaration": {
             "name": "NeuButton",
             "module": "dist/button.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/button-group.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "NeuButtonGroup",
+          "tagName": "neu-button-group",
+          "customElement": true,
+          "description": "Merges adjacent buttons into one raised block.",
+          "attributes": [
+            {
+              "name": "label",
+              "fieldName": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "''"
+            },
+            {
+              "name": "orientation",
+              "fieldName": "orientation",
+              "type": {
+                "text": "'horizontal' | 'vertical'"
+              },
+              "default": "'horizontal'"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "label",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "orientation",
+              "type": {
+                "text": "'horizontal' | 'vertical'"
+              },
+              "default": "'horizontal'",
+              "attribute": "orientation",
+              "reflects": true
+            }
+          ],
+          "events": [],
+          "slots": [
+            {
+              "name": "",
+              "description": "neu-button and neu-icon-button elements."
+            }
+          ],
+          "cssParts": [
+            {
+              "name": "base",
+              "description": "The raised wrapper around the buttons."
+            }
+          ],
+          "cssProperties": [
+            {
+              "name": "--neu-bg",
+              "description": "Surface colour; shadows and text are derived from it."
+            },
+            {
+              "name": "--neu-accent",
+              "description": "Accent colour."
+            },
+            {
+              "name": "--neu-distance",
+              "description": "Shadow distance for the md size."
+            },
+            {
+              "name": "--neu-intensity",
+              "description": "Shadow strength multiplier."
+            },
+            {
+              "name": "--neu-radius",
+              "description": "Corner radius for the md size."
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "NeuButtonGroup",
+          "declaration": {
+            "name": "NeuButtonGroup",
+            "module": "dist/button-group.js"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "neu-button-group",
+          "declaration": {
+            "name": "NeuButtonGroup",
+            "module": "dist/button-group.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/divider.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "NeuDivider",
+          "tagName": "neu-divider",
+          "customElement": true,
+          "description": "A thin engraved line that separates content.",
+          "attributes": [
+            {
+              "name": "orientation",
+              "fieldName": "orientation",
+              "type": {
+                "text": "'horizontal' | 'vertical'"
+              },
+              "default": "'horizontal'"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "orientation",
+              "type": {
+                "text": "'horizontal' | 'vertical'"
+              },
+              "default": "'horizontal'",
+              "attribute": "orientation",
+              "reflects": true
+            }
+          ],
+          "events": [],
+          "slots": [],
+          "cssParts": [
+            {
+              "name": "base",
+              "description": "The engraved line."
+            }
+          ],
+          "cssProperties": [
+            {
+              "name": "--neu-bg",
+              "description": "Surface colour; shadows and text are derived from it."
+            },
+            {
+              "name": "--neu-accent",
+              "description": "Accent colour."
+            },
+            {
+              "name": "--neu-distance",
+              "description": "Shadow distance for the md size."
+            },
+            {
+              "name": "--neu-intensity",
+              "description": "Shadow strength multiplier."
+            },
+            {
+              "name": "--neu-radius",
+              "description": "Corner radius for the md size."
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "NeuDivider",
+          "declaration": {
+            "name": "NeuDivider",
+            "module": "dist/divider.js"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "neu-divider",
+          "declaration": {
+            "name": "NeuDivider",
+            "module": "dist/divider.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/icon.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "NeuIcon",
+          "tagName": "neu-icon",
+          "customElement": true,
+          "description": "A vector icon from the built-in set or a registered icon library.",
+          "attributes": [
+            {
+              "name": "name",
+              "fieldName": "name",
+              "type": {
+                "text": "string"
+              },
+              "default": "''"
+            },
+            {
+              "name": "library",
+              "fieldName": "library",
+              "type": {
+                "text": "string"
+              },
+              "default": "'system'"
+            },
+            {
+              "name": "label",
+              "fieldName": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "''"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "name",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "name",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "library",
+              "type": {
+                "text": "string"
+              },
+              "default": "'system'",
+              "attribute": "library",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "label",
+              "reflects": true
+            }
+          ],
+          "events": [],
+          "slots": [],
+          "cssParts": [
+            {
+              "name": "svg",
+              "description": "The rendered SVG element."
+            }
+          ],
+          "cssProperties": []
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "NeuIcon",
+          "declaration": {
+            "name": "NeuIcon",
+            "module": "dist/icon.js"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "neu-icon",
+          "declaration": {
+            "name": "NeuIcon",
+            "module": "dist/icon.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/icon-button.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "NeuIconButton",
+          "tagName": "neu-icon-button",
+          "customElement": true,
+          "description": "A raised button that shows an icon instead of a label. Name it with label.",
+          "attributes": [
+            {
+              "name": "icon",
+              "fieldName": "icon",
+              "type": {
+                "text": "string"
+              },
+              "default": "''"
+            },
+            {
+              "name": "library",
+              "fieldName": "library",
+              "type": {
+                "text": "string"
+              },
+              "default": "'system'"
+            },
+            {
+              "name": "label",
+              "fieldName": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "''"
+            },
+            {
+              "name": "shape",
+              "fieldName": "shape",
+              "type": {
+                "text": "'circle' | 'square'"
+              },
+              "default": "'circle'"
+            },
+            {
+              "name": "variant",
+              "fieldName": "variant",
+              "type": {
+                "text": "'default' | 'primary' | 'flat'"
+              },
+              "default": "'default'"
+            },
+            {
+              "name": "size",
+              "fieldName": "size",
+              "type": {
+                "text": "'sm' | 'md' | 'lg'"
+              },
+              "default": "'md'"
+            },
+            {
+              "name": "disabled",
+              "fieldName": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false"
+            },
+            {
+              "name": "type",
+              "fieldName": "type",
+              "type": {
+                "text": "'button' | 'submit' | 'reset'"
+              },
+              "default": "'button'"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "icon",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "icon",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "library",
+              "type": {
+                "text": "string"
+              },
+              "default": "'system'",
+              "attribute": "library",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "label",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "shape",
+              "type": {
+                "text": "'circle' | 'square'"
+              },
+              "default": "'circle'",
+              "attribute": "shape",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "variant",
+              "type": {
+                "text": "'default' | 'primary' | 'flat'"
+              },
+              "default": "'default'",
+              "attribute": "variant",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "size",
+              "type": {
+                "text": "'sm' | 'md' | 'lg'"
+              },
+              "default": "'md'",
+              "attribute": "size",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "disabled",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "type",
+              "type": {
+                "text": "'button' | 'submit' | 'reset'"
+              },
+              "default": "'button'",
+              "attribute": "type",
+              "reflects": true
+            }
+          ],
+          "events": [
+            {
+              "name": "click",
+              "type": {
+                "text": "Event"
+              },
+              "description": "Fired on activation; never while disabled."
+            }
+          ],
+          "slots": [],
+          "cssParts": [
+            {
+              "name": "base",
+              "description": "The raised surface."
+            },
+            {
+              "name": "icon",
+              "description": "Wrapper around the icon."
+            },
+            {
+              "name": "svg",
+              "description": "The rendered SVG element."
+            }
+          ],
+          "cssProperties": [
+            {
+              "name": "--neu-bg",
+              "description": "Surface colour; shadows and text are derived from it."
+            },
+            {
+              "name": "--neu-accent",
+              "description": "Accent colour."
+            },
+            {
+              "name": "--neu-distance",
+              "description": "Shadow distance for the md size."
+            },
+            {
+              "name": "--neu-intensity",
+              "description": "Shadow strength multiplier."
+            },
+            {
+              "name": "--neu-radius",
+              "description": "Corner radius for the md size."
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "NeuIconButton",
+          "declaration": {
+            "name": "NeuIconButton",
+            "module": "dist/icon-button.js"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "neu-icon-button",
+          "declaration": {
+            "name": "NeuIconButton",
+            "module": "dist/icon-button.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/spinner.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "NeuSpinner",
+          "tagName": "neu-spinner",
+          "customElement": true,
+          "description": "A rotating indicator for work in progress.",
+          "attributes": [
+            {
+              "name": "label",
+              "fieldName": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Loading'"
+            },
+            {
+              "name": "size",
+              "fieldName": "size",
+              "type": {
+                "text": "'sm' | 'md' | 'lg'"
+              },
+              "default": "'md'"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Loading'",
+              "attribute": "label",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "size",
+              "type": {
+                "text": "'sm' | 'md' | 'lg'"
+              },
+              "default": "'md'",
+              "attribute": "size",
+              "reflects": true
+            }
+          ],
+          "events": [],
+          "slots": [],
+          "cssParts": [
+            {
+              "name": "base",
+              "description": "The sized wrapper."
+            },
+            {
+              "name": "track",
+              "description": "The inset ring behind the indicator."
+            },
+            {
+              "name": "indicator",
+              "description": "The rotating arc."
+            }
+          ],
+          "cssProperties": [
+            {
+              "name": "--neu-bg",
+              "description": "Surface colour; shadows and text are derived from it."
+            },
+            {
+              "name": "--neu-accent",
+              "description": "Accent colour."
+            },
+            {
+              "name": "--neu-distance",
+              "description": "Shadow distance for the md size."
+            },
+            {
+              "name": "--neu-intensity",
+              "description": "Shadow strength multiplier."
+            },
+            {
+              "name": "--neu-radius",
+              "description": "Corner radius for the md size."
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "NeuSpinner",
+          "declaration": {
+            "name": "NeuSpinner",
+            "module": "dist/spinner.js"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "neu-spinner",
+          "declaration": {
+            "name": "NeuSpinner",
+            "module": "dist/spinner.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "dist/surface.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "NeuSurface",
+          "tagName": "neu-surface",
+          "customElement": true,
+          "description": "A neumorphic container with its own shape, elevation, radius and padding.",
+          "attributes": [
+            {
+              "name": "shape",
+              "fieldName": "shape",
+              "type": {
+                "text": "'raised' | 'inset' | 'flat' | 'convex' | 'concave'"
+              },
+              "default": "'raised'"
+            },
+            {
+              "name": "elevation",
+              "fieldName": "elevation",
+              "type": {
+                "text": "'sm' | 'md' | 'lg'"
+              },
+              "default": "'md'"
+            },
+            {
+              "name": "radius",
+              "fieldName": "radius",
+              "type": {
+                "text": "'sm' | 'md' | 'lg' | 'full'"
+              },
+              "default": "'md'"
+            },
+            {
+              "name": "padding",
+              "fieldName": "padding",
+              "type": {
+                "text": "'none' | 'sm' | 'md' | 'lg'"
+              },
+              "default": "'md'"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "shape",
+              "type": {
+                "text": "'raised' | 'inset' | 'flat' | 'convex' | 'concave'"
+              },
+              "default": "'raised'",
+              "attribute": "shape",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "elevation",
+              "type": {
+                "text": "'sm' | 'md' | 'lg'"
+              },
+              "default": "'md'",
+              "attribute": "elevation",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "radius",
+              "type": {
+                "text": "'sm' | 'md' | 'lg' | 'full'"
+              },
+              "default": "'md'",
+              "attribute": "radius",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "padding",
+              "type": {
+                "text": "'none' | 'sm' | 'md' | 'lg'"
+              },
+              "default": "'md'",
+              "attribute": "padding",
+              "reflects": true
+            }
+          ],
+          "events": [],
+          "slots": [
+            {
+              "name": "",
+              "description": "The content of the surface."
+            }
+          ],
+          "cssParts": [
+            {
+              "name": "base",
+              "description": "The surface itself."
+            }
+          ],
+          "cssProperties": [
+            {
+              "name": "--neu-bg",
+              "description": "Surface colour; shadows and text are derived from it."
+            },
+            {
+              "name": "--neu-accent",
+              "description": "Accent colour."
+            },
+            {
+              "name": "--neu-distance",
+              "description": "Shadow distance for the md size."
+            },
+            {
+              "name": "--neu-intensity",
+              "description": "Shadow strength multiplier."
+            },
+            {
+              "name": "--neu-radius",
+              "description": "Corner radius for the md size."
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "NeuSurface",
+          "declaration": {
+            "name": "NeuSurface",
+            "module": "dist/surface.js"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "neu-surface",
+          "declaration": {
+            "name": "NeuSurface",
+            "module": "dist/surface.js"
           }
         }
       ]

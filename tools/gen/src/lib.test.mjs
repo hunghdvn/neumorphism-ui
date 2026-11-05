@@ -5,6 +5,7 @@ import {
   buildReactIndex,
   buildReactWrapper,
   eventToReactProp,
+  findOrphans,
   propTsType,
   tagToClassName,
   tagToFileBase,
@@ -65,11 +66,24 @@ describe('buildManifest', () => {
     const manifest = buildManifest(defs);
     expect(manifest.schemaVersion).toBe('2.1.0');
     const tags = manifest.modules.map((m) => m.declarations[0].tagName);
-    expect(tags).toEqual(['neu-button', 'neu-switch', 'neu-text-field']);
+    expect(tags).toEqual([
+      'neu-avatar',
+      'neu-badge',
+      'neu-button',
+      'neu-button-group',
+      'neu-divider',
+      'neu-icon',
+      'neu-icon-button',
+      'neu-spinner',
+      'neu-surface',
+      'neu-switch',
+      'neu-text-field',
+    ]);
     for (const mod of manifest.modules) {
       expect(mod.exports.some((e) => e.kind === 'custom-element-definition')).toBe(true);
     }
-    const sw = manifest.modules[1].declarations[0];
+    const sw = manifest.modules.find((m) => m.declarations[0].tagName === 'neu-switch')
+      .declarations[0];
     expect(sw.attributes.find((a) => a.name === 'checked').fieldName).toBe('defaultChecked');
   });
 });
@@ -78,4 +92,12 @@ test('buildReactIndex re-exports every wrapper', () => {
   expect(buildReactIndex(defs)).toContain(
     "export { NeuTextField, type NeuTextFieldProps } from './text-field.js';",
   );
+});
+
+describe('findOrphans', () => {
+  test('lists files in generated/ that are not outputs', () => {
+    const outputs = new Set(['packages/react/src/generated/index.ts']);
+    const found = findOrphans(['index.ts', 'orphan.ts'], 'packages/react/src/generated', outputs);
+    expect(found).toEqual(['packages/react/src/generated/orphan.ts']);
+  });
 });

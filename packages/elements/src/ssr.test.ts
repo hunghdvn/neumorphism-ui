@@ -24,6 +24,34 @@ const cases: Case[] = [
     light: '',
     ref: 'input',
   },
+  {
+    tag: 'neu-button-group',
+    attrs: { label: 'Align', orientation: 'vertical' },
+    light: '<neu-button>A</neu-button><neu-button>B</neu-button>',
+    ref: '.base',
+  },
+  {
+    tag: 'neu-surface',
+    attrs: { shape: 'inset', elevation: 'lg', radius: 'full', padding: 'sm' },
+    light: '<p>Inside</p>',
+    ref: '.base',
+  },
+  { tag: 'neu-badge', attrs: { variant: 'success', pill: '' }, light: 'New', ref: '.base' },
+  { tag: 'neu-divider', attrs: { orientation: 'vertical' }, light: '', ref: '.base' },
+  { tag: 'neu-icon', attrs: { name: 'check', label: 'Done' }, light: '', ref: '.box' },
+  { tag: 'neu-icon-button', attrs: { icon: 'x', label: 'Close' }, light: '', ref: '.icon' },
+  {
+    tag: 'neu-avatar',
+    attrs: {
+      src: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==',
+      initials: 'HD',
+      label: 'Hung',
+      size: 'lg',
+    },
+    light: '',
+    ref: '.image',
+  },
+  { tag: 'neu-spinner', attrs: { label: 'Saving', size: 'lg' }, light: '', ref: '.indicator' },
 ];
 
 function attributeText(attrs: Record<string, string>): string {
@@ -74,22 +102,25 @@ describe('SSR parity', () => {
 
   test('server-rendered disabled controls look disabled before their definitions run', () => {
     // The same server markup under tag names that are never defined, so nothing upgrades.
-    const looks = cases.map((c) => {
-      const markup = ssrMarkup({ ...c, attrs: { ...c.attrs, disabled: '' } });
-      const probe = `${c.tag}-not-defined`;
-      document.body.setHTMLUnsafe(markup.replaceAll(c.tag, probe));
-      const el = document.body.querySelector(probe)!;
-      const part = (selector: string) => getComputedStyle(el.shadowRoot!.querySelector(selector)!);
-      const look =
-        c.tag === 'neu-button'
+    const looks = cases
+      .filter((c) => 'disabled' in definitions.get(c.tag)!.props)
+      .map((c) => {
+        const markup = ssrMarkup({ ...c, attrs: { ...c.attrs, disabled: '' } });
+        const probe = `${c.tag}-not-defined`;
+        document.body.setHTMLUnsafe(markup.replaceAll(c.tag, probe));
+        const el = document.body.querySelector(probe)!;
+        const part = (selector: string) =>
+          getComputedStyle(el.shadowRoot!.querySelector(selector)!);
+        const look = c.tag.endsWith('button')
           ? part('.base').boxShadow
           : part(c.tag === 'neu-switch' ? '.base' : '.control').opacity;
-      return [c.tag, getComputedStyle(el).cursor, look];
-    });
+        return [c.tag, getComputedStyle(el).cursor, look];
+      });
     expect(looks).toEqual([
       ['neu-button', 'not-allowed', 'none'],
       ['neu-switch', 'not-allowed', '0.55'],
       ['neu-text-field', 'not-allowed', '0.6'],
+      ['neu-icon-button', 'not-allowed', 'none'],
     ]);
   });
 
@@ -105,6 +136,8 @@ describe('SSR parity', () => {
     });
     expect(out).not.toContain('<img');
     expect(out).not.toContain('" onfocus="');
+    expect(out).toContain('&lt;img');
+    expect(out).toContain('&quot;');
   });
 
   test('unknown tags render nothing, including Object.prototype keys', () => {
@@ -112,13 +145,33 @@ describe('SSR parity', () => {
     expect(renderDSD('constructor', {})).toBe('');
   });
 
-  test('definitions lists the phase-1 tags', () => {
-    expect([...definitions.keys()].sort()).toEqual(['neu-button', 'neu-switch', 'neu-text-field']);
+  test('definitions lists the registered tags', () => {
+    expect([...definitions.keys()].sort()).toEqual([
+      'neu-avatar',
+      'neu-badge',
+      'neu-button',
+      'neu-button-group',
+      'neu-divider',
+      'neu-icon',
+      'neu-icon-button',
+      'neu-spinner',
+      'neu-surface',
+      'neu-switch',
+      'neu-text-field',
+    ]);
   });
 
   test('formDefaultProp names the property that holds a form control default', () => {
     expect([...definitions.values()].map((def) => [def.tag, formDefaultProp(def)])).toEqual([
+      ['neu-avatar', undefined],
+      ['neu-badge', undefined],
       ['neu-button', undefined],
+      ['neu-button-group', undefined],
+      ['neu-divider', undefined],
+      ['neu-icon', undefined],
+      ['neu-icon-button', undefined],
+      ['neu-spinner', undefined],
+      ['neu-surface', undefined],
       ['neu-switch', 'defaultChecked'],
       ['neu-text-field', 'defaultValue'],
     ]);

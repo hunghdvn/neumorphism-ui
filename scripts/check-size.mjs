@@ -32,7 +32,15 @@ const core = [
 ].join('\n');
 
 const components = [
+  ['neu-avatar', './avatar.js', 'NeuAvatar'],
+  ['neu-badge', './badge.js', 'NeuBadge'],
   ['neu-button', './button.js', 'NeuButton'],
+  ['neu-button-group', './button-group.js', 'NeuButtonGroup'],
+  ['neu-divider', './divider.js', 'NeuDivider'],
+  ['neu-icon', './icon.js', 'NeuIcon'],
+  ['neu-icon-button', './icon-button.js', 'NeuIconButton'],
+  ['neu-spinner', './spinner.js', 'NeuSpinner'],
+  ['neu-surface', './surface.js', 'NeuSurface'],
   ['neu-switch', './switch.js', 'NeuSwitch'],
   ['neu-text-field', './text-field.js', 'NeuTextField'],
 ];
