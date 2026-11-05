@@ -1,12 +1,12 @@
 {
-  "name": "@neu-ui/gen",
+  "name": "@neumorphism-ui/gen",
   "private": true,
   "type": "module",
   "scripts": {
     "gen": "node src/gen.mjs",
-    "test": "pnpm --filter @neu-ui/elements build && vitest run"
+    "test": "pnpm --filter @neumorphism-ui/elements build && vitest run"
   },
   "dependencies": {
-    "@neu-ui/elements": "workspace:*"
+    "@neumorphism-ui/elements": "workspace:*"
   }
 }

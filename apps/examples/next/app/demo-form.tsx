@@ -1,5 +1,5 @@
 'use client';
-import { NeuButton, NeuSwitch, NeuTextField } from '@neu-ui/react';
+import { NeuButton, NeuSwitch, NeuTextField } from '@neumorphism-ui/react';
 import { useState, type FormEvent } from 'react';
 
 export function DemoForm() {

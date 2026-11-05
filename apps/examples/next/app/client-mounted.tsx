@@ -1,5 +1,5 @@
 'use client';
-import { NeuTextField } from '@neu-ui/react';
+import { NeuTextField } from '@neumorphism-ui/react';
 import { useEffect, useState } from 'react';
 
 /** Created by script after hydration, which can happen while the Suspense stream is still open. */

@@ -32,7 +32,7 @@ Xây một thư viện UI neumorphism mã nguồn mở, publish lên npm, dùng 
 | Môi trường hạng nhất | React wrapper, SSR (Next.js / Nuxt), CDN |
 | Form | Mọi control tham gia `<form>` native qua `ElementInternals` |
 | Phát hành | v1 = 17 component; các nhóm khác ra ở v1.x |
-| Tên | npm scope `@neu-ui`, prefix tag `neu-` |
+| Tên | npm scope `@neumorphism-ui`, prefix tag `neu-` |
 
 ## 3. Trình duyệt hỗ trợ
 
@@ -58,10 +58,10 @@ Không dùng CSS anchor positioning (chưa đủ phổ biến). Vị trí popove
 
 ```
 packages/
-  tokens/      @neu-ui/tokens    CSS thuần. Không JS.
-  elements/    @neu-ui/elements  Các custom element. 0 runtime dependency.
-  ssr/         @neu-ui/ssr       renderDSD, transformHtml, module Nuxt.
-  react/       @neu-ui/react     Wrapper React sinh tự động.
+  tokens/      @neumorphism-ui/tokens    CSS thuần. Không JS.
+  elements/    @neumorphism-ui/elements  Các custom element. 0 runtime dependency.
+  ssr/         @neumorphism-ui/ssr       renderDSD, transformHtml, module Nuxt.
+  react/       @neumorphism-ui/react     Wrapper React sinh tự động.
 apps/
   docs/                          Astro Starlight.
   examples/next/                 Kiểm thử SSR với Next.js.
@@ -77,8 +77,8 @@ tools/
 ### 4.2 Quy tắc phụ thuộc
 
 - `tokens` và `elements`: không có dependency lúc chạy.
-- `ssr`: chỉ phụ thuộc `@neu-ui/elements` (cùng version). Tự viết bộ quét HTML, không dùng parser ngoài.
-- `react`: `react` và `react-dom` là peer dependency (`^18.3 || ^19`), phụ thuộc `@neu-ui/elements`.
+- `ssr`: chỉ phụ thuộc `@neumorphism-ui/elements` (cùng version). Tự viết bộ quét HTML, không dùng parser ngoài.
+- `react`: `react` và `react-dom` là peer dependency (`^18.3 || ^19`), phụ thuộc `@neumorphism-ui/elements`.
 
 ### 4.3 Tách "định nghĩa" và "hành vi"
 
@@ -93,21 +93,21 @@ Mỗi component gồm 2 nửa:
 
 SSR, bộ sinh React wrapper và bộ sinh docs **chỉ đọc định nghĩa**, nên không cần DOM.
 
-**Mọi module của `@neu-ui/elements` phải import được trong Node mà không lỗi.** Base class dùng
+**Mọi module của `@neumorphism-ui/elements` phải import được trong Node mà không lỗi.** Base class dùng
 `globalThis.HTMLElement ?? class {}` và chỉ gọi `customElements.define` khi `customElements` tồn tại.
 
-### 4.4 Entry point của `@neu-ui/elements`
+### 4.4 Entry point của `@neumorphism-ui/elements`
 
 | Import | Tác dụng |
 |---|---|
-| `@neu-ui/elements/button.js` | Đăng ký `<neu-button>` (bỏ qua nếu đã có) và export class |
-| `@neu-ui/elements/all.js` | Đăng ký cả 17 component |
-| `@neu-ui/elements/ssr.js` | Tất cả định nghĩa, không đụng DOM, dùng cho `@neu-ui/ssr` |
-| `@neu-ui/elements/icons.js` | `registerIconLibrary()` |
+| `@neumorphism-ui/elements/button.js` | Đăng ký `<neu-button>` (bỏ qua nếu đã có) và export class |
+| `@neumorphism-ui/elements/all.js` | Đăng ký cả 17 component |
+| `@neumorphism-ui/elements/ssr.js` | Tất cả định nghĩa, không đụng DOM, dùng cho `@neumorphism-ui/ssr` |
+| `@neumorphism-ui/elements/icons.js` | `registerIconLibrary()` |
 
 `package.json` khai báo `sideEffects` chỉ cho các file đăng ký, để bundler tree-shake được phần còn lại.
 
-## 5. Theming (`@neu-ui/tokens`)
+## 5. Theming (`@neumorphism-ui/tokens`)
 
 ### 5.1 Biến đầu vào công khai
 
@@ -463,7 +463,7 @@ Quy ước: "size" trong danh sách attribute là `size="sm|md|lg"` (mặc đị
 - Event: `input` rồi `change` khi giá trị đổi; `neu-open`, `neu-close`.
 - Part: `base`, `label`, `combobox`, `display`, `chevron`, `listbox`, `option`, `help-text`.
 
-## 8. SSR (`@neu-ui/ssr`)
+## 8. SSR (`@neumorphism-ui/ssr`)
 
 ### 8.1 Cơ chế
 
@@ -498,7 +498,7 @@ CSS bị lặp lại ở mỗi instance trong HTML. Gzip nén tốt phần lặp
 - Select chỉ SSR phần nút kích hoạt (nhãn đang chọn hoặc placeholder). Listbox được dựng ở client
   khi mở lần đầu.
 
-### 8.4 Next.js (qua `@neu-ui/react`)
+### 8.4 Next.js (qua `@neumorphism-ui/react`)
 
 Wrapper render `<template shadowrootmode="open" dangerouslySetInnerHTML={…}>` làm con đầu tiên
 **chỉ khi `typeof window === 'undefined'`**. Wrapper Select đọc các `<NeuOption>` con (props
@@ -507,7 +507,7 @@ Wrapper render `<template shadowrootmode="open" dangerouslySetInnerHTML={…}>` 
 
 ### 8.5 Nuxt và các framework khác
 
-- `@neu-ui/ssr/nuxt`: module Nuxt khai báo `compilerOptions.isCustomElement` cho tag `neu-*`
+- `@neumorphism-ui/ssr/nuxt`: module Nuxt khai báo `compilerOptions.isCustomElement` cho tag `neu-*`
   và thêm plugin Nitro gọi `transformHtml` trên `html.body` trong hook `render:html`.
 - Astro, SvelteKit, Express, site tĩnh: docs hướng dẫn gọi `transformHtml` trong hook HTML của
   từng framework.
@@ -526,7 +526,7 @@ mỗi trang có Button, Switch, TextField:
 rule `:not(:defined)` ở 5.6 giữ chỗ cho tới khi JS chạy. Kết quả phải được báo cho người dùng
 trước khi làm tiếp.
 
-## 9. React wrapper (`@neu-ui/react`)
+## 9. React wrapper (`@neumorphism-ui/react`)
 
 - Sinh tự động bởi `tools/gen` từ **định nghĩa component** (mục 4.3). Cùng nguồn đó sinh luôn
   `custom-elements.json` theo chuẩn Custom Elements Manifest (cho IDE) và bảng API của docs.
@@ -549,9 +549,9 @@ trước khi làm tiếp.
 ## 10. CDN và ngân sách dung lượng
 
 ```html
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@neu-ui/tokens@1.0.0/neu.css"
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@neumorphism-ui/tokens@1.0.0/neu.css"
       integrity="sha384-…" crossorigin="anonymous">
-<script type="module" src="https://cdn.jsdelivr.net/npm/@neu-ui/elements@1.0.0/cdn/neu.min.js"
+<script type="module" src="https://cdn.jsdelivr.net/npm/@neumorphism-ui/elements@1.0.0/cdn/neu.min.js"
         integrity="sha384-…" crossorigin="anonymous"></script>
 ```
 
@@ -609,13 +609,14 @@ Ngân sách (min+gzip), kiểm bằng `size-limit` trong CI, vượt thì CI fai
   giai đoạn 4 xong.
 - CI (GitHub Actions) trên mỗi PR: lint → typecheck → unit test 3 trình duyệt → visual →
   SSR e2e → size. Release từ `main` bằng Changesets action, publish kèm **npm provenance**.
-- Nên tạo sớm org `neu-ui` trên npmjs.com để giữ scope.
+- Scope `@neu-ui` đã có người khác dùng, nên ngày 2026-11-05 đã tạo org `neumorphism-ui` trên
+  npmjs.com và đổi tên các gói sang `@neumorphism-ui/*`. Tên thẻ vẫn giữ prefix `neu-`.
 
 ## 14. Các giai đoạn
 
 | # | Nội dung | Điều kiện xong |
 |---|---|---|
-| **1** | Monorepo, CI, `tokens`, `NeuElement` + `FormControl` + `html`, `tools/gen`. **Button, Switch, TextField.** `@neu-ui/ssr`, `@neu-ui/react` cho 3 component đó. `examples/next`, `examples/nuxt`. | 3 component qua checklist mục 11. Tinh chỉnh tokens khớp mockup A. **🚧 Cổng SSR (8.6): báo kết quả cho người dùng và chờ quyết định trước khi sang giai đoạn 2.** Publish `1.0.0-next.0`. |
+| **1** | Monorepo, CI, `tokens`, `NeuElement` + `FormControl` + `html`, `tools/gen`. **Button, Switch, TextField.** `@neumorphism-ui/ssr`, `@neumorphism-ui/react` cho 3 component đó. `examples/next`, `examples/nuxt`. | 3 component qua checklist mục 11. Tinh chỉnh tokens khớp mockup A. **🚧 Cổng SSR (8.6): báo kết quả cho người dùng và chờ quyết định trước khi sang giai đoạn 2.** Publish `1.0.0-next.0`. |
 | **2** | IconButton, ButtonGroup, Surface, Divider, Icon (+ `registerIconLibrary`), Badge, Avatar, Spinner. | Qua checklist. Visual regression cho cả nhóm. `next.x`. |
 | **3** | Textarea, Checkbox, Radio + RadioGroup, Slider, NumberField, rồi Select + Option. | Qua checklist. `next.x`. |
 | **4** | Docs Starlight, khung thử theme, rà soát API của 17 component, hướng dẫn. | CI xanh toàn bộ, đúng ngân sách dung lượng. Publish **`1.0.0`**. |

@@ -12,7 +12,7 @@
     "typecheck": "pnpm -r --filter \"./packages/*\" run typecheck",
     "lint": "eslint . && prettier --check .",
     "format": "prettier --write .",
-    "gen": "pnpm --filter @neu-ui/elements build && pnpm --filter @neu-ui/gen run gen",
+    "gen": "pnpm --filter @neumorphism-ui/elements build && pnpm --filter @neumorphism-ui/gen run gen",
     "size": "node scripts/check-size.mjs",
     "examples:build": "pnpm --filter next-example build && pnpm --filter nuxt-example build",
     "test:ssr:prod": "playwright test -c playwright.ssr-prod.config.ts",

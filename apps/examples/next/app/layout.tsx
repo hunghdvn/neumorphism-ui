@@ -1,4 +1,4 @@
-import '@neu-ui/tokens/neu.css';
+import '@neumorphism-ui/tokens/neu.css';
 import type { ReactNode } from 'react';
 
 export const metadata = {

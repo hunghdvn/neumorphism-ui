@@ -1,4 +1,4 @@
-# @neu-ui/elements
+# @neumorphism-ui/elements
 
 Framework-agnostic neumorphism web components for
 [neumorphism-ui](https://github.com/hunghdvn/neumorphism-ui): `<neu-button>`, `<neu-switch>`,
@@ -8,12 +8,12 @@ controls are form-associated, and they adopt server-rendered declarative shadow 
 tag per module (`button.js`, `icon.js`, `badge.js`, ...) or all of them with `all.js`; `cdn/neu.min.js` is a single minified bundle. Pre-release.
 
 ```sh
-npm install @neu-ui/elements@next @neu-ui/tokens@next
+npm install @neumorphism-ui/elements@next @neumorphism-ui/tokens@next
 ```
 
 ```js
-import '@neu-ui/tokens/neu.css';
-import '@neu-ui/elements/all.js';
+import '@neumorphism-ui/tokens/neu.css';
+import '@neumorphism-ui/elements/all.js';
 ```
 
 ```html
@@ -42,7 +42,7 @@ import '@neu-ui/elements/all.js';
 library with `registerIconLibrary`:
 
 ```js
-import { registerIconLibrary } from '@neu-ui/elements/icons.js';
+import { registerIconLibrary } from '@neumorphism-ui/elements/icons.js';
 
 registerIconLibrary('brand', {
   // Return SVG markup, or a URL that serves an SVG.

@@ -8,7 +8,7 @@ import type { NuxtModule } from '@nuxt/schema';
  * SSR streaming bypasses render:html and is not supported in v1.
  */
 const neuUiModule: NuxtModule = defineNuxtModule({
-  meta: { name: '@neu-ui/ssr', configKey: 'neuUi' },
+  meta: { name: '@neumorphism-ui/ssr', configKey: 'neuUi' },
   setup(_options, nuxt) {
     const { resolve } = createResolver(import.meta.url);
 
@@ -18,8 +18,8 @@ const neuUiModule: NuxtModule = defineNuxtModule({
 
     addServerPlugin(resolve('./runtime/server-plugin.js'));
 
-    // Resolved from this package, so it works even when the app does not list @neu-ui/elements.
-    const elements = fileURLToPath(import.meta.resolve('@neu-ui/elements/all.js'));
+    // Resolved from this package, so it works even when the app does not list @neumorphism-ui/elements.
+    const elements = fileURLToPath(import.meta.resolve('@neumorphism-ui/elements/all.js'));
     addPluginTemplate({
       filename: 'neu-ui.client.mjs',
       mode: 'client',

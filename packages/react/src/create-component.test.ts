@@ -1,6 +1,6 @@
-import { renderShadowContents } from '@neu-ui/elements/ssr.js';
-import { NeuSwitch as NeuSwitchElement } from '@neu-ui/elements/switch.js';
-import type { NeuTextField as NeuTextFieldElement } from '@neu-ui/elements/text-field.js';
+import { renderShadowContents } from '@neumorphism-ui/elements/ssr.js';
+import { NeuSwitch as NeuSwitchElement } from '@neumorphism-ui/elements/switch.js';
+import type { NeuTextField as NeuTextFieldElement } from '@neumorphism-ui/elements/text-field.js';
 import * as React from 'react';
 import { createRoot, hydrateRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, expect, inject, test, vi } from 'vitest';

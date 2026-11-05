@@ -1,5 +1,5 @@
 {
-  "name": "@neu-ui/react",
+  "name": "@neumorphism-ui/react",
   "version": "0.0.0",
   "description": "React wrappers for neumorphism-ui",
   "license": "MIT",
@@ -22,7 +22,7 @@
   "sideEffects": false,
   "scripts": {
     "build": "tsc -p tsconfig.build.json",
-    "test": "pnpm --filter @neu-ui/elements build && vitest run && node scripts/ssr-react18.mjs",
+    "test": "pnpm --filter @neumorphism-ui/elements build && vitest run && node scripts/ssr-react18.mjs",
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "publishConfig": {
@@ -30,7 +30,7 @@
     "provenance": true
   },
   "dependencies": {
-    "@neu-ui/elements": "workspace:*"
+    "@neumorphism-ui/elements": "workspace:*"
   },
   "peerDependencies": {
     "react": "^18.3 || ^19",
