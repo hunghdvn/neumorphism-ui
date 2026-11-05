@@ -65,13 +65,11 @@ export class NeuSwitch extends FormControlElement {
 
   private onKeyDown(event: KeyboardEvent): void {
     if (event.key === ' ') {
-      // Arm after the whole dispatch, so a listener further up can still claim the key. From
-      // window this runs before the default action, so cancelling here still stops the scroll.
-      afterDispatch(event, () => {
-        if (event.defaultPrevented) return;
-        event.preventDefault();
-        this.toggleState('pressed', true);
-      });
+      if (event.defaultPrevented) return;
+      // Cancelled at once: deferred, an ancestor that stops propagation would let the page scroll.
+      // An ancestor claims Space in the capture phase, or by cancelling the keyup.
+      event.preventDefault();
+      this.toggleState('pressed', true);
     } else if (event.key === 'Enter' && !event.repeat) {
       // Not cancelled here, so a handler further up can still cancel the toggle.
       afterDispatch(event, () => {

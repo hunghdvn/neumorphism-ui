@@ -185,6 +185,29 @@ describe('neu-button', () => {
     expect(submitters).toEqual([null]);
   });
 
+  test('a NeuButton subclass under another tag is the default button too', async () => {
+    class AppButton extends NeuButton {
+      static override def = { ...NeuButton.def, tag: 'app-submit-button' };
+    }
+    AppButton.define();
+    const form = mountForm(
+      '<neu-text-field label="Q" name="q"></neu-text-field><neu-text-field label="R" name="r"></neu-text-field>' +
+        '<app-submit-button type="submit">Go</app-submit-button>',
+    );
+    const button = form.querySelector('app-submit-button') as AppButton;
+    const clicks = countClicks(button);
+    let submitted = 0;
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+      submitted++;
+    });
+    // Two fields: without a default button, Enter would not submit at all.
+    (form.querySelector('neu-text-field') as NeuTextField).focus();
+    await userEvent.keyboard('{Enter}');
+    await tick();
+    expect([clicks(), submitted]).toEqual([1, 1]);
+  });
+
   test('el.click() on a submit button submits before it returns', () => {
     const form = mountForm('<neu-button type="submit">Go</neu-button>');
     let submitted = 0;
@@ -289,30 +312,33 @@ describe('neu-button', () => {
     }
   });
 
-  test('a Space keydown cancelled by an ancestor in the bubble phase does not arm', async () => {
+  test('Space is cancelled before an ancestor that stops propagation sees it, so the page cannot scroll', async () => {
     const form = mountForm('<neu-button>Save</neu-button>');
     const el = form.querySelector('neu-button') as NeuButton;
     const clicks = countClicks(el);
-    form.addEventListener('keydown', (event) => event.preventDefault());
-    keydown(el, ' ');
-    expect(el.matches(':state(pressed)')).toBe(false);
-    keyup(el, ' ');
-    await tick();
-    expect(clicks()).toBe(0);
-  });
-
-  test('Space still arms when an ancestor stops propagation without cancelling', async () => {
-    // Plan ruling 10: the keydown never reaches window, so the button arms a task later.
-    const form = mountForm('<neu-button>Save</neu-button>');
-    const el = form.querySelector('neu-button') as NeuButton;
-    const clicks = countClicks(el);
-    form.addEventListener('keydown', (event) => event.stopPropagation());
-    keydown(el, ' ');
-    await tick();
+    let seen: boolean | undefined;
+    form.addEventListener('keydown', (event) => {
+      seen = event.defaultPrevented;
+      event.stopPropagation();
+    });
+    expect(keydown(el, ' ').defaultPrevented).toBe(true);
+    expect(seen).toBe(true);
     expect(el.matches(':state(pressed)')).toBe(true);
     keyup(el, ' ');
     await tick();
     expect(clicks()).toBe(1);
+  });
+
+  test('an ancestor claims Space by cancelling the keyup', async () => {
+    const form = mountForm('<neu-button>Save</neu-button>');
+    const el = form.querySelector('neu-button') as NeuButton;
+    const clicks = countClicks(el);
+    form.addEventListener('keyup', (event) => event.preventDefault());
+    keydown(el, ' ');
+    keyup(el, ' ');
+    await tick();
+    expect(clicks()).toBe(0);
+    expect(el.matches(':state(pressed)')).toBe(false);
   });
 
   test('pressed is cleared when the element regains focus', async () => {

@@ -208,15 +208,31 @@ describe('neu-switch', () => {
     }
   });
 
-  test('a Space keydown cancelled by an ancestor in the bubble phase does not arm', async () => {
+  test('Space is cancelled before an ancestor that stops propagation sees it, so the page cannot scroll', async () => {
     const form = mountForm('<neu-switch>N</neu-switch>');
     const el = form.querySelector('neu-switch') as NeuSwitch;
-    form.addEventListener('keydown', (event) => event.preventDefault());
+    let seen: boolean | undefined;
+    form.addEventListener('keydown', (event) => {
+      seen = event.defaultPrevented;
+      event.stopPropagation();
+    });
+    expect(keydown(el, ' ').defaultPrevented).toBe(true);
+    expect(seen).toBe(true);
+    expect(el.matches(':state(pressed)')).toBe(true);
+    keyup(el, ' ');
+    await tick();
+    expect(el.checked).toBe(true);
+  });
+
+  test('an ancestor claims Space by cancelling the keyup', async () => {
+    const form = mountForm('<neu-switch>N</neu-switch>');
+    const el = form.querySelector('neu-switch') as NeuSwitch;
+    form.addEventListener('keyup', (event) => event.preventDefault());
     keydown(el, ' ');
-    expect(el.matches(':state(pressed)')).toBe(false);
     keyup(el, ' ');
     await tick();
     expect(el.checked).toBe(false);
+    expect(el.matches(':state(pressed)')).toBe(false);
   });
 
   test('pressed is cleared when the element regains focus', async () => {

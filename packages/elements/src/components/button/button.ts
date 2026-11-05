@@ -1,5 +1,5 @@
 import { afterDispatch, isActiveInRoot } from '../../core/dom.js';
-import { markSubmitAttempt } from '../../core/form-control.js';
+import { markSubmitAttempt, SUBMITS } from '../../core/form-control.js';
 import type { ComponentDef } from '../../core/define.js';
 import { NeuElement } from '../../core/neu-element.js';
 import { buttonDef } from './button.def.js';
@@ -8,6 +8,8 @@ export class NeuButton extends NeuElement {
   static override def: ComponentDef = buttonDef;
   /** Form-associated only to reach internals.form; a button contributes no value. */
   static formAssociated = true;
+  /** type="submit" submits the form, so this class and its subclasses can be the default button. */
+  static readonly [SUBMITS] = true;
   declare variant: 'default' | 'primary' | 'flat';
   declare size: 'sm' | 'md' | 'lg';
   declare disabled: boolean;
@@ -66,14 +68,11 @@ export class NeuButton extends NeuElement {
       afterDispatch(event, () => {
         if (!event.defaultPrevented && !this.inactive) this.click();
       });
-    } else if (event.key === ' ') {
-      // Arm after the whole dispatch, so a listener further up can still claim the key. From
-      // window this runs before the default action, so cancelling here still stops the scroll.
-      afterDispatch(event, () => {
-        if (event.defaultPrevented) return;
-        event.preventDefault();
-        this.toggleState('pressed', true);
-      });
+    } else if (event.key === ' ' && !event.defaultPrevented) {
+      // Cancelled at once: deferred, an ancestor that stops propagation would let the page scroll.
+      // An ancestor claims Space in the capture phase, or by cancelling the keyup.
+      event.preventDefault();
+      this.toggleState('pressed', true);
     }
   }
 
