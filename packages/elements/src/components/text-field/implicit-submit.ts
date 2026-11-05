@@ -16,6 +16,9 @@ const BLOCKING_TYPES = new Set([
   'number',
 ]);
 
+/** Custom elements that block implicit submission like a text input. */
+const BLOCKING_TAGS = new Set(['neu-text-field', 'neu-number-field']);
+
 /**
  * Enter in a text control submits like a native input (HTML §4.10.21.2). With a default button
  * (the form's first submit button, form="id" ones included) it clicks that button unless it is
@@ -36,7 +39,7 @@ export function implicitSubmit(form: HTMLFormElement | null): void {
   const blocking = elements.filter(
     (el) =>
       (el instanceof HTMLInputElement && BLOCKING_TYPES.has(el.type)) ||
-      el.localName === 'neu-text-field',
+      BLOCKING_TAGS.has(el.localName),
   );
   if (blocking.length !== 1) return;
   markSubmitAttempt(form);

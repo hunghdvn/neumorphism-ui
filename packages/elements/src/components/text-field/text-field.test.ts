@@ -309,6 +309,28 @@ describe('neu-text-field', () => {
     }
   });
 
+  test('a field in a form with autocomplete=off saves no restore state', async () => {
+    const spy = vi.spyOn(ElementInternals.prototype, 'setFormValue');
+    try {
+      const last: unknown[] = [];
+      for (const attrs of ['', 'autocomplete="on"']) {
+        const form = mountForm(`<neu-text-field label="A" ${attrs}></neu-text-field>`);
+        form.setAttribute('autocomplete', ' OFF ');
+        const el = form.firstElementChild as NeuTextField;
+        el.focus();
+        await userEvent.keyboard('secret');
+        last.push(spy.mock.lastCall);
+        form.remove();
+      }
+      expect(last).toEqual([
+        ['secret', null],
+        ['secret', 'secret'],
+      ]);
+    } finally {
+      spy.mockRestore();
+    }
+  });
+
   test('a required empty field is invalid before it connects', () => {
     const el = document.createElement('neu-text-field') as NeuTextField;
     el.required = true;
