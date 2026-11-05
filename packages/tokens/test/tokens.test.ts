@@ -147,6 +147,13 @@ describe('undefined elements (§5.6)', () => {
     expect(el.getBoundingClientRect().height).toBeGreaterThan(40);
   });
 
+  test('neu-textarea is hidden too and keeps its measured box', () => {
+    const el = mount('<neu-textarea label="Notes"></neu-textarea>').querySelector('neu-textarea')!;
+    expect(getComputedStyle(el).visibility).toBe('hidden');
+    expect(getComputedStyle(el).display).toBe('block');
+    expect(el.getBoundingClientRect().height).toBeGreaterThanOrEqual(105);
+  });
+
   test('an element that already has a shadow root can undo the hiding with :host', () => {
     const el = mount('<neu-switch></neu-switch>').querySelector('neu-switch')!;
     el.attachShadow({ mode: 'open' }).innerHTML =

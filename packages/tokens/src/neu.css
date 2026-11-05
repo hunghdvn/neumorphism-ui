@@ -168,7 +168,8 @@
   neu-icon-button:not(:defined),
   neu-spinner:not(:defined),
   neu-switch:not(:defined),
-  neu-text-field:not(:defined) {
+  neu-text-field:not(:defined),
+  neu-textarea:not(:defined) {
     visibility: hidden;
   }
   neu-avatar:not(:defined) {
