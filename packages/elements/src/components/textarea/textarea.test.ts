@@ -1,6 +1,7 @@
 import { afterEach, describe, expect, test } from 'vitest';
 import { userEvent } from 'vitest/browser';
 import '../../button.js';
+import '../../text-field.js';
 import { renderDSD } from '../../ssr.js';
 import { NeuTextarea } from '../../textarea.js';
 import { axeViolations, internalsOf, mount, mountForm, tick } from '../../test-utils/helpers.js';
@@ -269,6 +270,19 @@ describe('neu-textarea', () => {
     expect(el.shadowRoot!.querySelector('img')).toBeNull();
     expect(areaOf(el).hasAttribute('onfocus')).toBe(false);
     expect(el.value).toBe('</textarea><img src=y>');
+  });
+
+  test('Enter in a textarea does not mark untouched fields user-invalid', async () => {
+    const form = mountForm(
+      '<neu-text-field name="a" label="A" required></neu-text-field><neu-textarea name="t" label="T"></neu-textarea>',
+    );
+    const field = form.querySelector('neu-text-field')!;
+    const el = form.querySelector('neu-textarea') as NeuTextarea;
+    el.addEventListener('input', () => form.checkValidity());
+    el.focus();
+    await userEvent.keyboard('a{Enter}b');
+    await tick();
+    expect(field.matches(':state(user-invalid)')).toBe(false);
   });
 
   test('has no axe violations', async () => {

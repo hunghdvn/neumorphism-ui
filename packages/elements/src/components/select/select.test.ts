@@ -1,6 +1,7 @@
 import { afterEach, describe, expect, test, vi } from 'vitest';
 import { userEvent } from 'vitest/browser';
 import '../../option.js';
+import '../../text-field.js';
 import { NeuSelect } from '../../select.js';
 import { renderDSD } from '../../ssr.js';
 import { axeViolations, internalsOf, mount, mountForm, tick } from '../../test-utils/helpers.js';
@@ -979,6 +980,18 @@ describe('neu-select', () => {
     press(el, 'ArrowDown');
     expect(optionsOf(el)[0]!.textContent).toBe('<b>bold</b>');
     expect(el.shadowRoot!.querySelector('b, i, img')).toBeNull();
+  });
+
+  test('Enter on a select does not mark untouched fields user-invalid', async () => {
+    const form = mountForm(
+      `<neu-text-field name="a" label="A" required></neu-text-field><neu-select name="plan" label="Plan">${THREE}</neu-select>`,
+    );
+    const field = form.querySelector('neu-text-field')!;
+    const el = form.querySelector('neu-select') as NeuSelect;
+    await tick();
+    press(el, 'Enter');
+    form.checkValidity();
+    expect(field.matches(':state(user-invalid)')).toBe(false);
   });
 
   test('has no axe violations with a placeholder, a value, a disabled option and help text', async () => {
