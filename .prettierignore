@@ -10,3 +10,6 @@ packages/tokens/neu.css
 packages/elements/custom-elements.json
 packages/react/src/generated/
 e2e/__screenshots__/
+# Written by Changesets on every release.
+.changeset/pre.json
+**/CHANGELOG.md
