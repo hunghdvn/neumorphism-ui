@@ -40,7 +40,7 @@ export function createComponent<P extends object, E extends HTMLElement>(
   const events = config.events ?? {};
   const valueProp = def.form?.valueProp;
   const defaultProp = formDefaultProp(def);
-  const elementKeys = new Set(Object.keys(def.props));
+  const elementKeys = new Set([...Object.keys(def.props), ...Object.keys(def.properties ?? {})]);
   if (defaultProp) elementKeys.add(defaultProp);
 
   const Wrapper = React.forwardRef<E, P>(function NeuWrapper(props, forwardedRef) {

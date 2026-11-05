@@ -77,6 +77,12 @@ const cases: Case[] = [
     ref: '.items',
   },
   { tag: 'neu-radio', attrs: { value: 'a' }, light: 'Option A', ref: '.control' },
+  {
+    tag: 'neu-slider',
+    attrs: { value: '30', min: '0', max: '200', step: '5', name: 'n', label: 'Volume' },
+    light: '',
+    ref: '.track',
+  },
 ];
 
 function attributeText(attrs: Record<string, string>): string {
@@ -136,6 +142,7 @@ describe('SSR parity', () => {
     'neu-number-field': ['.control', 'opacity'],
     'neu-radio-group': ['.items', 'opacity'],
     'neu-radio': ['.base', 'opacity'],
+    'neu-slider': ['.base', 'opacity'],
   };
 
   test('server-rendered disabled controls look disabled before their definitions run', () => {
@@ -163,6 +170,7 @@ describe('SSR parity', () => {
       ['neu-checkbox', 'not-allowed', '0.55'],
       ['neu-radio-group', 'not-allowed', '0.55'],
       ['neu-radio', 'not-allowed', '0.55'],
+      ['neu-slider', 'not-allowed', '0.55'],
     ]);
   });
 
@@ -202,6 +210,7 @@ describe('SSR parity', () => {
       'neu-number-field',
       'neu-radio',
       'neu-radio-group',
+      'neu-slider',
       'neu-spinner',
       'neu-surface',
       'neu-switch',
@@ -223,6 +232,7 @@ describe('SSR parity', () => {
       ['neu-number-field', 'defaultValue'],
       ['neu-radio', undefined],
       ['neu-radio-group', 'defaultValue'],
+      ['neu-slider', 'defaultValue'],
       ['neu-spinner', undefined],
       ['neu-surface', undefined],
       ['neu-switch', 'defaultChecked'],

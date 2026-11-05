@@ -64,6 +64,10 @@
       "types": "./dist/radio-group.d.ts",
       "default": "./dist/radio-group.js"
     },
+    "./slider.js": {
+      "types": "./dist/slider.d.ts",
+      "default": "./dist/slider.js"
+    },
     "./spinner.js": {
       "types": "./dist/spinner.d.ts",
       "default": "./dist/spinner.js"
@@ -108,6 +112,7 @@
     "./dist/number-field.js",
     "./dist/radio.js",
     "./dist/radio-group.js",
+    "./dist/slider.js",
     "./dist/spinner.js",
     "./dist/surface.js",
     "./dist/switch.js",

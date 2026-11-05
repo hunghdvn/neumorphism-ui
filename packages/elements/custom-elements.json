@@ -1935,6 +1935,238 @@
     },
     {
       "kind": "javascript-module",
+      "path": "dist/slider.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "NeuSlider",
+          "tagName": "neu-slider",
+          "customElement": true,
+          "description": "A horizontal slider for a number. The value attribute is the default; the value property is the current value. The valueFormatter property turns the value into the text a screen reader announces.",
+          "attributes": [
+            {
+              "name": "value",
+              "fieldName": "defaultValue",
+              "type": {
+                "text": "number"
+              },
+              "default": "NaN"
+            },
+            {
+              "name": "min",
+              "fieldName": "min",
+              "type": {
+                "text": "number"
+              },
+              "default": "0"
+            },
+            {
+              "name": "max",
+              "fieldName": "max",
+              "type": {
+                "text": "number"
+              },
+              "default": "100"
+            },
+            {
+              "name": "step",
+              "fieldName": "step",
+              "type": {
+                "text": "number"
+              },
+              "default": "1"
+            },
+            {
+              "name": "name",
+              "fieldName": "name",
+              "type": {
+                "text": "string"
+              },
+              "default": "''"
+            },
+            {
+              "name": "label",
+              "fieldName": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "''"
+            },
+            {
+              "name": "disabled",
+              "fieldName": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "value",
+              "type": {
+                "text": "number"
+              },
+              "description": "Current value. The value attribute holds the default."
+            },
+            {
+              "kind": "field",
+              "name": "min",
+              "type": {
+                "text": "number"
+              },
+              "default": "0",
+              "attribute": "min",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "max",
+              "type": {
+                "text": "number"
+              },
+              "default": "100",
+              "attribute": "max",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "step",
+              "type": {
+                "text": "number"
+              },
+              "default": "1",
+              "attribute": "step",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "name",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "name",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "''",
+              "attribute": "label",
+              "reflects": false
+            },
+            {
+              "kind": "field",
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "attribute": "disabled",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "defaultValue",
+              "type": {
+                "text": "number"
+              },
+              "attribute": "value",
+              "reflects": true
+            },
+            {
+              "kind": "field",
+              "name": "valueFormatter",
+              "type": {
+                "text": "(value: number) => string"
+              }
+            }
+          ],
+          "events": [
+            {
+              "name": "input",
+              "type": {
+                "text": "Event"
+              },
+              "description": "Fired on every change while the user drags or presses a key."
+            },
+            {
+              "name": "change",
+              "type": {
+                "text": "Event"
+              },
+              "description": "Fired after the user commits a change: on release, or per key."
+            }
+          ],
+          "slots": [],
+          "cssParts": [
+            {
+              "name": "base",
+              "description": "Wrapper around the track."
+            },
+            {
+              "name": "track",
+              "description": "The inset groove."
+            },
+            {
+              "name": "fill",
+              "description": "The part of the track up to the thumb."
+            },
+            {
+              "name": "thumb",
+              "description": "The raised handle."
+            }
+          ],
+          "cssProperties": [
+            {
+              "name": "--neu-bg",
+              "description": "Surface colour; shadows and text are derived from it."
+            },
+            {
+              "name": "--neu-accent",
+              "description": "Accent colour."
+            },
+            {
+              "name": "--neu-distance",
+              "description": "Shadow distance for the md size."
+            },
+            {
+              "name": "--neu-intensity",
+              "description": "Shadow strength multiplier."
+            },
+            {
+              "name": "--neu-radius",
+              "description": "Corner radius for the md size."
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "NeuSlider",
+          "declaration": {
+            "name": "NeuSlider",
+            "module": "dist/slider.js"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "neu-slider",
+          "declaration": {
+            "name": "NeuSlider",
+            "module": "dist/slider.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "dist/spinner.js",
       "declarations": [
         {

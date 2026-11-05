@@ -9,6 +9,7 @@ import { iconButtonDef } from './components/icon-button/icon-button.def.js';
 import { numberFieldDef } from './components/number-field/number-field.def.js';
 import { radioDef } from './components/radio/radio.def.js';
 import { radioGroupDef } from './components/radio-group/radio-group.def.js';
+import { sliderDef } from './components/slider/slider.def.js';
 import { spinnerDef } from './components/spinner/spinner.def.js';
 import { surfaceDef } from './components/surface/surface.def.js';
 import { switchDef } from './components/switch/switch.def.js';
@@ -44,6 +45,7 @@ export const definitions: ReadonlyMap<string, ComponentDef> = /* @__PURE__ */ ne
   [numberFieldDef.tag, numberFieldDef],
   [radioDef.tag, radioDef],
   [radioGroupDef.tag, radioGroupDef],
+  [sliderDef.tag, sliderDef],
   [spinnerDef.tag, spinnerDef],
   [surfaceDef.tag, surfaceDef],
   [switchDef.tag, switchDef],

@@ -169,6 +169,7 @@
   neu-icon-button:not(:defined),
   neu-number-field:not(:defined),
   neu-radio:not(:defined),
+  neu-slider:not(:defined),
   neu-spinner:not(:defined),
   neu-switch:not(:defined),
   neu-text-field:not(:defined),
@@ -201,6 +202,10 @@
   }
   neu-radio-group:not(:defined) {
     display: block;
+  }
+  neu-slider:not(:defined) {
+    display: block;
+    min-block-size: 1.25rem;
   }
   neu-surface:not(:defined) {
     display: block;

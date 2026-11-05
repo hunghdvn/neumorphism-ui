@@ -44,6 +44,7 @@ const components = [
   ['neu-number-field', './number-field.js', 'NeuNumberField', { limit: 3.5 }],
   ['neu-radio', './radio.js', 'NeuRadio'],
   ['neu-radio-group', './radio-group.js', 'NeuRadioGroup'],
+  ['neu-slider', './slider.js', 'NeuSlider'],
   ['neu-spinner', './spinner.js', 'NeuSpinner'],
   ['neu-surface', './surface.js', 'NeuSurface'],
   ['neu-switch', './switch.js', 'NeuSwitch'],

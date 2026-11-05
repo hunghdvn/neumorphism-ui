@@ -27,6 +27,8 @@ export interface ComponentDef<S extends PropsSchema = PropsSchema> {
   template(props: InferProps<S>): RawHtml;
   readonly delegatesFocus?: boolean;
   readonly form?: FormDef;
+  /** Properties set only from JS (no attribute), name to TypeScript type, for wrappers and the manifest. Type-only. */
+  readonly properties?: Readonly<Record<string, string>>;
   readonly docs: ComponentDocs;
 }
 

@@ -1,11 +1,12 @@
 import { renderShadowContents } from '@neumorphism-ui/elements/ssr.js';
+import type { NeuSlider as NeuSliderElement } from '@neumorphism-ui/elements/slider.js';
 import { NeuSwitch as NeuSwitchElement } from '@neumorphism-ui/elements/switch.js';
 import type { NeuTextField as NeuTextFieldElement } from '@neumorphism-ui/elements/text-field.js';
 import * as React from 'react';
 import { createRoot, hydrateRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, expect, inject, test, vi } from 'vitest';
 import { userEvent } from 'vitest/browser';
-import { NeuButton, NeuSwitch, NeuTextField } from './index.js';
+import { NeuButton, NeuSlider, NeuSwitch, NeuTextField } from './index.js';
 
 declare module 'vitest' {
   export interface ProvidedContext {
@@ -199,6 +200,18 @@ test('text field: onInput and onChange both receive each edit, in prop order', a
     await tick();
   });
   expect(seen).toEqual(['input:input', 'change:input']);
+});
+
+test('a JS-only property is set on the element, not as an attribute', async () => {
+  const formatter = (value: number) => `${value} dB`;
+  await render(h(NeuSlider, { defaultValue: 30, valueFormatter: formatter }));
+  const el = container.querySelector('neu-slider') as NeuSliderElement;
+  expect(el.valueFormatter).toBe(formatter);
+  expect(el.hasAttribute('valueformatter')).toBe(false);
+  expect(el.hasAttribute('value-formatter')).toBe(false);
+  expect(el.value).toBe(30);
+  await render(h(NeuSlider, { defaultValue: 30 }));
+  expect(el.valueFormatter).toBeUndefined();
 });
 
 test('dropping defaultValue removes the default attribute instead of writing "undefined"', async () => {

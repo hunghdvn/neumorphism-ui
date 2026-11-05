@@ -10,6 +10,7 @@ export { NeuIconButton, type NeuIconButtonProps } from './icon-button.js';
 export { NeuNumberField, type NeuNumberFieldProps } from './number-field.js';
 export { NeuRadio, type NeuRadioProps } from './radio.js';
 export { NeuRadioGroup, type NeuRadioGroupProps } from './radio-group.js';
+export { NeuSlider, type NeuSliderProps } from './slider.js';
 export { NeuSpinner, type NeuSpinnerProps } from './spinner.js';
 export { NeuSurface, type NeuSurfaceProps } from './surface.js';
 export { NeuSwitch, type NeuSwitchProps } from './switch.js';
