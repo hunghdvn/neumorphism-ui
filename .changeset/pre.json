@@ -10,6 +10,8 @@
   "changesets": [
     "phase-1-foundation",
     "phase-2-basics",
+    "phase-3-forms",
+    "select-focus-return",
     "trusted-publishing"
   ]
 }
