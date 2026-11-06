@@ -335,7 +335,7 @@ Quy ước: "size" trong danh sách attribute là `size="sm|md|lg"` (mặc đị
 **`neu-icon-button`** — như Button, chỉ có icon
 - Attribute: `icon`, `library`, `label` (**bắt buộc**, thành `aria-label`), `shape="circle|square"`
   (mặc định `circle`), `variant`, size, `disabled`, `type`.
-- Part: `base`, `icon`.
+- Part: `base`, `icon`, `svg` (svg của icon, như `neu-icon`).
 
 **`neu-button-group`** — role `group`
 - Attribute: `label` (thành `aria-label`), `orientation="horizontal|vertical"`.
@@ -375,7 +375,7 @@ Quy ước: "size" trong danh sách attribute là `size="sm|md|lg"` (mặc đị
 - Attribute: `src`, `label` (thành `aria-label`), `initials`, size, `shape="circle|rounded"`.
 - Không có `label` thì là ảnh trang trí (`aria-hidden="true"`), giống `neu-icon`.
 - Thứ tự dự phòng: ảnh → chữ viết tắt → icon `user`. Ảnh lỗi thì tự chuyển xuống mức tiếp theo.
-- Part: `base`, `image`, `initials`, `icon`.
+- Part: `base`, `image`, `initials`, `icon`, `svg` (svg của icon dự phòng).
 
 **`neu-spinner`** — role `status`
 - Attribute: `label` (mặc định `"Loading"`, thành `aria-label`), size.
@@ -424,6 +424,7 @@ Quy ước: "size" trong danh sách attribute là `size="sm|md|lg"` (mặc đị
 - Roving tabindex: chỉ radio đang chọn (hoặc radio bật đầu tiên) nằm trong thứ tự Tab.
 - Phím: mũi tên di chuyển **và** chọn, vòng lại ở hai đầu, bỏ qua radio `disabled`. Space chọn radio đang focus.
 - Event: `input` rồi `change` trên group.
+- Slot: `label` (thay cho attribute `label`). Tên truy cập của group theo chữ trong slot `label`, kể cả khi chữ đó đổi tại chỗ; không có thì dùng attribute `label`.
 - Part: `base`, `label`.
 
 **`neu-radio`** — role `radio`, không form-associated
@@ -465,6 +466,7 @@ Quy ước: "size" trong danh sách attribute là `size="sm|md|lg"` (mặc đị
   và đóng; Escape đóng, không đổi giá trị; Tab chọn, đóng và chuyển focus đi; Alt+Up chọn và đóng;
   gõ ký tự để nhảy (gom các ký tự gõ trong vòng 500ms).
 - Event: `input` rồi `change` khi giá trị đổi; `neu-open`, `neu-close`.
+- Slot: `label` (thay cho attribute `label`).
 - Part: `base`, `label`, `combobox`, `display`, `chevron`, `listbox`, `option`, `help-text`.
 
 ## 8. SSR (`@neumorphism-ui/ssr`)

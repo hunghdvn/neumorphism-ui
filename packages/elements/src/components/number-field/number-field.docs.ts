@@ -13,7 +13,8 @@ export const numberFieldDocs: ComponentDocs = {
     label: 'Visible label text; the label slot replaces it.',
     placeholder: 'Hint shown while the field is empty.',
     helpText: 'Guidance shown below the field; the help-text slot replaces it.',
-    errorText: 'Message shown below the field, marking it invalid while it is set.',
+    errorText:
+      "Shown in place of the browser's validation message once the field is invalid after user interaction; does not itself make the field invalid.",
     required: 'Makes the form invalid while the field is empty.',
     disabled: 'Prevents interaction and leaves the field out of form submission.',
     readOnly: 'Keeps the value visible and submitted but not editable.',

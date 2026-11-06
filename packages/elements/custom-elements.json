@@ -20,7 +20,7 @@
                 "text": "string"
               },
               "default": "''",
-              "description": "URL of the picture; when it is missing or empty the initials or the icon show instead."
+              "description": "URL of the picture; when it is missing, empty or fails to load, the initials or the icon show instead."
             },
             {
               "name": "label",
@@ -69,7 +69,7 @@
               "default": "''",
               "attribute": "src",
               "reflects": true,
-              "description": "URL of the picture; when it is missing or empty the initials or the icon show instead."
+              "description": "URL of the picture; when it is missing, empty or fails to load, the initials or the icon show instead."
             },
             {
               "kind": "field",
@@ -622,7 +622,7 @@
           "name": "NeuCheckbox",
           "tagName": "neu-checkbox",
           "customElement": true,
-          "description": "A checkbox. The checked attribute is the default state; indeterminate is a property whose attribute only sets the initial state.",
+          "description": "A checkbox. The checked attribute is the default state; indeterminate is a property that the attribute also sets.",
           "attributes": [
             {
               "name": "checked",
@@ -640,7 +640,7 @@
                 "text": "boolean"
               },
               "default": "false",
-              "description": "Shows the mixed state; it is a property, and the attribute only sets the initial state."
+              "description": "Shows the mixed state; the attribute is observed, so changing it later also sets the property."
             },
             {
               "name": "name",
@@ -706,7 +706,7 @@
               "default": "false",
               "attribute": "indeterminate",
               "reflects": false,
-              "description": "Shows the mixed state; it is a property, and the attribute only sets the initial state."
+              "description": "Shows the mixed state; the attribute is observed, so changing it later also sets the property."
             },
             {
               "kind": "field",
@@ -1377,7 +1377,7 @@
                 "text": "string"
               },
               "default": "''",
-              "description": "Message shown below the field, marking it invalid while it is set."
+              "description": "Shown in place of the browser's validation message once the field is invalid after user interaction; does not itself make the field invalid."
             },
             {
               "name": "required",
@@ -1529,7 +1529,7 @@
               "default": "''",
               "attribute": "error-text",
               "reflects": true,
-              "description": "Message shown below the field, marking it invalid while it is set."
+              "description": "Shown in place of the browser's validation message once the field is invalid after user interaction; does not itself make the field invalid."
             },
             {
               "kind": "field",
@@ -2196,7 +2196,7 @@
                 "text": "string"
               },
               "default": "''",
-              "description": "Message shown below the select, marking it invalid while it is set."
+              "description": "Shown in place of the browser's validation message once the select is invalid after user interaction; does not itself make the select invalid."
             },
             {
               "name": "required",
@@ -2288,7 +2288,7 @@
               "default": "''",
               "attribute": "error-text",
               "reflects": true,
-              "description": "Message shown below the select, marking it invalid while it is set."
+              "description": "Shown in place of the browser's validation message once the select is invalid after user interaction; does not itself make the select invalid."
             },
             {
               "kind": "field",
@@ -2829,7 +2829,7 @@
                 "text": "'raised' | 'inset' | 'flat' | 'convex' | 'concave'"
               },
               "default": "'raised'",
-              "description": "How the surface is lit, from raised to inset."
+              "description": "How the surface is lit and curved."
             },
             {
               "name": "elevation",
@@ -2869,7 +2869,7 @@
               "default": "'raised'",
               "attribute": "shape",
               "reflects": true,
-              "description": "How the surface is lit, from raised to inset."
+              "description": "How the surface is lit and curved."
             },
             {
               "kind": "field",
@@ -3203,7 +3203,7 @@
                 "text": "'text' | 'email' | 'password' | 'search' | 'tel' | 'url'"
               },
               "default": "'text'",
-              "description": "The kind of text the field accepts, which sets its keyboard and masking."
+              "description": "The kind of text the field accepts, which sets its keyboard and masking and drives email, url and tel validation."
             },
             {
               "name": "value",
@@ -3257,7 +3257,7 @@
                 "text": "string"
               },
               "default": "''",
-              "description": "Message shown below the field, marking it invalid while it is set."
+              "description": "Shown in place of the browser's validation message once the field is invalid after user interaction; does not itself make the field invalid."
             },
             {
               "name": "required",
@@ -3293,7 +3293,7 @@
                 "text": "number"
               },
               "default": "-1",
-              "description": "The fewest characters the text must have."
+              "description": "The fewest characters the text must have; checked after user edits, like native, not on script-set values."
             },
             {
               "name": "maxlength",
@@ -3302,7 +3302,7 @@
                 "text": "number"
               },
               "default": "-1",
-              "description": "The most characters the text may have."
+              "description": "The most characters the text may have; checked after user edits, like native, not a hard limit on script-set values."
             },
             {
               "name": "pattern",
@@ -3360,7 +3360,7 @@
               "default": "'text'",
               "attribute": "type",
               "reflects": true,
-              "description": "The kind of text the field accepts, which sets its keyboard and masking."
+              "description": "The kind of text the field accepts, which sets its keyboard and masking and drives email, url and tel validation."
             },
             {
               "kind": "field",
@@ -3423,7 +3423,7 @@
               "default": "''",
               "attribute": "error-text",
               "reflects": true,
-              "description": "Message shown below the field, marking it invalid while it is set."
+              "description": "Shown in place of the browser's validation message once the field is invalid after user interaction; does not itself make the field invalid."
             },
             {
               "kind": "field",
@@ -3467,7 +3467,7 @@
               "default": "-1",
               "attribute": "minlength",
               "reflects": true,
-              "description": "The fewest characters the text must have."
+              "description": "The fewest characters the text must have; checked after user edits, like native, not on script-set values."
             },
             {
               "kind": "field",
@@ -3478,7 +3478,7 @@
               "default": "-1",
               "attribute": "maxlength",
               "reflects": true,
-              "description": "The most characters the text may have."
+              "description": "The most characters the text may have; checked after user edits, like native, not a hard limit on script-set values."
             },
             {
               "kind": "field",
@@ -3716,7 +3716,7 @@
                 "text": "string"
               },
               "default": "''",
-              "description": "Message shown below the field, marking it invalid while it is set."
+              "description": "Shown in place of the browser's validation message once the field is invalid after user interaction; does not itself make the field invalid."
             },
             {
               "name": "required",
@@ -3752,7 +3752,7 @@
                 "text": "number"
               },
               "default": "-1",
-              "description": "The fewest characters the text must have."
+              "description": "The fewest characters the text must have; checked after user edits, like native, not on script-set values."
             },
             {
               "name": "maxlength",
@@ -3761,7 +3761,7 @@
                 "text": "number"
               },
               "default": "-1",
-              "description": "The most characters the text may have."
+              "description": "The most characters the text may have; checked after user edits, like native, not a hard limit on script-set values."
             },
             {
               "name": "autocomplete",
@@ -3871,7 +3871,7 @@
               "default": "''",
               "attribute": "error-text",
               "reflects": true,
-              "description": "Message shown below the field, marking it invalid while it is set."
+              "description": "Shown in place of the browser's validation message once the field is invalid after user interaction; does not itself make the field invalid."
             },
             {
               "kind": "field",
@@ -3915,7 +3915,7 @@
               "default": "-1",
               "attribute": "minlength",
               "reflects": true,
-              "description": "The fewest characters the text must have."
+              "description": "The fewest characters the text must have; checked after user edits, like native, not on script-set values."
             },
             {
               "kind": "field",
@@ -3926,7 +3926,7 @@
               "default": "-1",
               "attribute": "maxlength",
               "reflects": true,
-              "description": "The most characters the text may have."
+              "description": "The most characters the text may have; checked after user edits, like native, not a hard limit on script-set values."
             },
             {
               "kind": "field",

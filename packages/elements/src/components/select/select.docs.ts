@@ -10,7 +10,8 @@ export const selectDocs: ComponentDocs = {
     label: 'Visible label text that names the select.',
     placeholder: 'Text shown while no option is chosen.',
     helpText: 'Guidance shown below the select; the help-text slot replaces it.',
-    errorText: 'Message shown below the select, marking it invalid while it is set.',
+    errorText:
+      "Shown in place of the browser's validation message once the select is invalid after user interaction; does not itself make the select invalid.",
     required: 'Makes the form invalid until an option is chosen.',
     disabled: 'Prevents interaction and leaves the select out of form submission.',
     size: 'The select size.',

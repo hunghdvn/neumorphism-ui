@@ -94,8 +94,8 @@ through `aria-activedescendant`.
 ### 1.5 Typeahead
 
 - [ ] Closed, type "b". Expect: it opens with "Banana" active and announced.
-- [ ] On a keyboard layout with AltGr characters (for example German), type one that starts an
-      option label (e.g. "ä" for an option "Äpfel"). Expect: it opens on the matching option.
+- [ ] On a keyboard layout with AltGr characters (for example Polish), type one that starts an
+      option label (e.g. "ą" with AltGr+A for an option "Ąbel"). Expect: it opens on the matching option.
 - [ ] Open, type "d". Expect: "Date, 4 of 4" becomes active.
 - [ ] Open, type "c". Expect: nothing matches an enabled option (Cherry is disabled), so the active
       option does not change.
@@ -120,10 +120,14 @@ Use `<neu-select label="Fruit" name="fruit" required>` with no value, inside a `
 - [ ] Tab to the select. Expect: "Fruit, combobox, collapsed, required" (and a blank or placeholder
       value).
 - [ ] Press Enter on a button that submits the form with the select empty. Expect: the select
-      becomes invalid; the reader announces "invalid entry" (or equivalent) and the validation
-      message when focus lands on it.
-- [ ] Choose an option, then re-check. Expect: "invalid" is gone.
-- [ ] Set `invalid` by hand. Expect: "invalid entry" is announced on focus.
+      becomes invalid. Record what is announced when focus lands on it (the validation message, and
+      whether any "invalid" wording is spoken).
+- [ ] Choose an option, then re-check. Record what is announced now.
+- [ ] Submit the form with `required` and no value, then Tab back to the select. Record what is
+      announced.
+
+Note: no component sets `aria-invalid` in 1.0, so "invalid entry" is not expected; whether to set it
+is to be decided later.
 
 ### 1.8 Label from the slot
 
@@ -181,9 +185,9 @@ no `label` attribute.
 ### 2.5 Required and invalid
 
 - [ ] `required` group, nothing checked, Tab in. Expect: "Size, radio group, required".
-- [ ] Submit the form with nothing checked. Expect: "invalid entry" and the validation message
-      announced on focus.
-- [ ] Check a radio. Expect: "invalid" is gone.
+- [ ] Submit the form with nothing checked. Record what is announced on focus (the validation
+      message, and whether any "invalid" wording is spoken). `aria-invalid` is not set in 1.0.
+- [ ] Check a radio. Record what is announced now.
 
 ## 3. Result
 

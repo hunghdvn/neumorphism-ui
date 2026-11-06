@@ -30,12 +30,13 @@ export const radioGroupDocs: ComponentDocs = {
   keyboard: [
     {
       name: 'ArrowDown / ArrowRight',
-      description: 'Moves to the next radio and selects it, wrapping and skipping disabled radios.',
+      description:
+        'Moves to the next radio and selects it, wrapping and skipping disabled radios; ArrowLeft and ArrowRight swap in right-to-left text.',
     },
     {
       name: 'ArrowUp / ArrowLeft',
       description:
-        'Moves to the previous radio and selects it, wrapping and skipping disabled radios.',
+        'Moves to the previous radio and selects it, wrapping and skipping disabled radios; ArrowLeft and ArrowRight swap in right-to-left text.',
     },
     { name: 'Space', description: 'Selects the focused radio.' },
   ],

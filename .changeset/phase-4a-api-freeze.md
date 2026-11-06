@@ -12,15 +12,15 @@ Phase 4a: API freeze for 1.0.
   attribute.
 - New entry `@neumorphism-ui/elements/docs.js` exports `componentDocs`. Docs metadata moved out of
   the runtime definitions into `<name>.docs.ts`, so `ComponentDef` no longer has a `docs` field and
-  the CDN bundle is smaller (20.97 to 18.69 KB gzip). Every prop is described and eight tags have
+  the CDN bundle is smaller (20.97 to 18.96 KB gzip). Every prop is described and eight tags have
   keyboard tables; descriptions appear in `custom-elements.json`.
 - New `label` slot on `neu-select` and `neu-radio-group`; the radio group's accessible name follows
   the slotted label.
 - The internal icons of `neu-checkbox`, `neu-number-field` and `neu-select` no longer expose
   `part="svg"`. `neu-icon`, `neu-icon-button` and `neu-avatar` keep it.
-- Fixes: in `neu-text-field`, `neu-number-field` and `neu-textarea` inside a form, Enter that commits
-  an IME composition is no longer a submit attempt, so required fields do not turn user-invalid; AltGr characters take part in
-  `neu-select` typeahead; hovering an option no longer scrolls the listbox; `neu-avatar` recovers
+- Fixes: in a form, Enter that commits an IME composition in `neu-text-field`, `neu-number-field`
+  or a plain `<input>` is no longer a submit attempt, so required fields do not turn user-invalid;
+  this now covers Safari (keyCode 229). AltGr characters take part in `neu-select` typeahead; hovering an option no longer scrolls the listbox; `neu-avatar` recovers
   after a stale image error and treats whitespace-only initials as none;
   `neu-radio-group[label]:not(:defined)` reserves its label row; `transformHtml` skips HTML comments
   when reading select options.

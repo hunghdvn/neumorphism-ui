@@ -3,11 +3,11 @@ import type { ComponentDocs } from '../../core/define.js';
 
 export const checkboxDocs: ComponentDocs = {
   summary:
-    'A checkbox. The checked attribute is the default state; indeterminate is a property whose attribute only sets the initial state.',
+    'A checkbox. The checked attribute is the default state; indeterminate is a property that the attribute also sets.',
   descriptions: {
     checked: 'Whether the checkbox is currently checked.',
     indeterminate:
-      'Shows the mixed state; it is a property, and the attribute only sets the initial state.',
+      'Shows the mixed state; the attribute is observed, so changing it later also sets the property.',
     name: 'The name under which the value is submitted with a form.',
     value: 'The value submitted with the form while the checkbox is checked; defaults to "on".',
     disabled: 'Prevents interaction and leaves the checkbox out of form submission.',
