@@ -53,9 +53,9 @@ through `aria-activedescendant`.
 
 ### 1.2 Open and close
 
-- [ ] Alt+Down. Expect: "expanded"; the current option, "Apple, 1 of 4", is announced.
+- [ ] Down (closed). Expect: "expanded"; the current option, "Apple, 1 of 4", is announced.
+- [ ] Alt+Down (closed). Expect: the same as plain Down.
 - [ ] Escape. Expect: "collapsed"; the value is still Apple; focus stays on the select.
-- [ ] Down (closed). Expect: it opens ("expanded") on the current option.
 - [ ] Up (closed). Expect: it opens.
 - [ ] Enter (closed). Expect: it opens.
 - [ ] Space (closed). Expect: it opens.
@@ -69,7 +69,8 @@ through `aria-activedescendant`.
 
 - [ ] Down. Expect: "Banana, 2 of 4"; focus is still on the combobox (no "listbox" focus change).
 - [ ] Down again. Expect: Cherry is skipped; "Date, 4 of 4".
-- [ ] Down on the last option. Expect: no movement, no error, no extra announcement.
+- [ ] Down on the last option. Record what happens (the active option should stay on the last one;
+      note any announcement).
 - [ ] Up. Expect: "Banana, 2 of 4" (Cherry skipped on the way back).
 - [ ] Home. Expect: "Apple, 1 of 4".
 - [ ] End. Expect: "Date, 4 of 4".
@@ -93,6 +94,8 @@ through `aria-activedescendant`.
 ### 1.5 Typeahead
 
 - [ ] Closed, type "b". Expect: it opens with "Banana" active and announced.
+- [ ] On a keyboard layout with AltGr characters (for example German), type one that starts an
+      option label (e.g. "ä" for an option "Äpfel"). Expect: it opens on the matching option.
 - [ ] Open, type "d". Expect: "Date, 4 of 4" becomes active.
 - [ ] Open, type "c". Expect: nothing matches an enabled option (Cherry is disabled), so the active
       option does not change.
@@ -103,11 +106,12 @@ through `aria-activedescendant`.
 
 - [ ] Navigate across Cherry with Up and Down. Expect: it is never active and never announced as
       selectable.
-- [ ] Click Cherry with the mouse. Expect: nothing is chosen and the listbox stays open.
+- [ ] Click Cherry with the mouse. Record what happens (whether it is chosen, whether the listbox
+      closes).
 - [ ] Browse the listbox content with the reader's own commands. Expect: Cherry is announced as
       "unavailable" (or "dimmed", "disabled").
 - [ ] Put `disabled` on the select. Expect: Tab skips it, or the reader announces "unavailable".
-      Alt+Down does nothing.
+      Down and Alt+Down do nothing.
 
 ### 1.7 Required and invalid
 
@@ -152,10 +156,8 @@ no `label` attribute.
 - [ ] Left (or Up) from Small. Expect: it wraps to "Extra large, checked".
 - [ ] Left from Extra large. Expect: Large is skipped; "Medium, checked, 2 of 4".
 - [ ] Check that `change` fired once per move and the group value matches what was announced.
-- [ ] Space on a focused radio that is not checked (move focus with the reader's own commands, or
-      with a mouse click on the text then Shift+Tab). Expect: it becomes checked and is announced
-      "checked".
-- [ ] Space on the checked radio. Expect: no change, no extra announcement.
+- [ ] Use a group with no value. Tab into it. Expect: focus lands on the first enabled radio, which
+      is not checked. Press Space. Expect: it becomes checked and is announced "checked".
 
 ### 2.3 Disabled radio
 

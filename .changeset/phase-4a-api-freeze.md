@@ -7,17 +7,19 @@
 
 Phase 4a: API freeze for 1.0.
 
-- Every prop now reflects to its attribute, except a form control's `value` and `checked` props and
-  checkbox `indeterminate`. A non-finite number removes the attribute.
+- Every prop now reflects to its attribute except a form control's current value (`value`, or
+  `checked` for checkbox and switch) and checkbox `indeterminate`. A non-finite number removes the
+  attribute.
 - New entry `@neumorphism-ui/elements/docs.js` exports `componentDocs`. Docs metadata moved out of
   the runtime definitions into `<name>.docs.ts`, so `ComponentDef` no longer has a `docs` field and
   the CDN bundle is smaller (20.97 to 18.69 KB gzip). Every prop is described and eight tags have
   keyboard tables; descriptions appear in `custom-elements.json`.
-- New `label` slot on `neu-select` and `neu-radio-group`; the accessible name of a radio group
-  follows the slotted text.
+- New `label` slot on `neu-select` and `neu-radio-group`; the radio group's accessible name follows
+  the slotted label.
 - The internal icons of `neu-checkbox`, `neu-number-field` and `neu-select` no longer expose
   `part="svg"`. `neu-icon`, `neu-icon-button` and `neu-avatar` keep it.
-- Fixes: Enter during IME composition is not a submit attempt; AltGr characters take part in
+- Fixes: in `neu-text-field`, `neu-number-field` and `neu-textarea` inside a form, Enter that commits
+  an IME composition is no longer a submit attempt, so required fields do not turn user-invalid; AltGr characters take part in
   `neu-select` typeahead; hovering an option no longer scrolls the listbox; `neu-avatar` recovers
   after a stale image error and treats whitespace-only initials as none;
   `neu-radio-group[label]:not(:defined)` reserves its label row; `transformHtml` skips HTML comments
