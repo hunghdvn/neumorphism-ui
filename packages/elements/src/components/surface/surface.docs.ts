@@ -1,4 +1,4 @@
-import { themeCssProperties } from '../../core/styles.js';
+import { themeCssProperties } from '../theme-docs.js';
 import type { ComponentDocs } from '../../core/define.js';
 
 export const surfaceDocs: ComponentDocs = {

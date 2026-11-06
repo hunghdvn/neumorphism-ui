@@ -1,5 +1,3 @@
-import type { DocEntry } from './define.js';
-
 /**
  * Re-declares the derived theme values on every host (spec §5.3). Fallbacks are the light
  * defaults from @neumorphism-ui/tokens so components still look right without the tokens stylesheet;
@@ -33,11 +31,3 @@ export const hostTheme = `
 :host(:focus) { outline: none; }
 *, *::before, *::after { box-sizing: border-box; }
 `;
-
-export const themeCssProperties: readonly DocEntry[] = [
-  { name: '--neu-bg', description: 'Surface colour; shadows and text are derived from it.' },
-  { name: '--neu-accent', description: 'Accent colour.' },
-  { name: '--neu-distance', description: 'Shadow distance for the md size.' },
-  { name: '--neu-intensity', description: 'Shadow strength multiplier.' },
-  { name: '--neu-radius', description: 'Corner radius for the md size.' },
-];

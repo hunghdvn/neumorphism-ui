@@ -28,7 +28,7 @@ const core = [
   "export { html, unsafeHTML } from './core/html.js';",
   "export * from './core/dom.js';",
   "export * from './core/validation.js';",
-  "export { hostTheme, themeCssProperties } from './core/styles.js';",
+  "export { hostTheme } from './core/styles.js';",
 ].join('\n');
 
 // Every non-test module in components/shared, read from the directory so a new one is counted automatically.
@@ -83,7 +83,26 @@ for (const [tag, file, name, { base, limit = 3 } = {}] of components) {
   }
 }
 
-let failed = false;
+// Docs strings live in dist/docs.js only; the CDN bundle must not carry them (spec §10).
+const { componentDocs } = await import(`file:///${elements}/dist/docs.js`);
+const cdnText = readFileSync(`${elements}/cdn/neu.min.js`, 'utf8');
+const docsLeaks = (text) =>
+  [...componentDocs].flatMap(([tag, docs]) =>
+    [docs.summary, ...Object.values(docs.descriptions)]
+      .filter((s) => text.includes(s))
+      .map((s) => `${tag}: ${s}`),
+  );
+
+let failed = componentDocs.size === 0; // an empty map would make the guard vacuous
+if (failed) console.log('FAIL  componentDocs is empty');
+// SIZE_GUARD_PROBE appends a docs summary to the scanned text, to prove the guard can fail.
+const scanned = process.env.SIZE_GUARD_PROBE
+  ? `${cdnText}${[...componentDocs.values()][0].summary}`
+  : cdnText;
+for (const leak of docsLeaks(scanned)) {
+  failed = true;
+  console.log(`FAIL  docs string in cdn/neu.min.js (${leak})`);
+}
 for (const [label, bytes, limit] of rows) {
   const ok = bytes <= limit * KB;
   if (!ok) failed = true;
