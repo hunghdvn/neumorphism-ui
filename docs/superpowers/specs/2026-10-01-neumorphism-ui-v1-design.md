@@ -567,7 +567,8 @@ Ngân sách (min+gzip), kiểm bằng `size-limit` trong CI, vượt thì CI fai
 |---|---|
 | `cdn/neu.min.js` (cả 17 component) | ≤ 25KB |
 | `neu.css` (tokens) | ≤ 4KB |
-| Mỗi component riêng, không tính base class | ≤ 3KB (riêng Select ≤ 5KB) |
+| Module dùng chung `components/shared/` | ≤ 3KB |
+| Mỗi component riêng, không tính core, module dùng chung và component cha | ≤ 3KB (riêng Select ≤ 5KB) |
 | Base class + mixin form + `html` | ≤ 4KB |
 
 ## 11. Testing
