@@ -17,13 +17,13 @@ export class NeuCheckbox extends CheckableElement {
     return this.props.indeterminate === true ? 'mixed' : super.ariaCheckedValue();
   }
 
-  /** Native: clicking an indeterminate box checks it and clears indeterminate. */
+  /** Native: a click on an indeterminate box toggles checked and clears indeterminate. */
   protected override flip(): () => void {
     const mixed = this.props.indeterminate === true;
     if (!mixed) return super.flip();
     const checked = this.checked;
     this.setProp('indeterminate', false);
-    this.checked = true;
+    this.checked = !checked;
     return () => {
       this.setProp('indeterminate', true);
       this.checked = checked;

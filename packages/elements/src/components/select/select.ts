@@ -1,20 +1,9 @@
 import type { OptionData } from '../../core/define.js';
 import { dispatch, setOptionalAttribute, setText } from '../../core/dom.js';
 import { FormControlElement } from '../../core/form-control.js';
+import { requiredMessage } from '../../core/validation.js';
 import { readOption } from '../option/option-data.js';
 import { pickOption, selectDef } from './select.def.js';
-
-let selectMessage: string | undefined;
-
-/** The browser's own, localised "please select an item" message, from a native select. */
-function requiredSelectMessage(): string {
-  if (selectMessage === undefined) {
-    const probe = document.createElement('select');
-    probe.required = true;
-    selectMessage = probe.validationMessage || 'Please select an item in the list.';
-  }
-  return selectMessage;
-}
 
 /** An option read from the light DOM, with the element it came from. */
 interface Option extends OptionData {
@@ -191,7 +180,7 @@ export class NeuSelect extends FormControlElement {
     dispatch(this, 'neu-open');
   }
 
-  /** The one way the listbox closes: by key, by choice, by light dismiss (toggle) or when disabled. */
+  /** The one way the listbox closes: by key, by choice, by light dismiss (toggle), by focus leaving or when disabled. */
   private close(): void {
     if (!this.opened) return;
     this.opened = false;
@@ -323,6 +312,12 @@ export class NeuSelect extends FormControlElement {
     listbox.addEventListener('toggle', () => {
       if (!listbox.matches(':popover-open')) this.close();
     });
+    // Focus moved elsewhere by a script, assistive tech or into a frame. Clicks on the listbox
+    // keep focus here (its pointerdown is cancelled), and leaving the window keeps it open.
+    combobox.addEventListener('focusout', (event) => {
+      const to = event.relatedTarget as Node | null;
+      if (to ? !this.shadowRoot!.contains(to) : document.hasFocus()) this.close();
+    });
   }
 
   protected override willUpdate(changed: ReadonlySet<string>): void {
@@ -363,14 +358,15 @@ export class NeuSelect extends FormControlElement {
     this.close();
   }
 
+  /** Like a native select: an option whose value is "" submits name=; no option, nothing. */
   protected formValue(): string | null {
-    return this.chosen() || null;
+    return pickOption(this.opts, this.current) ? this.current : null;
   }
   protected validate(): void {
     if (this.props.required === true && this.chosen() === '') {
       this.internals.setValidity(
         { valueMissing: true },
-        requiredSelectMessage(),
+        requiredMessage('select', 'Please select an item in the list.'),
         this.ref('combobox') ?? undefined,
       );
     } else {

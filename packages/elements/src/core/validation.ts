@@ -1,14 +1,22 @@
-let checkboxMessage: string | undefined;
+const missing = new Map<string, string>();
 
-/** The browser's own, localised "please check this box" message, borrowed from a native checkbox. */
-export function requiredCheckboxMessage(): string {
-  if (checkboxMessage === undefined) {
-    const probe = document.createElement('input');
-    probe.type = 'checkbox';
+/**
+ * The browser's own, localised "value missing" message, borrowed once from a required native
+ * control: an input of type `kind` ("checkbox", "radio") or, for "select", a select. `fallback`
+ * covers a browser that reports none.
+ */
+export function requiredMessage(kind: 'checkbox' | 'radio' | 'select', fallback: string): string {
+  let message = missing.get(kind);
+  if (message === undefined) {
+    const probe =
+      kind === 'select'
+        ? document.createElement('select')
+        : Object.assign(document.createElement('input'), { type: kind });
     probe.required = true;
-    checkboxMessage = probe.validationMessage || 'Please check this box if you want to proceed.';
+    message = probe.validationMessage || fallback;
+    missing.set(kind, message);
   }
-  return checkboxMessage;
+  return message;
 }
 
 /** Copies a native input's validity so the host can report the same errors. */

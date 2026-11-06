@@ -1,6 +1,7 @@
 import { dispatch } from '../../core/dom.js';
 import { FormControlElement } from '../../core/form-control.js';
-import { sliderBigStep, sliderDef, sliderStyle, sliderUnit, sliderValue } from './slider.def.js';
+import { stepUnit } from '../shared/step.js';
+import { sliderBigStep, sliderDef, sliderStyle, sliderValue } from './slider.def.js';
 
 export class NeuSlider extends FormControlElement {
   static override def = sliderDef;
@@ -27,6 +28,14 @@ export class NeuSlider extends FormControlElement {
     this.addEventListener('pointermove', (event) => this.onMove(event));
     this.addEventListener('pointerup', () => this.endDrag());
     this.addEventListener('pointercancel', () => this.endDrag());
+    // Capture lost without a pointerup reaching us (the browser took it back, say): the drag is over.
+    this.addEventListener('lostpointercapture', () => this.endDrag());
+  }
+
+  protected override disconnected(): void {
+    super.disconnected();
+    // A drag cut short by removal does not resume when the slider is put back.
+    this.dragging = false;
   }
 
   get value(): number {
@@ -94,7 +103,7 @@ export class NeuSlider extends FormControlElement {
   private onKey(event: KeyboardEvent): void {
     if (this.isDisabled || event.altKey || event.ctrlKey || event.metaKey) return;
     const { min, max } = this.props as { min: number; max: number };
-    const step = sliderUnit(this.props.step as number);
+    const step = stepUnit(this.props.step as number);
     const direction = this.matches(':dir(rtl)') ? -1 : 1;
     const big = sliderBigStep(min, max, step);
     const wanted: Record<string, number> = {

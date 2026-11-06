@@ -1,12 +1,14 @@
 import { afterDispatch, setOptionalAttribute } from '../../core/dom.js';
 import { baseCommitProps, TextControlElement } from '../shared/text-control.js';
-import { implicitSubmit } from '../text-field/implicit-submit.js';
-import { numberFieldDef, stepOf, type NumberFieldProps } from './number-field.def.js';
+import { BLOCKS_IMPLICIT_SUBMIT, implicitSubmit } from '../text-field/implicit-submit.js';
+import { stepUnit } from '../shared/step.js';
+import { decimalPad, numberFieldDef, type NumberFieldProps } from './number-field.def.js';
 
 type Mover = (input: HTMLInputElement) => void;
 
 export class NeuNumberField extends TextControlElement {
   static override def = numberFieldDef;
+  static readonly [BLOCKS_IMPLICIT_SUBMIT] = true;
   static override extraProperties = ['defaultValue', 'valueAsNumber'];
   declare min: number;
   declare max: number;
@@ -34,7 +36,8 @@ export class NeuNumberField extends TextControlElement {
     const p = this.np;
     setOptionalAttribute(input, 'min', Number.isFinite(p.min) ? String(p.min) : '');
     setOptionalAttribute(input, 'max', Number.isFinite(p.max) ? String(p.max) : '');
-    input.step = String(stepOf(p.step));
+    input.step = String(stepUnit(p.step));
+    setOptionalAttribute(input, 'inputmode', decimalPad(p.min) ? 'decimal' : '');
   }
 
   protected probe(value: string): HTMLInputElement {
@@ -68,10 +71,11 @@ export class NeuNumberField extends TextControlElement {
     ];
     for (const [ref, mover] of steps) {
       const button = this.ref<HTMLButtonElement>(ref);
-      // Keep focus (and the caret) in the input while the button is pressed.
+      // Keep focus (and the caret) in the input while the button is pressed. A touch leaves focus
+      // where it is: focusing the input would open the on-screen keyboard on every tap.
       button?.addEventListener('pointerdown', (event) => {
         event.preventDefault();
-        if (!button.disabled) this.input?.focus();
+        if (!button.disabled && event.pointerType !== 'touch') this.input?.focus();
       });
       button?.addEventListener('click', () => this.move(mover));
     }

@@ -128,6 +128,19 @@ describe('transformHtml', () => {
     expect(out).toContain('data-ref="display">a b</span>');
   });
 
+  test('an option label with a named entity it cannot decode leaves the display empty, not wrong', () => {
+    const out = transformHtml(
+      '<neu-select value="c" placeholder="Pick"><neu-option value="a">A &amp; B</neu-option><neu-option value="c">Caf&eacute; &mdash; daily</neu-option></neu-select>',
+    );
+    expect(out).toContain('data-ref="display"></span>');
+    expect(out).not.toMatch(/data-ref="display">[^<]*eacute/);
+    expect(out).not.toContain('>Pick</span>');
+    const known = transformHtml(
+      '<neu-select value="a"><neu-option value="a">A &amp; B&#8212;&#x2014;</neu-option></neu-select>',
+    );
+    expect(known).toContain('data-ref="display">A &amp; B——</span>');
+  });
+
   test('an unclosed select still gets its selected label', () => {
     const out = transformHtml(
       '<neu-select value="b"><neu-option value="a">A</neu-option><neu-option value="b">B</neu-option>',

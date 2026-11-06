@@ -8,9 +8,10 @@ afterEach(() => {
 });
 
 describe('neu-radio', () => {
-  test('defaults: not checked, no value, not disabled; role radio and aria-checked false', () => {
+  test('defaults: not checked, value "on" like a native radio, not disabled; role radio and aria-checked false', () => {
     const el = mount<NeuRadio>('<neu-radio>One</neu-radio>');
-    expect([el.checked, el.value, el.disabled]).toEqual([false, '', false]);
+    expect([el.checked, el.value, el.disabled]).toEqual([false, 'on', false]);
+    expect(el.hasAttribute('value')).toBe(false);
     expect(internalsOf(el).role).toBe('radio');
     expect(internalsOf(el).ariaChecked).toBe('false');
     expect(el.matches(':state(checked)')).toBe(false);

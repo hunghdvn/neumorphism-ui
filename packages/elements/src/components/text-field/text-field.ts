@@ -1,10 +1,11 @@
 import { afterDispatch, setOptionalAttribute } from '../../core/dom.js';
 import { baseCommitProps, TextControlElement } from '../shared/text-control.js';
-import { implicitSubmit } from './implicit-submit.js';
+import { BLOCKS_IMPLICIT_SUBMIT, implicitSubmit } from './implicit-submit.js';
 import { textFieldDef, type TextFieldProps } from './text-field.def.js';
 
 export class NeuTextField extends TextControlElement {
   static override def = textFieldDef;
+  static readonly [BLOCKS_IMPLICIT_SUBMIT] = true;
   static override extraProperties = ['defaultValue'];
   declare type: 'text' | 'email' | 'password' | 'search' | 'tel' | 'url';
   declare minLength: number;

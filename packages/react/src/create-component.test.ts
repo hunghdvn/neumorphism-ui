@@ -214,6 +214,14 @@ test('a JS-only property is set on the element, not as an attribute', async () =
   expect(el.valueFormatter).toBeUndefined();
 });
 
+test('a controlled value is applied after min and max, whatever the prop order', async () => {
+  await render(h(NeuSlider, { value: 150, max: 200, onChange: () => {} }));
+  const el = container.querySelector('neu-slider') as NeuSliderElement;
+  expect(el.value).toBe(150);
+  await render(h(NeuSlider, { value: -20, min: -50, max: 200, onChange: () => {} }));
+  expect(el.value).toBe(-20);
+});
+
 test('dropping defaultValue removes the default attribute instead of writing "undefined"', async () => {
   await render(h(NeuTextField, { label: 'L', defaultValue: 'a' }));
   const el = container.querySelector('neu-text-field') as NeuTextFieldElement;

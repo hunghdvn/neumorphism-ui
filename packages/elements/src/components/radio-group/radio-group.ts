@@ -1,25 +1,14 @@
 import { dispatch, setText } from '../../core/dom.js';
 import { FormControlElement } from '../../core/form-control.js';
+import { requiredMessage } from '../../core/validation.js';
 import { RESYNC, SET_CHECKED, SET_GROUP_DISABLED, type RadioLink } from '../radio/radio-link.js';
 import { markRule, radioGroupDef } from './radio-group.def.js';
-
-let radioMessage: string | undefined;
-
-/** The browser's own, localised "please select one of these options" message, from a native radio. */
-function requiredRadioMessage(): string {
-  if (radioMessage === undefined) {
-    const probe = document.createElement('input');
-    probe.type = 'radio';
-    probe.required = true;
-    radioMessage = probe.validationMessage || 'Please select one of these options.';
-  }
-  return radioMessage;
-}
 
 /** Which way each arrow key moves through the radios. */
 const STEP: Record<string, number> = { ArrowDown: 1, ArrowRight: 1, ArrowUp: -1, ArrowLeft: -1 };
 
-const valueOf = (radio: Element) => radio.getAttribute('value') ?? '';
+/** A radio's value; without the attribute it is "on", like a native radio. */
+const valueOf = (radio: Element) => radio.getAttribute('value') ?? 'on';
 
 export class NeuRadioGroup extends FormControlElement {
   static override def = radioGroupDef;
@@ -29,16 +18,21 @@ export class NeuRadioGroup extends FormControlElement {
   declare required: boolean;
   declare disabled: boolean;
   declare orientation: 'vertical' | 'horizontal';
-  /** The requested value, kept even while no radio matches it (plan decision 8). */
-  private current: string;
+  /**
+   * The requested value, kept even while no radio matches it (plan decision 8); null requests
+   * nothing, so a radio whose value is "" is chosen only when asked for.
+   */
+  private current: string | null;
   private dirty = false;
   /** The radio that holds the Tab stop. */
   private stop: RadioLink | undefined;
+  /** The selected radio as of the last sync, which the form value and validity read. */
+  private picked: RadioLink | undefined;
   private observer: MutationObserver | undefined;
 
   constructor() {
     super();
-    this.current = String(this.props.value);
+    this.current = this.getAttribute('value');
     this.internals.role = 'radiogroup';
     this.addEventListener('click', (event) => {
       const radio = this.radioAt(event);
@@ -48,11 +42,11 @@ export class NeuRadioGroup extends FormControlElement {
   }
 
   get value(): string {
-    return this.selected() ? this.current : '';
+    return this.selected() ? this.current! : '';
   }
   set value(next: string) {
     this.dirty = true;
-    this.current = next === null || next === undefined ? '' : String(next);
+    this.current = next === null || next === undefined ? null : String(next);
     this.sync();
   }
 
@@ -70,9 +64,9 @@ export class NeuRadioGroup extends FormControlElement {
     );
   }
 
-  /** The first radio of this group matching the current value; none for an empty value. */
+  /** The first radio of this group matching the requested value, if one is requested. */
   private selected(radios = this.radios()): RadioLink | undefined {
-    return this.current === ''
+    return this.current === null
       ? undefined
       : radios.find((radio) => valueOf(radio) === this.current);
   }
@@ -93,8 +87,12 @@ export class NeuRadioGroup extends FormControlElement {
       this.choose(radio);
       return;
     }
-    const step = STEP[event.key];
+    let step = STEP[event.key];
     if (!step) return;
+    // Like native radios, the horizontal arrows follow the reading direction.
+    if ((event.key === 'ArrowLeft' || event.key === 'ArrowRight') && this.matches(':dir(rtl)')) {
+      step = -step;
+    }
     const on = this.radios().filter((candidate) => !candidate.hasAttribute('disabled'));
     const next = on[(on.indexOf(radio) + step + on.length) % on.length];
     if (!next) return;
@@ -106,7 +104,7 @@ export class NeuRadioGroup extends FormControlElement {
   /** A choice by the user: no event when the value does not change. */
   private choose(radio: RadioLink): void {
     const next = valueOf(radio);
-    if (next === this.value) return;
+    if (next === this.current && this.selected()) return;
     this.dirty = true;
     this.current = next;
     this.sync();
@@ -126,7 +124,7 @@ export class NeuRadioGroup extends FormControlElement {
    */
   private sync(): void {
     const radios = this.radios();
-    const picked = this.selected(radios);
+    const picked = (this.picked = this.selected(radios));
     const off = this.isDisabled;
     const ready = radios.filter((radio) => SET_CHECKED in radio);
     for (const radio of ready) {
@@ -139,13 +137,13 @@ export class NeuRadioGroup extends FormControlElement {
       const tabindex = radio === this.stop ? '0' : '-1';
       if (radio.getAttribute('tabindex') !== tabindex) radio.setAttribute('tabindex', tabindex);
     }
-    const rule = markRule(this.current);
+    const rule = markRule(this.current ?? '');
     setText(this.ref('mark'), rule === '' ? '' : rule.value);
     this.commit();
   }
 
   protected override willUpdate(changed: ReadonlySet<string>): void {
-    if (changed.has('value') && !this.dirty) this.current = String(this.props.value);
+    if (changed.has('value') && !this.dirty) this.current = this.getAttribute('value');
   }
 
   protected override update(changed: ReadonlySet<string>): void {
@@ -174,18 +172,26 @@ export class NeuRadioGroup extends FormControlElement {
   }
 
   protected formValue(): string | null {
-    return this.selected() ? this.current : null;
+    return this.picked ? this.current : null;
+  }
+  /** Nothing selected saves nothing, so a radio whose value is "" is not chosen on restore. */
+  protected override formState(): string | null {
+    return this.formValue();
   }
   protected validate(): void {
-    if (this.props.required === true && !this.selected()) {
-      this.internals.setValidity({ valueMissing: true }, requiredRadioMessage(), this.stop);
+    if (this.props.required === true && !this.picked) {
+      this.internals.setValidity(
+        { valueMissing: true },
+        requiredMessage('radio', 'Please select one of these options.'),
+        this.stop,
+      );
     } else {
       this.internals.setValidity({});
     }
   }
   protected resetToDefault(): void {
     this.dirty = false;
-    this.current = String(this.props.value);
+    this.current = this.getAttribute('value');
     this.sync();
   }
   protected restoreState(state: string): void {

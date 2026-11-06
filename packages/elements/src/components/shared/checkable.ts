@@ -1,6 +1,6 @@
 import { afterDispatch, dispatch } from '../../core/dom.js';
 import { FormControlElement } from '../../core/form-control.js';
-import { requiredCheckboxMessage } from '../../core/validation.js';
+import { requiredMessage } from '../../core/validation.js';
 import { pressable, type EnterMode } from './press.js';
 
 /**
@@ -115,7 +115,7 @@ export abstract class CheckableElement extends FormControlElement {
     if (this.props.required === true && !this.current) {
       this.internals.setValidity(
         { valueMissing: true },
-        requiredCheckboxMessage(),
+        requiredMessage('checkbox', 'Please check this box if you want to proceed.'),
         this.ref(this.anchor) ?? undefined,
       );
     } else {

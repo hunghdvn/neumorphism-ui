@@ -6,7 +6,7 @@ import { radioStyles } from './radio.styles.js';
 export const radioDef = defineComponent({
   tag: 'neu-radio',
   props: {
-    value: { type: 'string', reflect: true },
+    value: { type: 'string', default: 'on', reflect: true },
     disabled: { type: 'boolean', reflect: true },
   },
   styles: radioStyles,

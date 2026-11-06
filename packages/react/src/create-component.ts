@@ -42,19 +42,25 @@ function textOf(node: React.ReactNode): string {
   return '';
 }
 
-/** Option elements among the children, looking through fragments and arrays (spec §8.4). */
+/**
+ * Option elements among the children at any depth, as the client reads them, looking through
+ * fragments, arrays and plain elements (spec §8.4). A component other than the option wrapper may
+ * render options the server cannot see, so meeting one returns no options at all: the select then
+ * leaves its display empty for the client to fill rather than guessing from part of the list.
+ */
 function collectOptions(children: React.ReactNode, optionTag: string): OptionData[] {
   const options: OptionData[] = [];
+  let complete = true;
   const walk = (node: React.ReactNode) => {
     React.Children.forEach(node, (child) => {
       if (!React.isValidElement(child)) return;
       const props = child.props as Record<string, unknown> & { children?: React.ReactNode };
-      if (child.type === React.Fragment) {
-        walk(props.children);
-        return;
-      }
       const type = child.type as string | { displayName?: string };
-      if (type !== optionTag && (typeof type === 'string' || type?.displayName !== optionTag)) {
+      const isOption =
+        type === optionTag || (typeof type !== 'string' && type?.displayName === optionTag);
+      if (!isOption) {
+        if (child.type === React.Fragment || typeof type === 'string') walk(props.children);
+        else complete = false;
         return;
       }
       const label = optionLabel(textOf(props.children));
@@ -66,7 +72,7 @@ function collectOptions(children: React.ReactNode, optionTag: string): OptionDat
     });
   };
   walk(children);
-  return options;
+  return complete ? options : [];
 }
 
 export function createComponent<P extends object, E extends HTMLElement>(
@@ -114,7 +120,9 @@ export function createComponent<P extends object, E extends HTMLElement>(
     handlersRef.current = handlers;
     const applied = React.useRef(new Set<string>());
 
-    // Properties after every commit. Defaults go first so a controlled value set in the same pass wins.
+    // Properties after every commit. Defaults go first so a controlled value set in the same pass
+    // wins, and the value goes last so min, max and step are in place when it is clamped (as
+    // ReactDOM orders a native range input).
     useIsomorphicLayoutEffect(() => {
       const node = elementRef.current as unknown as Record<string, unknown> | null;
       if (!node) return;
@@ -132,9 +140,8 @@ export function createComponent<P extends object, E extends HTMLElement>(
         }
       }
       const next = new Set<string>();
-      const keys = Object.keys(element).sort(
-        (a, b) => Number(b === defaultProp) - Number(a === defaultProp),
-      );
+      const rank = (key: string) => (key === defaultProp ? 0 : key === valueProp ? 2 : 1);
+      const keys = Object.keys(element).sort((a, b) => rank(a) - rank(b));
       for (const key of keys) {
         const value = element[key];
         if (absent(key)) continue;

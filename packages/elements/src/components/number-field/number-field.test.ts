@@ -2,6 +2,7 @@ import { afterEach, describe, expect, test } from 'vitest';
 import { userEvent } from 'vitest/browser';
 import '../../button.js';
 import { NeuNumberField } from '../../number-field.js';
+import '../../text-field.js';
 import { renderDSD } from '../../ssr.js';
 import { axeViolations, keydown, mount, mountForm, tick } from '../../test-utils/helpers.js';
 
@@ -127,6 +128,39 @@ describe('neu-number-field', () => {
     button(el, 'decrement').dispatchEvent(event);
     expect(event.defaultPrevented).toBe(true);
     expect(el.shadowRoot!.activeElement).toBe(inputOf(el));
+  });
+
+  test('a touch on a button does not focus the input, so no on-screen keyboard opens', () => {
+    const el = mount<NeuNumberField>('<neu-number-field label="Q"></neu-number-field>');
+    const event = new PointerEvent('pointerdown', {
+      bubbles: true,
+      cancelable: true,
+      pointerType: 'touch',
+    });
+    button(el, 'increment').dispatchEvent(event);
+    expect(event.defaultPrevented).toBe(true);
+    expect(el.shadowRoot!.activeElement).toBe(null);
+    button(el, 'increment').click();
+    expect(el.value).toBe('1');
+  });
+
+  test('the decimal keypad is asked for only when negative values are out of range', () => {
+    const mode = (attrs: string) =>
+      inputOf(mount(`<neu-number-field ${attrs}></neu-number-field>`)).getAttribute('inputmode');
+    expect([mode('min="0"'), mode('min="2.5"'), mode('min="-50" max="50"'), mode('')]).toEqual([
+      'decimal',
+      'decimal',
+      null,
+      null,
+    ]);
+    const el = mount<NeuNumberField>('<neu-number-field min="0"></neu-number-field>');
+    el.min = -5;
+    expect(inputOf(el).getAttribute('inputmode')).toBe(null);
+    el.min = 1;
+    expect(inputOf(el).getAttribute('inputmode')).toBe('decimal');
+    const server = renderDSD('neu-number-field', { min: '-1' });
+    expect(server).not.toContain('inputmode');
+    expect(renderDSD('neu-number-field', { min: '0' })).toContain('inputmode="decimal"');
   });
 
   test('buttons step an empty field from zero and respect a custom step', () => {
@@ -291,6 +325,23 @@ describe('neu-number-field', () => {
       counts.push(submitted);
     }
     expect(counts).toEqual([1, 0, 1]);
+  });
+
+  test('a subclass registered under another tag still blocks implicit submission', async () => {
+    if (!customElements.get('my-qty'))
+      customElements.define('my-qty', class extends NeuNumberField {});
+    const form = mountForm(
+      '<my-qty name="q"></my-qty><neu-text-field name="t" label="T"></neu-text-field>',
+    );
+    let submitted = 0;
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+      submitted++;
+    });
+    form.querySelector<HTMLElement>('neu-text-field')!.focus();
+    await userEvent.keyboard('{Enter}');
+    await tick();
+    expect(submitted).toBe(0);
   });
 
   test('takes part in forms: FormData, reset, required', () => {

@@ -55,6 +55,28 @@ test('NeuSelect leaves the display empty when its options are unreadable', () =>
   expect(empty).toContain('data-ref="display">Pick</span>');
 });
 
+test('NeuSelect reads options inside plain elements, and does not guess past a custom component', () => {
+  const wrapped = renderToString(
+    h(
+      NeuSelect,
+      { value: 'pro', placeholder: 'Pick' },
+      h('div', null, h(NeuOption, { value: 'pro' }, 'Pro')),
+    ),
+  );
+  expect(wrapped).toContain('data-ref="display">Pro</span>');
+  const PlanOption = () => h(NeuOption, { value: 'pro' }, 'Pro');
+  const mixed = renderToString(
+    h(
+      NeuSelect,
+      { defaultValue: 'pro', placeholder: 'Pick' },
+      h(NeuOption, { value: 'free' }, 'Free'),
+      h(PlanOption, null),
+    ),
+  );
+  expect(mixed).toContain('data-ref="display"></span>');
+  expect(mixed).not.toContain('>Pick</span>');
+});
+
 test('a text field escapes a hostile label', () => {
   const html = renderToString(h(NeuTextField, { label: '"><script>x</script>' }));
   expect(html).toContain('&lt;script&gt;');

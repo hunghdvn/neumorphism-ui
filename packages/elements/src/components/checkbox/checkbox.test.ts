@@ -90,6 +90,19 @@ describe('neu-checkbox', () => {
     expect(el.shadowRoot!.querySelector('.control')!.className).toBe('control on');
   });
 
+  test('clicking a checked and indeterminate checkbox unchecks it, like a native one', async () => {
+    const el = mount<NeuCheckbox>('<neu-checkbox checked indeterminate>A</neu-checkbox>');
+    const native = document.createElement('input');
+    native.type = 'checkbox';
+    native.checked = true;
+    native.indeterminate = true;
+    native.click();
+    await userEvent.click(el);
+    expect([el.checked, el.indeterminate]).toEqual([native.checked, native.indeterminate]);
+    expect([el.checked, el.indeterminate]).toEqual([false, false]);
+    expect(internalsOf(el).ariaChecked).toBe('false');
+  });
+
   test('a cancelled click restores both checked and indeterminate', async () => {
     const el = mount<NeuCheckbox>('<neu-checkbox indeterminate>A</neu-checkbox>');
     const events: string[] = [];

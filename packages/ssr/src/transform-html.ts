@@ -26,6 +26,14 @@ const isSpace = (ch: string | undefined) =>
   ch === ' ' || ch === '\n' || ch === '\t' || ch === '\r' || ch === '\f';
 const isAsciiAlpha = (ch: string | undefined) => ch !== undefined && /[A-Za-z]/.test(ch);
 
+/** Whether `value` holds a named character reference that decodeEntities leaves as it is. */
+function hasUnknownEntity(value: string): boolean {
+  for (const [, name] of value.matchAll(/&([a-zA-Z][a-zA-Z0-9]*);/g)) {
+    if (!Object.hasOwn(NAMED_ENTITIES, name!)) return true;
+  }
+  return false;
+}
+
 export function decodeEntities(value: string): string {
   return value.replace(/&(#x[0-9a-fA-F]+|#[0-9]+|[a-zA-Z]+);/g, (match, body: string) => {
     if (body.startsWith('#')) {
@@ -148,7 +156,11 @@ function scanOptions(
       findTag(html, `</${optionTag}`, tag.end, cache),
       findTag(html, `<${optionTag}`, tag.end, cache),
     );
-    const label = optionLabel(decodeEntities(html.slice(tag.end, end).replace(/<[^<>]*>/g, '')));
+    const text = html.slice(tag.end, end).replace(/<[^<>]*>/g, '');
+    // A label the browser would decode differently (&eacute;, &mdash;, ...) would change on
+    // hydration: report the options as unreadable so the display is left for the client.
+    if (hasUnknownEntity(text)) return [];
+    const label = optionLabel(decodeEntities(text));
     options.push({
       value: Object.hasOwn(tag.attrs, 'value') ? tag.attrs.value! : label,
       label,

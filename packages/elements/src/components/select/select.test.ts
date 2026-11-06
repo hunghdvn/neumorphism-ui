@@ -938,15 +938,36 @@ describe('neu-select', () => {
     expect(combobox(el).getAttribute('tabindex')).toBe('0');
   });
 
-  test('a form value is null without a selection, also for an option whose value is empty', async () => {
+  test('an option whose value is empty submits name=, like a native select; required still counts it as missing', async () => {
     const form = mountForm(
       `<neu-select name="p" required><neu-option value="">None</neu-option><neu-option value="x">X</neu-option></neu-select>`,
     );
     const el = form.querySelector('neu-select') as NeuSelect;
     await tick();
     expect([el.value, display(el).textContent]).toEqual(['', 'None']);
-    expect(new FormData(form).has('p')).toBe(false);
+    expect(new FormData(form).get('p')).toBe('');
     expect(el.validity.valueMissing).toBe(true);
+  });
+
+  test('a form value is null when no option is selected', async () => {
+    const form = mountForm(`<neu-select name="p">${THREE}</neu-select>`);
+    await tick();
+    expect(new FormData(form).has('p')).toBe(false);
+  });
+
+  test('the listbox closes when focus moves elsewhere while it is open', async () => {
+    const form = mountForm(`<neu-select name="p">${THREE}</neu-select><input id="other">`);
+    const el = form.querySelector('neu-select') as NeuSelect;
+    await tick();
+    const events: string[] = [];
+    el.addEventListener('neu-close', () => events.push('close'));
+    combobox(el).focus();
+    await userEvent.keyboard('{ArrowDown}');
+    expect(isOpen(el)).toBe(true);
+    (form.querySelector('#other') as HTMLInputElement).focus();
+    expect(isOpen(el)).toBe(false);
+    expect(combobox(el).getAttribute('aria-expanded')).toBe('false');
+    expect(events).toEqual(['close']);
   });
 
   test('a user-invalid select shows the error look on the combobox', async () => {

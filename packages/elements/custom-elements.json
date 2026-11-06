@@ -1708,7 +1708,7 @@
               "type": {
                 "text": "string"
               },
-              "default": "''"
+              "default": "'on'"
             },
             {
               "name": "disabled",
@@ -1726,7 +1726,7 @@
               "type": {
                 "text": "string"
               },
-              "default": "''",
+              "default": "'on'",
               "attribute": "value",
               "reflects": true
             },

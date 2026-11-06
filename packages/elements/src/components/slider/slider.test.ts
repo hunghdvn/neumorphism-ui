@@ -322,6 +322,30 @@ describe('neu-slider', () => {
       expect(log.at(-1)).toBe('change:0');
     });
 
+    test('losing pointer capture ends the drag: change fires once and hovering moves nothing', () => {
+      const el = slider();
+      const log = record(el);
+      pointer(el, 'pointerdown', trackX(el, 0.25));
+      pointer(el, 'lostpointercapture', trackX(el, 0.25));
+      expect(log).toEqual(['input:25', 'change:25']);
+      pointer(el, 'pointermove', trackX(el, 0.75));
+      pointer(el, 'pointerup', trackX(el, 0.75));
+      expect(el.value).toBe(25);
+      expect(log).toEqual(['input:25', 'change:25']);
+    });
+
+    test('a drag that is cut short by removing the slider does not resume when it is put back', () => {
+      const el = slider();
+      const parent = el.parentElement!;
+      pointer(el, 'pointerdown', trackX(el, 0.25));
+      el.remove();
+      parent.append(el);
+      const log = record(el);
+      pointer(el, 'pointermove', trackX(el, 0.75));
+      expect(el.value).toBe(25);
+      expect(log).toEqual([]);
+    });
+
     test('pressing on the track focuses the slider and jumps there', () => {
       const el = slider();
       pointer(el, 'pointerdown', trackX(el, 0.25));

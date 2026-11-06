@@ -196,6 +196,55 @@ describe('neu-radio-group', () => {
     expect(events).toEqual([]);
   });
 
+  test('in a right-to-left group ArrowRight and ArrowLeft are reversed; Up and Down are not', async () => {
+    const el = group('orientation="horizontal" dir="rtl" value="b"');
+    await tick();
+    const [a, b, c] = radiosOf(el);
+    b!.focus();
+    await userEvent.keyboard('{ArrowRight}');
+    expect([el.value, document.activeElement]).toEqual(['a', a]);
+    await userEvent.keyboard('{ArrowLeft}');
+    expect([el.value, document.activeElement]).toEqual(['b', b]);
+    await userEvent.keyboard('{ArrowDown}');
+    expect([el.value, document.activeElement]).toEqual(['c', c]);
+  });
+
+  test('a radio without a value attribute has the value "on" and can be selected, like a native one', async () => {
+    const form = mountForm(
+      '<neu-radio-group name="p" value="a"><neu-radio value="a">A</neu-radio><neu-radio>Other</neu-radio></neu-radio-group>',
+    );
+    const el = form.querySelector('neu-radio-group') as NeuRadioGroup;
+    await tick();
+    const changes: string[] = [];
+    el.addEventListener('change', () => changes.push(el.value));
+    await userEvent.click(radiosOf(el)[1]!);
+    expect(checkedOf(el)).toEqual([false, true]);
+    expect(el.value).toBe('on');
+    expect(new FormData(form).get('p')).toBe('on');
+    expect(changes).toEqual(['on']);
+  });
+
+  test('a radio with an empty value can be selected and submits name=; it is not selected by default', async () => {
+    const form = mountForm(
+      '<neu-radio-group name="p" required><neu-radio value="">None</neu-radio><neu-radio value="x">X</neu-radio></neu-radio-group>',
+    );
+    const el = form.querySelector('neu-radio-group') as NeuRadioGroup;
+    await tick();
+    expect(checkedOf(el)).toEqual([false, false]);
+    expect(new FormData(form).has('p')).toBe(false);
+    expect(el.validity.valueMissing).toBe(true);
+    const changes: string[] = [];
+    el.addEventListener('change', () => changes.push(el.value));
+    await userEvent.click(radiosOf(el)[0]!);
+    expect(checkedOf(el)).toEqual([true, false]);
+    expect(changes).toEqual(['']);
+    expect(new FormData(form).get('p')).toBe('');
+    expect(el.validity.valueMissing).toBe(false);
+    form.reset();
+    expect(checkedOf(el)).toEqual([false, false]);
+    expect(new FormData(form).has('p')).toBe(false);
+  });
+
   test('other keys, modified arrows and cancelled keydowns do nothing', async () => {
     const el = group('value="a"');
     await tick();
