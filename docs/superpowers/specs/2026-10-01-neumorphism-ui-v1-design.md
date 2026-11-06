@@ -329,6 +329,8 @@ Quy ước: "size" trong danh sách attribute là `size="sm|md|lg"` (mặc đị
 - Slot: mặc định (nhãn), `prefix`, `suffix`. Part: `base`, `label`, `prefix`, `suffix`, `spinner`.
 - Đang nhấn → bóng `inset`.
 - Giới hạn có ghi trong docs: không đưa `name`/`value` của nút vào `FormData` khi submit.
+- Submit bằng `neu-button` cho `event.submitter === null`; `neu-button` không có `name`/`value`. Cần biết
+  nút nào submit thì dùng `<button>` native.
 
 **`neu-icon-button`** — như Button, chỉ có icon
 - Attribute: `icon`, `library`, `label` (**bắt buộc**, thành `aria-label`), `shape="circle|square"`
@@ -369,8 +371,9 @@ Quy ước: "size" trong danh sách attribute là `size="sm|md|lg"` (mặc đị
 - Attribute: `variant="neutral|accent|success|warning|danger"` (mặc định `neutral`), `pill`.
 - Slot: mặc định. Part: `base`.
 
-**`neu-avatar`** — role `img`
+**`neu-avatar`** — role `img` khi có `label`
 - Attribute: `src`, `label` (thành `aria-label`), `initials`, size, `shape="circle|rounded"`.
+- Không có `label` thì là ảnh trang trí (`aria-hidden="true"`), giống `neu-icon`.
 - Thứ tự dự phòng: ảnh → chữ viết tắt → icon `user`. Ảnh lỗi thì tự chuyển xuống mức tiếp theo.
 - Part: `base`, `image`, `initials`, `icon`.
 
