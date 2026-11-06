@@ -1,5 +1,6 @@
 import { renderDSD } from '@neumorphism-ui/elements/ssr.js';
 import { describe, expect, test } from 'vitest';
+import { LEGACY_NAMES, NAMED_REFERENCES } from './named-references.js';
 import { decodeEntities, readStartTag, transformHtml } from './transform-html.js';
 
 const button = renderDSD('neu-button', {});
@@ -128,17 +129,22 @@ describe('transformHtml', () => {
     expect(out).toContain('data-ref="display">a b</span>');
   });
 
-  test('an option label with a named entity it cannot decode leaves the display empty, not wrong', () => {
+  test('option labels decode every named reference, as the browser does', () => {
     const out = transformHtml(
       '<neu-select value="c" placeholder="Pick"><neu-option value="a">A &amp; B</neu-option><neu-option value="c">Caf&eacute; &mdash; daily</neu-option></neu-select>',
     );
-    expect(out).toContain('data-ref="display"></span>');
-    expect(out).not.toMatch(/data-ref="display">[^<]*eacute/);
-    expect(out).not.toContain('>Pick</span>');
-    const known = transformHtml(
-      '<neu-select value="a"><neu-option value="a">A &amp; B&#8212;&#x2014;</neu-option></neu-select>',
+    expect(out).toContain('data-ref="display">Café — daily</span>');
+    const numeric = transformHtml(
+      '<neu-select value="a"><neu-option value="a">A &amp B&#8212;&#x2014;&#128;</neu-option></neu-select>',
     );
-    expect(known).toContain('data-ref="display">A &amp; B——</span>');
+    expect(numeric).toContain('data-ref="display">A &amp; B——€</span>');
+  });
+
+  test('a reference split by a tag is not decoded, as the browser tokenizes each text run', () => {
+    const out = transformHtml(
+      '<neu-select value="x"><neu-option value="x">&am<b></b>p; &e<i>acute;</i></neu-option></neu-select>',
+    );
+    expect(out).toContain('data-ref="display">&amp;amp; &amp;eacute;</span>');
   });
 
   test('an unclosed select still gets its selected label', () => {
@@ -260,5 +266,47 @@ describe('decodeEntities', () => {
     expect(decodeEntities('&amp;&lt;&gt;&quot;&#39;&#x41;&nbsp;&bogus;&constructor;')).toBe(
       '&<>"\'A &bogus;&constructor;',
     );
+  });
+
+  test("knows every name in the HTML standard's table", () => {
+    const names = Object.keys(NAMED_REFERENCES);
+    const legacy = LEGACY_NAMES.split(' ');
+    // 2,231 identifiers: 2,125 names with a semicolon, and 106 legacy ones also without.
+    expect([names.length, legacy.length]).toEqual([2125, 106]);
+    expect(legacy.every((name) => Object.hasOwn(NAMED_REFERENCES, name))).toBe(true);
+    expect(decodeEntities('&eacute;&mdash;&CounterClockwiseContourIntegral;&fjlig;&Afr;')).toBe(
+      'é—∳fj𝔄',
+    );
+    expect(decodeEntities('&nvlt;')).toBe(`<${String.fromCodePoint(0x20d2)}`);
+  });
+
+  test('legacy names need no semicolon, and the longest name wins', () => {
+    expect(decodeEntities('&amp &eacute &copy2024 &notin &notit; &ampx; &mdash')).toBe(
+      '& é ©2024 ¬in ¬it; &x; &mdash',
+    );
+    expect(decodeEntities('&notin;&ampamp;&AMP;&AMp;&1x;&')).toBe('∉&amp;&&AMp;&1x;&');
+  });
+
+  test('in an attribute, a legacy name stays as written before a letter, digit or =', () => {
+    expect(decodeEntities('&copy=x &copy2 &copyx &copy; &copy &amp;', true)).toBe(
+      '&copy=x &copy2 &copyx © © &',
+    );
+    expect(readStartTag('<a title="&copy=1&amp;&eacute;">', 0)!.attrs.title).toBe('&copy=1&é');
+  });
+
+  test('numeric references follow the browser: C1 remapped, invalid ones replaced', () => {
+    expect(decodeEntities('&#65&#x42;&#X43x&#128;&#x9f;')).toBe('ABCx€Ÿ');
+    expect(decodeEntities('&#x81;')).toBe(String.fromCodePoint(0x81));
+    expect(decodeEntities('&#0;&#xD800;&#x110000;&#99999999999999999999;')).toBe(
+      String.fromCodePoint(0xfffd).repeat(4),
+    );
+    expect(decodeEntities('&#;&#x;&#xg;')).toBe('&#;&#x;&#xg;');
+  });
+
+  test('a very long run after & is not slow', () => {
+    const run = `&${'a'.repeat(1_000_000)};`;
+    const started = performance.now();
+    expect(decodeEntities(run.repeat(4))).toBe(run.repeat(4));
+    expect(performance.now() - started).toBeLessThan(500);
   });
 });

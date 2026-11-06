@@ -24,10 +24,6 @@ export default defineNuxtConfig({ modules: ['@neumorphism-ui/ssr/nuxt'], css: ['
 
 ## Limitations
 
-- In attribute values, `transformHtml` decodes only `&amp;`, `&lt;`, `&gt;`, `&quot;`, `&apos;`,
-  `&nbsp;` and numeric references. Other named references such as `&eacute;` are rendered literally
-  until the page hydrates. Output from React, Vue and similar renderers is unaffected, since they
-  emit UTF-8 characters and escape only `& < > " '`; write UTF-8 in hand-written HTML too.
 - Nuxt's experimental SSR streaming (`experimental.ssrStreaming`) bypasses the `render:html` hook,
   so streamed pages get no declarative shadow roots.
 

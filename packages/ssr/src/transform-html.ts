@@ -5,15 +5,45 @@ import {
   type OptionData,
 } from '@neumorphism-ui/elements/ssr.js';
 
+import { LEGACY_NAMES, NAMED_REFERENCES } from './named-references.js';
+
 const RAW_TEXT = new Set(['script', 'style', 'textarea', 'title']);
-const NAMED_ENTITIES: Readonly<Record<string, string>> = {
-  amp: '&',
-  lt: '<',
-  gt: '>',
-  quot: '"',
-  apos: "'",
-  nbsp: ' ',
+const LEGACY = new Set(LEGACY_NAMES.split(' '));
+const LONGEST_LEGACY = Math.max(...[...LEGACY].map((name) => name.length));
+const REPLACEMENT = String.fromCodePoint(0xfffd);
+/** Numeric references to C1 controls that the browser reads as windows-1252 (HTML §13.2.5.80). */
+const C1_REMAP: Readonly<Record<number, number>> = {
+  0x80: 0x20ac,
+  0x82: 0x201a,
+  0x83: 0x0192,
+  0x84: 0x201e,
+  0x85: 0x2026,
+  0x86: 0x2020,
+  0x87: 0x2021,
+  0x88: 0x02c6,
+  0x89: 0x2030,
+  0x8a: 0x0160,
+  0x8b: 0x2039,
+  0x8c: 0x0152,
+  0x8e: 0x017d,
+  0x91: 0x2018,
+  0x92: 0x2019,
+  0x93: 0x201c,
+  0x94: 0x201d,
+  0x95: 0x2022,
+  0x96: 0x2013,
+  0x97: 0x2014,
+  0x98: 0x02dc,
+  0x99: 0x2122,
+  0x9a: 0x0161,
+  0x9b: 0x203a,
+  0x9c: 0x0153,
+  0x9e: 0x017e,
+  0x9f: 0x0178,
 };
+/** A numeric reference (hex or decimal digits), or a run of letters and digits after '&'. */
+const REFERENCE = /&(?:#(?:[xX]([0-9a-fA-F]+)|([0-9]+));?|([a-zA-Z0-9]+)(;?))/g;
+const ALPHANUMERIC = /[a-zA-Z0-9]/;
 
 export interface StartTag {
   name: string;
@@ -26,23 +56,45 @@ const isSpace = (ch: string | undefined) =>
   ch === ' ' || ch === '\n' || ch === '\t' || ch === '\r' || ch === '\f';
 const isAsciiAlpha = (ch: string | undefined) => ch !== undefined && /[A-Za-z]/.test(ch);
 
-/** Whether `value` holds a named character reference that decodeEntities leaves as it is. */
-function hasUnknownEntity(value: string): boolean {
-  for (const [, name] of value.matchAll(/&([a-zA-Z][a-zA-Z0-9]*);/g)) {
-    if (!Object.hasOwn(NAMED_ENTITIES, name!)) return true;
-  }
-  return false;
+/** The text of a numeric reference, as the browser maps it (HTML §13.2.5.80). */
+function numericReference(code: number): string {
+  if (code === 0 || code > 0x10ffff || (code >= 0xd800 && code <= 0xdfff)) return REPLACEMENT;
+  return String.fromCodePoint(C1_REMAP[code] ?? code);
 }
 
-export function decodeEntities(value: string): string {
-  return value.replace(/&(#x[0-9a-fA-F]+|#[0-9]+|[a-zA-Z]+);/g, (match, body: string) => {
-    if (body.startsWith('#')) {
-      const hex = body[1] === 'x' || body[1] === 'X';
-      const code = parseInt(body.slice(hex ? 2 : 1), hex ? 16 : 10);
-      return Number.isFinite(code) && code <= 0x10ffff ? String.fromCodePoint(code) : match;
-    }
-    return Object.hasOwn(NAMED_ENTITIES, body) ? NAMED_ENTITIES[body]! : match;
-  });
+/**
+ * Decodes character references the way the browser's tokenizer does: numeric ones with or
+ * without a semicolon, and named ones by the longest name in the HTML standard's table, where
+ * the legacy names (`&amp`, `&eacute`, ...) need no semicolon. In an attribute value such a
+ * legacy name stays as written when a letter, digit or '=' follows it (HTML §13.2.5.73).
+ * Anything else, `&bogus;` included, is left as it is.
+ */
+export function decodeEntities(value: string, inAttribute = false): string {
+  return value.replace(
+    REFERENCE,
+    (
+      match: string,
+      hex: string | undefined,
+      decimal: string | undefined,
+      name: string | undefined,
+      semicolon: string | undefined,
+      offset: number,
+    ) => {
+      if (name === undefined) return numericReference(parseInt(hex ?? decimal!, hex ? 16 : 10));
+      if (semicolon && Object.hasOwn(NAMED_REFERENCES, name)) return NAMED_REFERENCES[name]!;
+      for (let size = Math.min(name.length, LONGEST_LEGACY); size > 0; size--) {
+        const legacy = name.slice(0, size);
+        if (!LEGACY.has(legacy)) continue;
+        const rest = name.slice(size) + (semicolon ?? '');
+        if (inAttribute) {
+          const next = rest === '' ? value[offset + match.length] : rest[0];
+          if (next !== undefined && (next === '=' || ALPHANUMERIC.test(next))) return match;
+        }
+        return NAMED_REFERENCES[legacy]! + rest;
+      }
+      return match;
+    },
+  );
 }
 
 /** Parses the start tag at html[pos] === '<'; null when it is not a complete start tag. */
@@ -84,7 +136,9 @@ export function readStartTag(html: string, pos: number): StartTag | null {
         value = html.slice(valueStart, i);
       }
     }
-    if (attrName !== '' && !Object.hasOwn(attrs, attrName)) attrs[attrName] = decodeEntities(value);
+    if (attrName !== '' && !Object.hasOwn(attrs, attrName)) {
+      attrs[attrName] = decodeEntities(value, true);
+    }
   }
   return null;
 }
@@ -156,11 +210,13 @@ function scanOptions(
       findTag(html, `</${optionTag}`, tag.end, cache),
       findTag(html, `<${optionTag}`, tag.end, cache),
     );
-    const text = html.slice(tag.end, end).replace(/<[^<>]*>/g, '');
-    // A label the browser would decode differently (&eacute;, &mdash;, ...) would change on
-    // hydration: report the options as unreadable so the display is left for the client.
-    if (hasUnknownEntity(text)) return [];
-    const label = optionLabel(decodeEntities(text));
+    // Each run of text between tags is decoded on its own, as the browser tokenizes it.
+    const text = html
+      .slice(tag.end, end)
+      .split(/<[^<>]*>/)
+      .map((run) => decodeEntities(run))
+      .join('');
+    const label = optionLabel(text);
     options.push({
       value: Object.hasOwn(tag.attrs, 'value') ? tag.attrs.value! : label,
       label,
