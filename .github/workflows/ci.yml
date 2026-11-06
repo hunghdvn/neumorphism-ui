@@ -9,10 +9,15 @@ concurrency:
   group: ci-${{ github.ref }}
   cancel-in-progress: true
 
+# The browser jobs run in Playwright's image, which ships the browsers and their system packages.
+# Installing them on the runner (`playwright install --with-deps`) stalled for the full job
+# timeout three times, on apt downloads from the Ubuntu mirror. Firefox refuses to start as root
+# with a HOME it does not own, hence `HOME: /root` on the steps that launch browsers.
 jobs:
   checks:
     runs-on: ubuntu-latest
     timeout-minutes: 20
+    container: mcr.microsoft.com/playwright:v1.63.0-noble
     steps:
       - uses: actions/checkout@v5
       - uses: pnpm/action-setup@v4
@@ -25,8 +30,9 @@ jobs:
       - run: pnpm build
       - run: pnpm gen --check
       - run: pnpm typecheck
-      - run: pnpm exec playwright install --with-deps chromium firefox webkit
       - run: pnpm test
+        env:
+          HOME: /root
       - run: pnpm size
 
   visual:
@@ -54,6 +60,7 @@ jobs:
   ssr-gate:
     runs-on: ubuntu-latest
     timeout-minutes: 20
+    container: mcr.microsoft.com/playwright:v1.63.0-noble
     steps:
       - uses: actions/checkout@v5
       - uses: pnpm/action-setup@v4
@@ -62,8 +69,11 @@ jobs:
           node-version: 24
           cache: pnpm
       - run: pnpm install --frozen-lockfile
-      - run: pnpm exec playwright install --with-deps chromium firefox webkit
       - run: pnpm build
       - run: pnpm examples:build
       - run: pnpm test:ssr:prod
+        env:
+          HOME: /root
       - run: pnpm test:ssr:dev
+        env:
+          HOME: /root
