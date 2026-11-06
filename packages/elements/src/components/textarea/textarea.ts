@@ -33,6 +33,7 @@ export class NeuTextarea extends TextControlElement {
   }
 
   private sizeWatch: ResizeObserver | undefined;
+  private sizeFrame = 0;
   private lastWidth = -1;
 
   /**
@@ -41,8 +42,7 @@ export class NeuTextarea extends TextControlElement {
    */
   private watchSize(area: HTMLTextAreaElement, on: boolean): void {
     if (!on) {
-      this.sizeWatch?.disconnect();
-      this.sizeWatch = undefined;
+      this.stopWatch();
       return;
     }
     if (this.sizeWatch) return;
@@ -51,9 +51,18 @@ export class NeuTextarea extends TextControlElement {
       const width = entry?.contentRect.width ?? 0;
       if (width === this.lastWidth) return;
       this.lastWidth = width;
-      this.grow();
+      // Next frame: resizing an observed box inside its own callback reports a
+      // "ResizeObserver loop" error on window.
+      cancelAnimationFrame(this.sizeFrame);
+      this.sizeFrame = requestAnimationFrame(() => this.grow());
     });
     this.sizeWatch.observe(area);
+  }
+
+  private stopWatch(): void {
+    cancelAnimationFrame(this.sizeFrame);
+    this.sizeWatch?.disconnect();
+    this.sizeWatch = undefined;
   }
 
   /** resize="auto": fit the height to the content, never below the rows height. */
@@ -79,8 +88,7 @@ export class NeuTextarea extends TextControlElement {
 
   protected override disconnected(): void {
     super.disconnected();
-    this.sizeWatch?.disconnect();
-    this.sizeWatch = undefined;
+    this.stopWatch();
   }
 
   protected override rendered(): void {

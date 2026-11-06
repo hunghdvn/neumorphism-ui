@@ -158,6 +158,10 @@ describe('neu-textarea', () => {
   });
 
   const frame = () => new Promise<void>((resolve) => requestAnimationFrame(() => resolve()));
+  // A layout-triggered re-fit lands the frame after the layout that revealed it.
+  const settle = async () => {
+    for (let i = 0; i < 3; i++) await frame();
+  };
   const TEN = Array.from({ length: 10 }, (_, i) => `line ${i}`).join('\n');
   const fits = (area: HTMLTextAreaElement) => area.clientHeight >= area.scrollHeight;
 
@@ -168,8 +172,7 @@ describe('neu-textarea', () => {
     const el = dialog.querySelector('neu-textarea') as NeuTextarea;
     el.value = TEN;
     dialog.show();
-    await frame();
-    await frame();
+    await settle();
     expect(fits(areaOf(el))).toBe(true);
     expect(areaOf(el).clientHeight).toBeGreaterThan(100);
   });
@@ -180,11 +183,10 @@ describe('neu-textarea', () => {
     );
     const el = wrap.querySelector('neu-textarea') as NeuTextarea;
     el.value = 'word '.repeat(60);
-    await frame();
+    await settle();
     const wide = areaOf(el).clientHeight;
     wrap.style.inlineSize = '200px';
-    await frame();
-    await frame();
+    await settle();
     expect(fits(areaOf(el))).toBe(true);
     expect(areaOf(el).clientHeight).toBeGreaterThan(wide);
   });
@@ -194,9 +196,29 @@ describe('neu-textarea', () => {
       `<dialog><neu-textarea label="A" resize="auto" rows="2" value="${TEN}"></neu-textarea></dialog>`,
     );
     dialog.show();
-    await frame();
-    await frame();
+    await settle();
     expect(fits(areaOf(dialog.querySelector('neu-textarea') as NeuTextarea))).toBe(true);
+  });
+
+  test('resize=auto re-fits on layout without a ResizeObserver loop error', async () => {
+    const loopErrors: string[] = [];
+    const onError = (event: ErrorEvent) => {
+      if (/ResizeObserver/.test(String(event.message))) loopErrors.push(event.message);
+    };
+    window.addEventListener('error', onError);
+    try {
+      const dialog = mount<HTMLDialogElement>(
+        `<dialog><div style="inline-size: 600px"><neu-textarea label="A" resize="auto" rows="2" value="${TEN}"></neu-textarea></div></dialog>`,
+      );
+      dialog.show();
+      await settle();
+      (dialog.firstElementChild as HTMLElement).style.inlineSize = '200px';
+      await settle();
+      expect(fits(areaOf(dialog.querySelector('neu-textarea') as NeuTextarea))).toBe(true);
+      expect(loopErrors).toEqual([]);
+    } finally {
+      window.removeEventListener('error', onError);
+    }
   });
 
   test('resize=auto leaves the height alone when resize changes away from it', () => {
