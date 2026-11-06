@@ -1117,3 +1117,23 @@ describe('neu-select typeahead and hover', () => {
     expect(active(el)).toBe(target.id);
   });
 });
+
+describe('neu-select label slot and icons', () => {
+  test('a slotted label names the combobox', async () => {
+    const el = mount<NeuSelect>(
+      `<neu-select><span slot="label">Fruit <b>*</b></span>${THREE}</neu-select>`,
+    );
+    const slot = el.shadowRoot!.querySelector<HTMLSlotElement>('#label slot[name="label"]')!;
+    expect(slot).not.toBeNull();
+    const text = slot
+      .assignedNodes()
+      .map((n) => n.textContent)
+      .join('')
+      .replace(/\s+/g, ' ')
+      .trim();
+    expect(text).toBe('Fruit *');
+    expect(combobox(el).getAttribute('aria-labelledby')).toBe('label');
+    expect(await axeViolations(el)).toEqual([]);
+  });
+
+});

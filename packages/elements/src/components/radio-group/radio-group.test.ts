@@ -572,3 +572,19 @@ describe('neu-radio-group', () => {
     expect(await axeViolations(el)).toEqual([]);
   });
 });
+
+test('a slotted label names the group', async () => {
+  const el = mount<NeuRadioGroup>(
+    `<neu-radio-group><span slot="label">Plan</span>${THREE}</neu-radio-group>`,
+  );
+  await tick();
+  expect(internalsOf(el).ariaLabel).toBe('Plan');
+  el.querySelector('[slot=label]')!.replaceWith(
+    Object.assign(document.createElement('b'), { slot: 'label', textContent: '  Billing   plan ' }),
+  );
+  await tick();
+  expect(internalsOf(el).ariaLabel).toBe('Billing plan');
+  const plain = mount<NeuRadioGroup>(`<neu-radio-group label="Size">${THREE}</neu-radio-group>`);
+  await tick();
+  expect(internalsOf(plain).ariaLabel).toBe('Size');
+});

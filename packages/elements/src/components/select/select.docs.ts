@@ -23,7 +23,10 @@ export const selectDocs: ComponentDocs = {
     { name: 'neu-open', description: 'Fired when the listbox opens.' },
     { name: 'neu-close', description: 'Fired when the listbox closes.' },
   ],
-  slots: [{ name: 'help-text', description: 'Rich help text; replaces the help-text attribute.' }],
+  slots: [
+    { name: 'label', description: 'Rich label; replaces the label attribute.' },
+    { name: 'help-text', description: 'Rich help text; replaces the help-text attribute.' },
+  ],
   parts: [
     { name: 'base', description: 'Outer wrapper.' },
     { name: 'label', description: 'The label text.' },

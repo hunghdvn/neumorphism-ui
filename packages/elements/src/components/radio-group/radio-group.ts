@@ -142,14 +142,31 @@ export class NeuRadioGroup extends FormControlElement {
     this.commit();
   }
 
+  /** The group's name: the slotted label's text when there is one, else the label attribute. */
+  private nameGroup(): void {
+    const slot = this.shadowRoot?.querySelector<HTMLSlotElement>('slot[name="label"]');
+    const text = (slot?.assignedNodes() ?? [])
+      .map((node) => node.textContent)
+      .join('')
+      .replace(/\s+/g, ' ')
+      .trim();
+    this.internals.ariaLabel = text || String(this.props.label) || null;
+  }
+
+  protected override rendered(): void {
+    this.shadowRoot!.querySelector('slot[name="label"]')!.addEventListener('slotchange', () =>
+      this.nameGroup(),
+    );
+  }
+
   protected override willUpdate(changed: ReadonlySet<string>): void {
     if (changed.has('value') && !this.dirty) this.current = this.getAttribute('value');
   }
 
   protected override update(changed: ReadonlySet<string>): void {
     if (changed.has('label')) {
-      setText(this.ref('label'), String(this.props.label));
-      this.internals.ariaLabel = String(this.props.label) || null;
+      setText(this.ref('label-text'), String(this.props.label));
+      this.nameGroup();
     }
     if (changed.has('required')) this.internals.ariaRequired = this.props.required ? 'true' : null;
     if (changed.has('disabled')) this.internals.ariaDisabled = this.isDisabled ? 'true' : null;

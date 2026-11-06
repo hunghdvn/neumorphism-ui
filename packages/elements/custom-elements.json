@@ -2074,6 +2074,10 @@
             {
               "name": "",
               "description": "neu-radio elements."
+            },
+            {
+              "name": "label",
+              "description": "Rich label; replaces the label attribute."
             }
           ],
           "cssParts": [
@@ -2361,6 +2365,10 @@
             }
           ],
           "slots": [
+            {
+              "name": "label",
+              "description": "Rich label; replaces the label attribute."
+            },
             {
               "name": "help-text",
               "description": "Rich help text; replaces the help-text attribute."

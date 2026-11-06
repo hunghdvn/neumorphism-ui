@@ -18,7 +18,10 @@ export const radioGroupDocs: ComponentDocs = {
     { name: 'input', description: 'Fired when the user selects a radio.' },
     { name: 'change', description: 'Fired after input when the user selects a radio.' },
   ],
-  slots: [{ name: '', description: 'neu-radio elements.' }],
+  slots: [
+    { name: '', description: 'neu-radio elements.' },
+    { name: 'label', description: 'Rich label; replaces the label attribute.' },
+  ],
   parts: [
     { name: 'base', description: 'Outer wrapper.' },
     { name: 'label', description: 'The group label.' },

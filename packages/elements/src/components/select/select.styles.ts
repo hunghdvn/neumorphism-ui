@@ -1,11 +1,7 @@
 import { fieldStyles } from '../shared/field.styles.js';
 
 export const selectStyles = `${fieldStyles}
-.label {
-  display: block; margin-block-end: 0.375rem;
-  font-size: 0.8125rem; font-weight: 600; line-height: 1rem; color: var(--_neu-fg-muted);
-}
-.label:empty { display: none; }
+.label { display: block; }
 .combobox {
   display: flex; align-items: center; gap: 0.5rem; min-block-size: 2.75rem; padding-inline: 0.875rem 0.75rem;
   border-radius: var(--_neu-r); background: var(--_neu-bg); box-shadow: var(--_neu-raised-sm);

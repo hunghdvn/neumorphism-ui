@@ -40,5 +40,5 @@ export const radioGroupDef = defineComponent({
   form: { valueProp: 'value' },
   styles: radioGroupStyles,
   template: (p) =>
-    html`<div part="base" class="base"><span part="label" class="label" data-ref="label">${p.label}</span><span class="items"><slot></slot></span><style data-ref="mark">${markRule(p.value)}</style></div>`,
+    html`<div part="base" class="base"><span part="label" class="label"><slot name="label"><span class="label-text" data-ref="label-text">${p.label}</span></slot></span><span class="items"><slot></slot></span><style data-ref="mark">${markRule(p.value)}</style></div>`,
 });
