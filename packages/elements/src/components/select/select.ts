@@ -177,8 +177,18 @@ export class NeuSelect extends FormControlElement {
     this.ref('combobox')!.setAttribute('aria-expanded', 'true');
     window.addEventListener('scroll', this.place, { capture: true, passive: true });
     window.addEventListener('resize', this.place, { passive: true });
+    this.ownerDocument.addEventListener('focusin', this.focusLanded, true);
     dispatch(this, 'neu-open');
   }
+
+  /**
+   * Focus that lands outside the select while the listbox is open. The combobox's focusout
+   * covers most moves; this covers focus set elsewhere after the window was left (the focusout
+   * then kept the listbox open, and Firefox sends no second one).
+   */
+  private readonly focusLanded = (): void => {
+    if (!this.shadowRoot!.activeElement) this.close();
+  };
 
   /** The one way the listbox closes: by key, by choice, by light dismiss (toggle), by focus leaving or when disabled. */
   private close(): void {
@@ -191,6 +201,7 @@ export class NeuSelect extends FormControlElement {
     combobox.removeAttribute('aria-activedescendant');
     window.removeEventListener('scroll', this.place, { capture: true });
     window.removeEventListener('resize', this.place);
+    this.ownerDocument.removeEventListener('focusin', this.focusLanded, true);
     dispatch(this, 'neu-close');
   }
 
