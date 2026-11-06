@@ -588,3 +588,17 @@ test('a slotted label names the group', async () => {
   await tick();
   expect(internalsOf(plain).ariaLabel).toBe('Size');
 });
+
+test('the group name follows in-place text changes of the slotted label', async () => {
+  const el = mount<NeuRadioGroup>(
+    `<neu-radio-group><span slot="label">Plan</span>${THREE}</neu-radio-group>`,
+  );
+  await tick();
+  const span = el.querySelector('[slot=label]')!;
+  span.textContent = 'Other';
+  await tick();
+  expect(internalsOf(el).ariaLabel).toBe('Other');
+  (span.firstChild as Text).data = 'Third';
+  await tick();
+  expect(internalsOf(el).ariaLabel).toBe('Third');
+});

@@ -29,6 +29,7 @@ export class NeuRadioGroup extends FormControlElement {
   /** The selected radio as of the last sync, which the form value and validity read. */
   private picked: RadioLink | undefined;
   private observer: MutationObserver | undefined;
+  private labelObserver: MutationObserver | undefined;
 
   constructor() {
     super();
@@ -181,11 +182,19 @@ export class NeuRadioGroup extends FormControlElement {
       attributes: true,
       attributeFilter: ['disabled', 'value'],
     });
+    // Frameworks rewrite the slotted label's text in place, which fires no slotchange.
+    this.labelObserver ??= new MutationObserver((records) => {
+      const inLabel = (n: Node) =>
+        (n instanceof Element ? n : n.parentElement)?.closest('[slot=label]');
+      if (records.some((r) => inLabel(r.target))) this.nameGroup();
+    });
+    this.labelObserver.observe(this, { subtree: true, childList: true, characterData: true });
     this.sync();
   }
 
   protected override disconnected(): void {
     this.observer?.disconnect();
+    this.labelObserver?.disconnect();
   }
 
   protected formValue(): string | null {
