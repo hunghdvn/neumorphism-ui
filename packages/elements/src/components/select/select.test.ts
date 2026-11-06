@@ -1138,4 +1138,11 @@ describe('neu-select label slot and icons', () => {
     const el = select();
     expect(el.shadowRoot!.querySelector('[part~=svg]')).toBeNull();
   });
+
+  test('the label typography sits on ::part(label), so a slotted label inherits it', () => {
+    const el = mount<NeuSelect>('<neu-select><span slot="label">Plan</span></neu-select>');
+    const part = getComputedStyle(el.shadowRoot!.querySelector('[part=label]')!);
+    expect(part.fontWeight).toBe('600');
+    expect(getComputedStyle(el.querySelector('[slot=label]')!).fontWeight).toBe('600');
+  });
 });

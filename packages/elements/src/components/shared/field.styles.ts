@@ -4,10 +4,8 @@ export const fieldStyles = `${hostTheme}
 :host { display: block; }
 :host(:disabled), :host([disabled]) { cursor: not-allowed; }
 .base { display: flex; flex-direction: column; }
-.label-text, ::slotted([slot='label']) {
-  display: block; margin-block-end: 0.375rem;
-  font-size: 0.8125rem; font-weight: 600; line-height: 1rem; color: var(--_neu-fg-muted);
-}
+.label { font-size: 0.8125rem; font-weight: 600; line-height: 1rem; color: var(--_neu-fg-muted); }
+.label-text, ::slotted([slot='label']) { display: block; margin-block-end: 0.375rem; }
 .label-text:empty { display: none; }
 .control {
   display: flex; align-items: center; min-block-size: 2.75rem; padding-inline: 0.875rem;

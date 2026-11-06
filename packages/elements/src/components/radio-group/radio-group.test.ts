@@ -602,3 +602,12 @@ test('the group name follows in-place text changes of the slotted label', async 
   await tick();
   expect(internalsOf(el).ariaLabel).toBe('Third');
 });
+
+test('the label typography sits on ::part(label), so a slotted label inherits it', () => {
+  const el = mount<NeuRadioGroup>(
+    `<neu-radio-group><span slot="label">Plan</span>${THREE}</neu-radio-group>`,
+  );
+  const part = getComputedStyle(el.shadowRoot!.querySelector('[part=label]')!);
+  expect(part.fontWeight).toBe('600');
+  expect(getComputedStyle(el.querySelector('[slot=label]')!).fontWeight).toBe('600');
+});
