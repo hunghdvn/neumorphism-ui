@@ -973,6 +973,23 @@ describe('neu-select', () => {
     expect(events).toEqual(['close']);
   });
 
+  test('the listbox stays open while the window is left, and closes when focus comes back elsewhere', async () => {
+    const form = mountForm(`<neu-select name="p">${THREE}</neu-select><input id="other">`);
+    const el = form.querySelector('neu-select') as NeuSelect;
+    await tick();
+    combobox(el).focus();
+    await userEvent.keyboard('{ArrowDown}');
+    // Leaving the window, as Firefox reports it: a focusout to nowhere while the document has no
+    // focus. A script then focuses another field, which brings no second focusout.
+    const hasFocus = vi.spyOn(document, 'hasFocus').mockReturnValue(false);
+    combobox(el).blur();
+    hasFocus.mockRestore();
+    expect(isOpen(el)).toBe(true);
+    (form.querySelector('#other') as HTMLInputElement).focus();
+    expect(isOpen(el)).toBe(false);
+    expect(combobox(el).getAttribute('aria-expanded')).toBe('false');
+  });
+
   test('a user-invalid select shows the error look on the combobox', async () => {
     const form = mountForm(`<neu-select name="p" label="P" required>${THREE}</neu-select>`);
     const el = form.querySelector('neu-select') as NeuSelect;
