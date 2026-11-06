@@ -7,11 +7,11 @@ import { avatarStyles } from './avatar.styles.js';
 export const avatarDef = defineComponent({
   tag: 'neu-avatar',
   props: {
-    src: { type: 'string', reflect: true },
+    src: { type: 'string' },
     label: { type: 'string' },
     initials: { type: 'string' },
-    size: { type: 'string', default: 'md', values: ['sm', 'md', 'lg'], reflect: true },
-    shape: { type: 'string', default: 'circle', values: ['circle', 'rounded'], reflect: true },
+    size: { type: 'string', default: 'md', values: ['sm', 'md', 'lg'] },
+    shape: { type: 'string', default: 'circle', values: ['circle', 'rounded'] },
   },
   styles: avatarStyles,
   template: (p) => {

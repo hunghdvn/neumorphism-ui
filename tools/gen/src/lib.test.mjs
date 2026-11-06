@@ -74,6 +74,16 @@ describe('buildReactWrapper', () => {
     expect(text.members.find((m) => m.name === 'defaultValue').type).toEqual({ text: 'string' });
   });
 
+  test('the manifest reflects every prop except the live value and opt-outs', () => {
+    const members = (def) => buildManifest([def]).modules[0].declarations[0].members;
+    const field = (def, name) => members(def).find((m) => m.name === name);
+    expect(field(textFieldDef, 'label').reflects).toBe(true);
+    expect(field(textFieldDef, 'name').reflects).toBe(true);
+    expect(field(textFieldDef, 'value').reflects).toBeUndefined();
+    expect(field(definitions.get('neu-checkbox'), 'indeterminate').reflects).toBe(false);
+    expect(field(definitions.get('neu-checkbox'), 'value').reflects).toBe(true);
+  });
+
   test('click stays a native React prop and is not mapped', () => {
     const source = buildReactWrapper(buttonDef);
     expect(source).not.toContain('onClick');

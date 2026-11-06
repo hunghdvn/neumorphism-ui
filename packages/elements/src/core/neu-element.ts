@@ -4,6 +4,7 @@ import {
   coerceProperty,
   parseAttribute,
   parseProps,
+  reflects,
   serializeAttribute,
   type PropDecl,
   type PropValue,
@@ -162,7 +163,7 @@ export abstract class NeuElement extends ServerSafeHTMLElement {
     const decl = this.def.props[key];
     if (!decl || Object.is(this.props[key], value)) return;
     this.props[key] = value;
-    if (!fromAttribute && decl.reflect) this.reflect(key, decl, value);
+    if (!fromAttribute && reflects(key, decl, this.def)) this.reflect(key, decl, value);
     this.propChanged(key);
   }
 

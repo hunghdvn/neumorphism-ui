@@ -13,6 +13,7 @@ const probeDef = defineComponent({
     size: { type: 'string', default: 'md', values: ['sm', 'md', 'lg'], reflect: true },
     disabled: { type: 'boolean', reflect: true },
     count: { type: 'number', default: 1 },
+    note: { type: 'string', reflect: false },
   },
   styles: ':host { display: block; }',
   template: (p) => html`<span data-ref="label" part="label">${p.label}</span>`,
@@ -25,6 +26,7 @@ class NeuProbe extends NeuElement {
   declare size: 'sm' | 'md' | 'lg';
   declare disabled: boolean;
   declare count: number;
+  declare note: string;
   renders = 0;
   connects = 0;
   readonly updates: string[][] = [];
@@ -76,16 +78,59 @@ describe('attributes and properties', () => {
     expect([el.size, el.disabled, el.count]).toEqual(['lg', true, 5]);
   });
 
-  test('only reflect: true props write back to attributes', () => {
+  test('every prop reflects unless it opts out', () => {
     const el = mount<NeuProbe>('<neu-probe></neu-probe>');
     el.size = 'sm';
     el.disabled = true;
-    el.label = 'x';
+    el.label = 'A';
+    el.count = 4;
     expect(el.getAttribute('size')).toBe('sm');
     expect(el.hasAttribute('disabled')).toBe(true);
-    expect(el.hasAttribute('label')).toBe(false);
+    expect(el.getAttribute('label')).toBe('A');
+    expect(el.getAttribute('count')).toBe('4');
     el.disabled = false;
     expect(el.hasAttribute('disabled')).toBe(false);
+  });
+
+  test('a reflect:false prop does not reflect', () => {
+    const el = mount<NeuProbe>('<neu-probe></neu-probe>');
+    el.note = 'x';
+    expect(el.note).toBe('x');
+    expect(el.hasAttribute('note')).toBe(false);
+  });
+
+  test('the form value prop never reflects', () => {
+    class NeuProbeValue extends NeuElement {
+      static override def = defineComponent({
+        tag: 'neu-probe-value',
+        props: { value: { type: 'string' }, name: { type: 'string' } },
+        form: { valueProp: 'value' },
+        styles: '',
+        template: () => html`<span></span>`,
+        docs,
+      });
+    }
+    NeuProbeValue.define();
+    const el = mount<NeuProbeValue & { value: string; name: string }>(
+      '<neu-probe-value value="d"></neu-probe-value>',
+    );
+    el.value = 'x';
+    el.name = 'n';
+    expect(el.value).toBe('x');
+    expect(el.getAttribute('value')).toBe('d');
+    expect(el.getAttribute('name')).toBe('n');
+  });
+
+  test('assigning the same value does not rewrite the attribute', async () => {
+    const el = mount<NeuProbe>('<neu-probe></neu-probe>');
+    const records: MutationRecord[] = [];
+    const observer = new MutationObserver((r) => records.push(...r));
+    observer.observe(el, { attributes: true });
+    el.label = 'A';
+    el.label = 'A';
+    await new Promise((resolve) => setTimeout(resolve, 0));
+    observer.disconnect();
+    expect(records).toHaveLength(1);
   });
 
   test('invalid values fall back to defaults silently', () => {

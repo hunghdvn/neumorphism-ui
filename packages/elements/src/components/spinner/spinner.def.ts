@@ -7,7 +7,7 @@ export const spinnerDef = defineComponent({
   tag: 'neu-spinner',
   props: {
     label: { type: 'string', default: 'Loading' },
-    size: { type: 'string', default: 'md', values: ['sm', 'md', 'lg'], reflect: true },
+    size: { type: 'string', default: 'md', values: ['sm', 'md', 'lg'] },
   },
   styles: spinnerStyles,
   // The label is also visually hidden text: a live region announces content, not its name.

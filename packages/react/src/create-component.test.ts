@@ -1,12 +1,13 @@
 import { renderShadowContents } from '@neumorphism-ui/elements/ssr.js';
 import type { NeuSlider as NeuSliderElement } from '@neumorphism-ui/elements/slider.js';
+import { NeuSelect as NeuSelectElement } from '@neumorphism-ui/elements/select.js';
 import { NeuSwitch as NeuSwitchElement } from '@neumorphism-ui/elements/switch.js';
 import type { NeuTextField as NeuTextFieldElement } from '@neumorphism-ui/elements/text-field.js';
 import * as React from 'react';
 import { createRoot, hydrateRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, expect, inject, test, vi } from 'vitest';
 import { userEvent } from 'vitest/browser';
-import { NeuButton, NeuSlider, NeuSwitch, NeuTextField } from './index.js';
+import { NeuButton, NeuOption, NeuSelect, NeuSlider, NeuSwitch, NeuTextField } from './index.js';
 
 declare module 'vitest' {
   export interface ProvidedContext {
@@ -72,6 +73,39 @@ test('hydrates server markup without errors and keeps the server-rendered shadow
   expect(server.querySelector('neu-switch')).toBe(el);
   expect(el.shadowRoot!.querySelector('.track')).toBe(track);
   expect(el.checked).toBe(true);
+  await act(() => hydrated!.unmount());
+  server.remove();
+});
+
+test('hydrating a select with label and placeholder logs no mismatch', async () => {
+  const server = document.createElement('div');
+  document.body.append(server);
+  server.setHTMLUnsafe(
+    '<neu-select label="Plan" placeholder="Pick"><template shadowrootmode="open">' +
+      renderShadowContents(NeuSelectElement.def, { label: 'Plan', placeholder: 'Pick' }) +
+      '</template><neu-option value="a">Alpha</neu-option><neu-option value="b">Beta</neu-option></neu-select>',
+  );
+  const errors: unknown[][] = [];
+  const spy = vi.spyOn(console, 'error').mockImplementation((...args: unknown[]) => {
+    errors.push(args);
+  });
+  let hydrated: Root | undefined;
+  try {
+    await act(async () => {
+      hydrated = hydrateRoot(
+        server,
+        h(
+          NeuSelect,
+          { label: 'Plan', placeholder: 'Pick' },
+          h(NeuOption, { value: 'a' }, 'Alpha'),
+          h(NeuOption, { value: 'b' }, 'Beta'),
+        ),
+      );
+    });
+  } finally {
+    spy.mockRestore();
+  }
+  expect(errors).toEqual([]);
   await act(() => hydrated!.unmount());
   server.remove();
 });

@@ -4,6 +4,7 @@ import {
   coerceProperty,
   parseAttribute,
   parseProps,
+  reflects,
   serializeAttribute,
   type PropDecl,
 } from './props.js';
@@ -92,6 +93,25 @@ describe('serializeAttribute', () => {
   test('numbers and strings are stringified', () => {
     expect(serializeAttribute(max, 3)).toBe('3');
     expect(serializeAttribute(size, 'lg')).toBe('lg');
+  });
+});
+
+describe('serializeAttribute edge cases', () => {
+  test('serializeAttribute removes the attribute for non-finite numbers', () => {
+    expect(serializeAttribute({ type: 'number', default: NaN }, NaN)).toBeNull();
+    expect(serializeAttribute({ type: 'number', default: 0 }, Infinity)).toBeNull();
+    expect(serializeAttribute({ type: 'number', default: 0 }, 0.1)).toBe('0.1');
+  });
+});
+
+describe('reflects', () => {
+  test('is true unless the prop opts out or is the form value prop', () => {
+    const form = { form: { valueProp: 'value' } };
+    expect(reflects('label', label, {})).toBe(true);
+    expect(reflects('label', { type: 'string', reflect: false }, {})).toBe(false);
+    expect(reflects('value', label, form)).toBe(false);
+    expect(reflects('value', { type: 'string', reflect: true }, form)).toBe(true);
+    expect(reflects('name', label, form)).toBe(true);
   });
 });
 

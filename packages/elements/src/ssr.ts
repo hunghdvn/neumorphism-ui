@@ -36,6 +36,7 @@ export {
   coerceProperty,
   parseAttribute,
   parseProps,
+  reflects,
   serializeAttribute,
 } from './core/props.js';
 

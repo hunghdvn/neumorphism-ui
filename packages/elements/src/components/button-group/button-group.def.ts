@@ -6,12 +6,11 @@ import { buttonGroupStyles } from './button-group.styles.js';
 export const buttonGroupDef = defineComponent({
   tag: 'neu-button-group',
   props: {
-    label: { type: 'string', reflect: true },
+    label: { type: 'string' },
     orientation: {
       type: 'string',
       default: 'horizontal',
       values: ['horizontal', 'vertical'],
-      reflect: true,
     },
   },
   styles: buttonGroupStyles,

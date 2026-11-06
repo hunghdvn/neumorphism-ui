@@ -10,7 +10,6 @@ export const dividerDef = defineComponent({
       type: 'string',
       default: 'horizontal',
       values: ['horizontal', 'vertical'],
-      reflect: true,
     },
   },
   styles: dividerStyles,

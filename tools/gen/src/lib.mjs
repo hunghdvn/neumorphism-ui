@@ -1,4 +1,4 @@
-import { attributeName, formDefaultProp } from '@neumorphism-ui/elements/ssr.js';
+import { attributeName, formDefaultProp, reflects } from '@neumorphism-ui/elements/ssr.js';
 
 const pascal = (text) =>
   text
@@ -57,7 +57,7 @@ export function buildManifest(defs) {
               type: { text: propTsType(decl) },
               default: defaultText(decl),
               attribute: attributeName(key, decl),
-              reflects: decl.reflect === true,
+              reflects: reflects(key, decl, def),
             },
       );
       if (defaultProp) {

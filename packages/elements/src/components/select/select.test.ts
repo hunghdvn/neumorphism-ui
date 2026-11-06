@@ -93,7 +93,7 @@ describe('neu-select', () => {
     expect(isOpen(el)).toBe(false);
   });
 
-  test('reflection: name, required, disabled and size reflect; value and the texts do not', () => {
+  test('reflection: name, required, disabled and size and the texts reflect; value does not', () => {
     const el = select();
     el.name = 'n';
     el.required = true;
@@ -110,10 +110,10 @@ describe('neu-select', () => {
     el.placeholder = 'Pick';
     el.helpText = 'Help';
     el.errorText = 'Oops';
+    expect(el.getAttribute('value')).toBeNull();
     expect(
-      ['value', 'placeholder', 'help-text', 'error-text'].map((a) => el.getAttribute(a)),
-    ).toEqual([null, null, null, null]);
-    expect(el.getAttribute('label')).toBe('Plan');
+      ['label', 'placeholder', 'help-text', 'error-text'].map((a) => el.getAttribute(a)),
+    ).toEqual(['Tier', 'Pick', 'Help', 'Oops']);
     el.setAttribute('help-text', 'More');
     expect(el.helpText).toBe('More');
     expect(el.shadowRoot!.querySelector('.help-text')!.textContent).toBe('More');

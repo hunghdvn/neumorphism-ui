@@ -65,7 +65,7 @@ describe('neu-radio-group', () => {
     expect(internalsOf(el).ariaRequired).toBeNull();
   });
 
-  test('reflection: name, required, disabled and orientation reflect; value and label do not', () => {
+  test('reflection: name, required, disabled and orientation and label reflect; value does not', () => {
     const el = group();
     el.name = 'n';
     el.required = true;
@@ -80,7 +80,7 @@ describe('neu-radio-group', () => {
     el.value = 'b';
     el.label = 'Other';
     expect(el.getAttribute('value')).toBeNull();
-    expect(el.getAttribute('label')).toBe('Plan');
+    expect(el.getAttribute('label')).toBe('Other');
   });
 
   test('an invalid orientation falls back to vertical', () => {

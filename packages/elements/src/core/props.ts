@@ -39,6 +39,18 @@ export function attributeName(prop: string, decl: PropDecl): string {
   return decl.attribute ?? prop.replace(/[A-Z]/g, (char) => `-${char.toLowerCase()}`);
 }
 
+/**
+ * Every prop reflects to its attribute, except the live value of a form control (the def's
+ * form.valueProp, whose attribute is only the default) and props that declare `reflect: false`.
+ */
+export function reflects(
+  key: string,
+  decl: PropDecl,
+  def: { readonly form?: { readonly valueProp: string } },
+): boolean {
+  return decl.reflect ?? key !== def.form?.valueProp;
+}
+
 /** Attribute text (null when absent) → prop value. Invalid input silently becomes the default. */
 export function parseAttribute(decl: PropDecl, raw: string | null): PropValue {
   switch (decl.type) {
@@ -73,7 +85,7 @@ export function serializeAttribute(decl: PropDecl, value: PropValue): string | n
     case 'boolean':
       return value ? '' : null;
     case 'number':
-      return String(value);
+      return Number.isFinite(value) ? String(value) : null;
     case 'string':
       return value === '' ? null : String(value);
   }

@@ -58,7 +58,7 @@ describe('neu-number-field', () => {
     expect(inputOf(el).hasAttribute('min')).toBe(false);
   });
 
-  test('reflects name, disabled, required, readonly and size; not the limits', () => {
+  test('reflects name, disabled, required, readonly, size and the limits', () => {
     const el = mount<NeuNumberField>('<neu-number-field></neu-number-field>');
     el.name = 'n';
     el.disabled = true;
@@ -71,7 +71,7 @@ describe('neu-number-field', () => {
     expect(
       ['name', 'disabled', 'required', 'readonly', 'size'].map((a) => el.getAttribute(a)),
     ).toEqual(['n', '', '', '', 'lg']);
-    expect(['min', 'max', 'step'].map((a) => el.hasAttribute(a))).toEqual([false, false, false]);
+    expect(['min', 'max', 'step'].map((a) => el.getAttribute(a))).toEqual(['1', '5', '2']);
   });
 
   test('the value attribute is the default; the property is the current value', () => {

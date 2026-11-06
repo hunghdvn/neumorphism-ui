@@ -28,15 +28,14 @@ export const radioGroupDef = defineComponent({
   tag: 'neu-radio-group',
   props: {
     label: { type: 'string' },
-    name: { type: 'string', reflect: true },
+    name: { type: 'string' },
     value: { type: 'string' },
-    required: { type: 'boolean', reflect: true },
-    disabled: { type: 'boolean', reflect: true },
+    required: { type: 'boolean' },
+    disabled: { type: 'boolean' },
     orientation: {
       type: 'string',
       default: 'vertical',
       values: ['vertical', 'horizontal'],
-      reflect: true,
     },
   },
   form: { valueProp: 'value' },

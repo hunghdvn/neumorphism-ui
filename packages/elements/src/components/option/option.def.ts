@@ -5,8 +5,8 @@ import { optionStyles } from './option.styles.js';
 export const optionDef = defineComponent({
   tag: 'neu-option',
   props: {
-    value: { type: 'string', reflect: true },
-    disabled: { type: 'boolean', reflect: true },
+    value: { type: 'string' },
+    disabled: { type: 'boolean' },
   },
   styles: optionStyles,
   template: () => html`<slot></slot>`,

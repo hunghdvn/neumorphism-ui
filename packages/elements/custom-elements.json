@@ -73,7 +73,7 @@
               },
               "default": "''",
               "attribute": "label",
-              "reflects": false
+              "reflects": true
             },
             {
               "kind": "field",
@@ -83,7 +83,7 @@
               },
               "default": "''",
               "attribute": "initials",
-              "reflects": false
+              "reflects": true
             },
             {
               "kind": "field",
@@ -1081,7 +1081,7 @@
               },
               "default": "''",
               "attribute": "icon",
-              "reflects": false
+              "reflects": true
             },
             {
               "kind": "field",
@@ -1091,7 +1091,7 @@
               },
               "default": "'system'",
               "attribute": "library",
-              "reflects": false
+              "reflects": true
             },
             {
               "kind": "field",
@@ -1101,7 +1101,7 @@
               },
               "default": "''",
               "attribute": "label",
-              "reflects": false
+              "reflects": true
             },
             {
               "kind": "field",
@@ -1370,7 +1370,7 @@
               },
               "default": "NaN",
               "attribute": "min",
-              "reflects": false
+              "reflects": true
             },
             {
               "kind": "field",
@@ -1380,7 +1380,7 @@
               },
               "default": "NaN",
               "attribute": "max",
-              "reflects": false
+              "reflects": true
             },
             {
               "kind": "field",
@@ -1390,7 +1390,7 @@
               },
               "default": "1",
               "attribute": "step",
-              "reflects": false
+              "reflects": true
             },
             {
               "kind": "field",
@@ -1410,7 +1410,7 @@
               },
               "default": "''",
               "attribute": "label",
-              "reflects": false
+              "reflects": true
             },
             {
               "kind": "field",
@@ -1420,7 +1420,7 @@
               },
               "default": "''",
               "attribute": "placeholder",
-              "reflects": false
+              "reflects": true
             },
             {
               "kind": "field",
@@ -1430,7 +1430,7 @@
               },
               "default": "''",
               "attribute": "help-text",
-              "reflects": false
+              "reflects": true
             },
             {
               "kind": "field",
@@ -1440,7 +1440,7 @@
               },
               "default": "''",
               "attribute": "error-text",
-              "reflects": false
+              "reflects": true
             },
             {
               "kind": "field",
@@ -1490,7 +1490,7 @@
               },
               "default": "'Increase'",
               "attribute": "increment-label",
-              "reflects": false
+              "reflects": true
             },
             {
               "kind": "field",
@@ -1500,7 +1500,7 @@
               },
               "default": "'Decrease'",
               "attribute": "decrement-label",
-              "reflects": false
+              "reflects": true
             },
             {
               "kind": "field",
@@ -1878,7 +1878,7 @@
               },
               "default": "''",
               "attribute": "label",
-              "reflects": false
+              "reflects": true
             },
             {
               "kind": "field",
@@ -2124,7 +2124,7 @@
               },
               "default": "''",
               "attribute": "label",
-              "reflects": false
+              "reflects": true
             },
             {
               "kind": "field",
@@ -2134,7 +2134,7 @@
               },
               "default": "''",
               "attribute": "placeholder",
-              "reflects": false
+              "reflects": true
             },
             {
               "kind": "field",
@@ -2144,7 +2144,7 @@
               },
               "default": "''",
               "attribute": "help-text",
-              "reflects": false
+              "reflects": true
             },
             {
               "kind": "field",
@@ -2154,7 +2154,7 @@
               },
               "default": "''",
               "attribute": "error-text",
-              "reflects": false
+              "reflects": true
             },
             {
               "kind": "field",
@@ -2394,7 +2394,7 @@
               },
               "default": "0",
               "attribute": "min",
-              "reflects": false
+              "reflects": true
             },
             {
               "kind": "field",
@@ -2404,7 +2404,7 @@
               },
               "default": "100",
               "attribute": "max",
-              "reflects": false
+              "reflects": true
             },
             {
               "kind": "field",
@@ -2414,7 +2414,7 @@
               },
               "default": "1",
               "attribute": "step",
-              "reflects": false
+              "reflects": true
             },
             {
               "kind": "field",
@@ -2434,7 +2434,7 @@
               },
               "default": "''",
               "attribute": "label",
-              "reflects": false
+              "reflects": true
             },
             {
               "kind": "field",
@@ -2578,7 +2578,7 @@
               },
               "default": "'Loading'",
               "attribute": "label",
-              "reflects": false
+              "reflects": true
             },
             {
               "kind": "field",
@@ -3189,7 +3189,7 @@
               },
               "default": "''",
               "attribute": "label",
-              "reflects": false
+              "reflects": true
             },
             {
               "kind": "field",
@@ -3199,7 +3199,7 @@
               },
               "default": "''",
               "attribute": "placeholder",
-              "reflects": false
+              "reflects": true
             },
             {
               "kind": "field",
@@ -3209,7 +3209,7 @@
               },
               "default": "''",
               "attribute": "help-text",
-              "reflects": false
+              "reflects": true
             },
             {
               "kind": "field",
@@ -3219,7 +3219,7 @@
               },
               "default": "''",
               "attribute": "error-text",
-              "reflects": false
+              "reflects": true
             },
             {
               "kind": "field",
@@ -3259,7 +3259,7 @@
               },
               "default": "-1",
               "attribute": "minlength",
-              "reflects": false
+              "reflects": true
             },
             {
               "kind": "field",
@@ -3269,7 +3269,7 @@
               },
               "default": "-1",
               "attribute": "maxlength",
-              "reflects": false
+              "reflects": true
             },
             {
               "kind": "field",
@@ -3279,7 +3279,7 @@
               },
               "default": "''",
               "attribute": "pattern",
-              "reflects": false
+              "reflects": true
             },
             {
               "kind": "field",
@@ -3289,7 +3289,7 @@
               },
               "default": "''",
               "attribute": "autocomplete",
-              "reflects": false
+              "reflects": true
             },
             {
               "kind": "field",
@@ -3299,7 +3299,7 @@
               },
               "default": "''",
               "attribute": "inputmode",
-              "reflects": false
+              "reflects": true
             },
             {
               "kind": "field",
@@ -3309,7 +3309,7 @@
               },
               "default": "''",
               "attribute": "enterkeyhint",
-              "reflects": false
+              "reflects": true
             },
             {
               "kind": "field",
@@ -3605,7 +3605,7 @@
               },
               "default": "''",
               "attribute": "label",
-              "reflects": false
+              "reflects": true
             },
             {
               "kind": "field",
@@ -3615,7 +3615,7 @@
               },
               "default": "''",
               "attribute": "placeholder",
-              "reflects": false
+              "reflects": true
             },
             {
               "kind": "field",
@@ -3625,7 +3625,7 @@
               },
               "default": "''",
               "attribute": "help-text",
-              "reflects": false
+              "reflects": true
             },
             {
               "kind": "field",
@@ -3635,7 +3635,7 @@
               },
               "default": "''",
               "attribute": "error-text",
-              "reflects": false
+              "reflects": true
             },
             {
               "kind": "field",
@@ -3675,7 +3675,7 @@
               },
               "default": "-1",
               "attribute": "minlength",
-              "reflects": false
+              "reflects": true
             },
             {
               "kind": "field",
@@ -3685,7 +3685,7 @@
               },
               "default": "-1",
               "attribute": "maxlength",
-              "reflects": false
+              "reflects": true
             },
             {
               "kind": "field",
@@ -3695,7 +3695,7 @@
               },
               "default": "''",
               "attribute": "autocomplete",
-              "reflects": false
+              "reflects": true
             },
             {
               "kind": "field",
@@ -3705,7 +3705,7 @@
               },
               "default": "''",
               "attribute": "enterkeyhint",
-              "reflects": false
+              "reflects": true
             },
             {
               "kind": "field",
@@ -3715,7 +3715,7 @@
               },
               "default": "3",
               "attribute": "rows",
-              "reflects": false
+              "reflects": true
             },
             {
               "kind": "field",

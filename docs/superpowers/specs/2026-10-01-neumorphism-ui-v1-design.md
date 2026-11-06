@@ -229,13 +229,14 @@ Tokens có rule `neu-*:not(:defined)` cho từng tag. Rule này giữ đúng kí
 
 ```ts
 props: {
-  size:     { type: String,  default: 'md', reflect: true, values: ['sm', 'md', 'lg'] },
-  disabled: { type: Boolean, reflect: true },
+  size:     { type: String,  default: 'md', values: ['sm', 'md', 'lg'] },
+  disabled: { type: Boolean },
   max:      { type: Number,  default: 100 },
 }
 ```
 
 - Attribute dạng kebab-case ↔ property dạng camelCase.
+- Mọi prop reflect ra attribute; ngoại lệ là prop giá trị của form control (`value`/`checked`) và `indeterminate`, khai báo `reflect: false`.
 - `Boolean`: có attribute là `true`.
 - `Number`: không parse được thì dùng `default`.
 - `values`: giá trị ngoài danh sách thì dùng `default`.

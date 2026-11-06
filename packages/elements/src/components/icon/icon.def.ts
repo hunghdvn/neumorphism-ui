@@ -6,9 +6,9 @@ import { systemIconSvg } from './system-icons.js';
 export const iconDef = defineComponent({
   tag: 'neu-icon',
   props: {
-    name: { type: 'string', reflect: true },
-    library: { type: 'string', default: 'system', reflect: true },
-    label: { type: 'string', reflect: true },
+    name: { type: 'string' },
+    library: { type: 'string', default: 'system' },
+    label: { type: 'string' },
   },
   styles: iconStyles,
   template: (p) => {

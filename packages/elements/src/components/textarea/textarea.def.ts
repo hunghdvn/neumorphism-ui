@@ -6,14 +6,14 @@ import { textareaStyles } from './textarea.styles.js';
 
 const props = {
   value: { type: 'string' },
-  name: { type: 'string', reflect: true },
+  name: { type: 'string' },
   label: { type: 'string' },
   placeholder: { type: 'string' },
   helpText: { type: 'string' },
   errorText: { type: 'string' },
-  required: { type: 'boolean', reflect: true },
-  disabled: { type: 'boolean', reflect: true },
-  readOnly: { type: 'boolean', reflect: true, attribute: 'readonly' },
+  required: { type: 'boolean' },
+  disabled: { type: 'boolean' },
+  readOnly: { type: 'boolean', attribute: 'readonly' },
   minLength: { type: 'number', default: -1, attribute: 'minlength' },
   maxLength: { type: 'number', default: -1, attribute: 'maxlength' },
   autocomplete: { type: 'string' },
@@ -23,9 +23,8 @@ const props = {
     type: 'string',
     default: 'vertical',
     values: ['none', 'vertical', 'auto'],
-    reflect: true,
   },
-  size: { type: 'string', default: 'md', values: ['sm', 'md', 'lg'], reflect: true },
+  size: { type: 'string', default: 'md', values: ['sm', 'md', 'lg'] },
 } as const;
 
 export type TextareaProps = InferProps<typeof props>;
