@@ -1,3 +1,4 @@
+import { composing } from './dom.js';
 import { NeuElement } from './neu-element.js';
 
 /** Forms the user is trying to submit during the current task (click on a submitter, or Enter). */
@@ -60,7 +61,7 @@ function watchSubmitAttempts(): void {
       // in a textarea, select or switch is no attempt and must not reveal untouched fields.
       if (
         event.key !== 'Enter' ||
-        event.isComposing ||
+        composing(event) ||
         !(event.composedPath()[0] instanceof HTMLInputElement)
       )
         return;

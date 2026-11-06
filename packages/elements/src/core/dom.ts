@@ -18,6 +18,10 @@ export function isActiveInRoot(el: Element): boolean {
   return (el.getRootNode() as Partial<DocumentOrShadowRoot>).activeElement === el;
 }
 
+/** An IME keystroke: WebKit ends the composition first, so the Enter that commits has keyCode 229. */
+export const composing = (event: KeyboardEvent): boolean =>
+  event.isComposing || event.keyCode === 229;
+
 /** Dispatches a bubbling, composed event from a host (spec §6.4). */
 export function dispatch(target: EventTarget, type: string): void {
   target.dispatchEvent(new Event(type, { bubbles: true, composed: true }));

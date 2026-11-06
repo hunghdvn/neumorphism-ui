@@ -1,4 +1,4 @@
-import { afterDispatch, setOptionalAttribute } from '../../core/dom.js';
+import { afterDispatch, composing, setOptionalAttribute } from '../../core/dom.js';
 import { baseCommitProps, TextControlElement } from '../shared/text-control.js';
 import { BLOCKS_IMPLICIT_SUBMIT, implicitSubmit } from './implicit-submit.js';
 import { textFieldDef, type TextFieldProps } from './text-field.def.js';
@@ -30,7 +30,7 @@ export class NeuTextField extends TextControlElement {
   }
 
   protected override controlKeyDown(event: KeyboardEvent): void {
-    if (event.key !== 'Enter' || event.isComposing) return;
+    if (event.key !== 'Enter' || composing(event)) return;
     // Like a native input: submit once the keydown has finished dispatching, unless a listener
     // (on the host or further up) cancelled it.
     afterDispatch(event, () => {
