@@ -241,3 +241,17 @@ describe('neu-avatar', () => {
     expect(hasErrorState(el)).toBe(false);
   });
 });
+
+test('a load after a stale error shows the image', () => {
+  const el = avatar(` src="${PNG}" initials="AB"`);
+  image(el).dispatchEvent(new Event('error'));
+  expect(show(el)).toBe('initials');
+  image(el).dispatchEvent(new Event('load'));
+  expect(show(el)).toBe('image');
+  expect(hasErrorState(el)).toBe(false);
+});
+
+test('whitespace-only initials fall back to the icon', () => {
+  const el = avatar(' initials="  "');
+  expect(show(el)).toBe('icon');
+});

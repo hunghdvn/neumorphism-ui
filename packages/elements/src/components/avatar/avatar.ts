@@ -19,6 +19,8 @@ export class NeuAvatar extends NeuElement {
     const img = this.ref<HTMLImageElement>('image');
     if (!img) return;
     img.addEventListener('error', () => this.setBroken(true));
+    // A load after an error (a stale one, from the previous src) means the current image is fine.
+    img.addEventListener('load', () => this.setBroken(false));
     // The error event may have fired before this element upgraded; it will not fire again. An SVG
     // without intrinsic size is not caught here: browsers give it a 300x150 (or viewBox) size.
     if (img.hasAttribute('src') && img.complete && img.naturalWidth === 0) this.broken = true;
@@ -47,7 +49,11 @@ export class NeuAvatar extends NeuElement {
   }
 
   private showing(): string {
-    return this.props.src && !this.broken ? 'image' : this.props.initials ? 'initials' : 'icon';
+    return this.props.src && !this.broken
+      ? 'image'
+      : String(this.props.initials).trim()
+        ? 'initials'
+        : 'icon';
   }
 
   private setBroken(broken: boolean): void {
