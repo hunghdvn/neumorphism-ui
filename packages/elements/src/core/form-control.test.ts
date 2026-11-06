@@ -244,3 +244,19 @@ test('implicitSubmit submits only when the form has a submit button or a single 
   implicitSubmit(null);
   expect(submitted).toEqual([single, withButton]);
 });
+
+test('Enter that commits an IME composition is not a submit attempt', () => {
+  const form = mountForm('<input name="q"><neu-probe-field name="a" required></neu-probe-field>');
+  const field = form.querySelector('neu-probe-field') as NeuProbeField;
+  suppressValidationPopup(form);
+  form.addEventListener('submit', (event) => {
+    event.preventDefault();
+  });
+  form
+    .querySelector('input')!
+    .dispatchEvent(
+      new KeyboardEvent('keydown', { key: 'Enter', isComposing: true, bubbles: true }),
+    );
+  form.requestSubmit();
+  expect(field.matches(':state(user-invalid)')).toBe(false);
+});
