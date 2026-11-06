@@ -119,6 +119,23 @@ describe('neu-select', () => {
     expect(el.shadowRoot!.querySelector('.help-text')!.textContent).toBe('More');
   });
 
+  test('setting label or placeholder keeps the options and the value', async () => {
+    const el = select('value="b"');
+    await tick();
+    press(el, 'ArrowDown');
+    const events: string[] = [];
+    el.addEventListener('input', () => events.push('input'));
+    el.addEventListener('change', () => events.push('change'));
+    const count = optionsOf(el).length;
+    expect(count).toBe(3);
+    el.label = 'Tier';
+    el.placeholder = 'Pick';
+    await tick();
+    expect(el.value).toBe('b');
+    expect(optionsOf(el)).toHaveLength(count);
+    expect(events).toEqual([]);
+  });
+
   test('an invalid size falls back to md', () => {
     expect(select('size="xl"').size).toBe('md');
   });
