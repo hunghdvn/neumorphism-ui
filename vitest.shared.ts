@@ -14,6 +14,17 @@ function selectedBrowsers(): BrowserName[] {
   return picked.length > 0 ? picked : ALL_BROWSERS;
 }
 
+/**
+ * Firefox runs its files one at a time. Vitest opens a page per worker, and the workers' pages
+ * open while the first ones already run tests; in Firefox every page that opens takes the
+ * window focus from the others. The focused element then loses `:focus` and gets a focusout
+ * to nowhere, which fails any test that was checking focus at that moment. Chromium and WebKit
+ * keep each page focused on its own.
+ */
+function instance(browser: BrowserName) {
+  return browser === 'firefox' ? { browser, fileParallelism: false } : { browser };
+}
+
 /** The `test` block of a Vitest config that runs files in real browsers. */
 export function browserTest(options: { include?: string[]; exclude?: string[] } = {}) {
   return {
@@ -23,7 +34,7 @@ export function browserTest(options: { include?: string[]; exclude?: string[] } 
       enabled: true,
       headless: true,
       provider: playwright(),
-      instances: selectedBrowsers().map((browser) => ({ browser })),
+      instances: selectedBrowsers().map(instance),
     },
   };
 }
