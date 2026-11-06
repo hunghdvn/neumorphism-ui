@@ -387,3 +387,9 @@ describe('neu-number-field', () => {
     expect(await axeViolations(el)).toEqual([]);
   });
 });
+
+test('internal icons expose no svg part', () => {
+  const el = mount<NeuNumberField>('<neu-number-field label="Qty"></neu-number-field>');
+  expect(el.shadowRoot!.querySelector('svg')).not.toBeNull();
+  expect(el.shadowRoot!.querySelector('[part~=svg]')).toBeNull();
+});

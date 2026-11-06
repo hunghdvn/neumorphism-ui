@@ -250,8 +250,6 @@ describe('neu-select', () => {
       'combobox',
       'display',
       'chevron',
-      // The system icon wrapper names its svg, as in neu-number-field's step buttons.
-      'svg',
       'listbox',
       'option',
       'option',
@@ -1136,4 +1134,8 @@ describe('neu-select label slot and icons', () => {
     expect(await axeViolations(el)).toEqual([]);
   });
 
+  test('internal icons expose no svg part', () => {
+    const el = select();
+    expect(el.shadowRoot!.querySelector('[part~=svg]')).toBeNull();
+  });
 });
