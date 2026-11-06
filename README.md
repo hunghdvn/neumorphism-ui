@@ -23,8 +23,8 @@ render on the server with declarative shadow DOM, and take part in native `<form
   every component is checked with axe in the test suite.
 - **Themeable.** Light and dark themes are CSS custom properties inside `@layer neu`, so your own
   CSS always wins.
-- **Small.** CI enforces min+gzip budgets: the shared core ≤ 4 KB, each component ≤ 3 KB, and the
-  whole CDN bundle ≤ 25 KB.
+- **Small.** CI enforces min+gzip budgets: the shared core ≤ 4 KB, each component ≤ 3 KB
+  (`neu-number-field` 3.5 KB, `neu-select` 5 KB), and the whole CDN bundle ≤ 25 KB.
 
 ## Packages
 
@@ -87,14 +87,14 @@ import '@neumorphism-ui/elements/all.js'; // or one tag at a time: '@neumorphism
 ```html
 <link
   rel="stylesheet"
-  href="https://cdn.jsdelivr.net/npm/@neumorphism-ui/tokens@1.0.0-next.1/neu.css"
-  integrity="sha384-ksGeOVKv90K2fd9BuSvj8vwSalTsN+SjmlCZETnKGu+ZcLbevt+1lSzjLZwkmDxj"
+  href="https://cdn.jsdelivr.net/npm/@neumorphism-ui/tokens@1.0.0-next.2/neu.css"
+  integrity="sha384-cazB0XcmmSQmjY0xpQI23NnnkWZ2Fpych2mIOSJ1KFoUFiboYRu7pYsB2JnsSUmh"
   crossorigin="anonymous"
 />
 <script
   type="module"
-  src="https://cdn.jsdelivr.net/npm/@neumorphism-ui/elements@1.0.0-next.1/cdn/neu.min.js"
-  integrity="sha384-mbmZfVEAatU2v/Rc7ify6zpicchvfBlsBJWrPZOARTpz1jFLkaZhIwcRCUhlZ2N8"
+  src="https://cdn.jsdelivr.net/npm/@neumorphism-ui/elements@1.0.0-next.2/cdn/neu.min.js"
+  integrity="sha384-C15FdUzmFAFZhvRxiQNp3yTRySJuIyxDJQpTm6VKlgBiKNPPv+NaJ8tuf743QF6P"
   crossorigin="anonymous"
 ></script>
 ```
