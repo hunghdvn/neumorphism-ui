@@ -127,6 +127,62 @@
         <neu-spinner></neu-spinner>
         <neu-spinner size="lg"></neu-spinner>
       </div>
+      <div class="fields">
+        <neu-textarea label="Empty" placeholder="Tell us more"></neu-textarea>
+        <neu-textarea label="Filled" value="Line one&#10;Line two"></neu-textarea>
+        <neu-textarea label="Disabled" value="locked" disabled></neu-textarea>
+        <neu-textarea
+          label="Auto"
+          resize="auto"
+          value="A long text that wraps over several lines so the auto-growing field has to become taller than its minimum height."
+        ></neu-textarea>
+      </div>
+      <div class="fields">
+        <neu-number-field label="Quantity" value="4"></neu-number-field>
+        <neu-number-field label="Bounded" value="5" min="0" max="10"></neu-number-field>
+        <neu-number-field label="Disabled" value="7" disabled></neu-number-field>
+        <neu-number-field label="Small" size="sm" value="1"></neu-number-field>
+        <neu-number-field label="Large" size="lg" value="2"></neu-number-field>
+      </div>
+      <div class="row">
+        <neu-checkbox>Unchecked</neu-checkbox>
+        <neu-checkbox checked>Checked</neu-checkbox>
+        <neu-checkbox indeterminate>Mixed</neu-checkbox>
+        <neu-checkbox disabled>Disabled</neu-checkbox>
+        <neu-checkbox disabled checked>Disabled on</neu-checkbox>
+        <neu-checkbox size="sm" checked>Small</neu-checkbox>
+        <neu-checkbox size="lg" checked>Large</neu-checkbox>
+      </div>
+      <div class="row">
+        <neu-radio-group label="Plan" value="b">
+          <neu-radio value="a">Free</neu-radio>
+          <neu-radio value="b">Pro</neu-radio>
+          <neu-radio value="c" disabled>Team</neu-radio>
+        </neu-radio-group>
+        <neu-radio-group label="Billing" orientation="horizontal" value="m">
+          <neu-radio value="m">Monthly</neu-radio>
+          <neu-radio value="y">Yearly</neu-radio>
+        </neu-radio-group>
+      </div>
+      <div class="fields">
+        <neu-slider label="Zero" value="0"></neu-slider>
+        <neu-slider label="Half" value="50"></neu-slider>
+        <neu-slider label="Full" value="100"></neu-slider>
+        <neu-slider label="Disabled" value="40" disabled></neu-slider>
+      </div>
+      <div class="fields">
+        <neu-select label="Placeholder" placeholder="Choose one">
+          <neu-option value="a">Apple</neu-option>
+          <neu-option value="b">Banana</neu-option>
+        </neu-select>
+        <neu-select label="Filled" value="b">
+          <neu-option value="a">Apple</neu-option>
+          <neu-option value="b">Banana</neu-option>
+        </neu-select>
+        <neu-select label="Disabled" value="a" disabled>
+          <neu-option value="a">Apple</neu-option>
+        </neu-select>
+      </div>
     </template>
     <script type="module">
       const states = document.getElementById('states');

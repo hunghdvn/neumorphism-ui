@@ -31,6 +31,18 @@ describe('neu-text-field', () => {
     expect(el.shadowRoot!.activeElement).toBe(inputOf(el));
   });
 
+  test('a labelled field is 4.125rem tall, the height neu.css reserves, whatever the font', () => {
+    const rem = Number.parseFloat(getComputedStyle(document.documentElement).fontSize);
+    const fonts = ['inherit', "'Courier New', 'DejaVu Sans Mono', monospace", 'Georgia, serif'];
+    const heights = fonts.map(
+      (font) =>
+        mount(
+          `<neu-text-field label="Email" style="font-family: ${font}"></neu-text-field>`,
+        ).getBoundingClientRect().height,
+    );
+    expect(heights).toEqual(fonts.map(() => rem * 4.125));
+  });
+
   test('focus() puts the caret in the input without selecting the whole value', () => {
     const el = mount<NeuTextField>('<neu-text-field label="A"></neu-text-field>');
     el.value = 'abc';
@@ -301,6 +313,28 @@ describe('neu-text-field', () => {
       }
       expect(last).toEqual([
         ['secret', null],
+        ['secret', null],
+        ['secret', 'secret'],
+      ]);
+    } finally {
+      spy.mockRestore();
+    }
+  });
+
+  test('a field in a form with autocomplete=off saves no restore state', async () => {
+    const spy = vi.spyOn(ElementInternals.prototype, 'setFormValue');
+    try {
+      const last: unknown[] = [];
+      for (const attrs of ['', 'autocomplete="on"']) {
+        const form = mountForm(`<neu-text-field label="A" ${attrs}></neu-text-field>`);
+        form.setAttribute('autocomplete', ' OFF ');
+        const el = form.firstElementChild as NeuTextField;
+        el.focus();
+        await userEvent.keyboard('secret');
+        last.push(spy.mock.lastCall);
+        form.remove();
+      }
+      expect(last).toEqual([
         ['secret', null],
         ['secret', 'secret'],
       ]);

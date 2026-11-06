@@ -3,7 +3,7 @@
 Framework-agnostic neumorphism web components for
 [neumorphism-ui](https://github.com/hunghdvn/neumorphism-ui): `<neu-button>`, `<neu-switch>`,
 `<neu-text-field>`, `<neu-icon>`, `<neu-icon-button>`, `<neu-button-group>`, `<neu-surface>`,
-`<neu-divider>`, `<neu-badge>`, `<neu-avatar>` and `<neu-spinner>`. They are accessible, the form
+`<neu-divider>`, `<neu-badge>`, `<neu-avatar>`, `<neu-spinner>`, `<neu-textarea>`, `<neu-number-field>`, `<neu-checkbox>`, `<neu-radio-group>` with `<neu-radio>`, `<neu-slider>` and `<neu-select>` with `<neu-option>`. They are accessible, the form
 controls are form-associated, and they adopt server-rendered declarative shadow roots. Import one
 tag per module (`button.js`, `icon.js`, `badge.js`, ...) or all of them with `all.js`; `cdn/neu.min.js` is a single minified bundle. Pre-release.
 
@@ -33,6 +33,17 @@ import '@neumorphism-ui/elements/all.js';
 <neu-avatar initials="HD" label="Hung Do"></neu-avatar>
 <neu-spinner size="lg"></neu-spinner>
 <neu-divider orientation="vertical"></neu-divider>
+```
+
+```html
+<neu-select label="Plan" name="plan" value="pro">
+  <neu-option value="free">Free</neu-option>
+  <neu-option value="pro">Pro</neu-option>
+</neu-select>
+<neu-radio-group label="Billing" name="billing" value="monthly">
+  <neu-radio value="monthly">Monthly</neu-radio>
+  <neu-radio value="yearly">Yearly</neu-radio>
+</neu-radio-group>
 ```
 
 ## Icons

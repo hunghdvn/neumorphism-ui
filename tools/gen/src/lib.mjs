@@ -22,6 +22,11 @@ function defaultText(decl) {
   return `'${decl.default ?? ''}'`;
 }
 
+/** The type of `defaultChecked` / `defaultValue`: that of the prop whose attribute holds the default. */
+function defaultTsType(def) {
+  return propTsType(def.props[def.form.valueProp]);
+}
+
 /** Custom Elements Manifest 2.1.0 for IDEs, docs and Storybook-like tools. */
 export function buildManifest(defs) {
   return {
@@ -59,10 +64,13 @@ export function buildManifest(defs) {
         members.push({
           kind: 'field',
           name: defaultProp,
-          type: { text: valueProp === 'checked' ? 'boolean' : 'string' },
+          type: { text: defaultTsType(def) },
           attribute: valueProp,
           reflects: true,
         });
+      }
+      for (const [name, type] of Object.entries(def.properties ?? {})) {
+        members.push({ kind: 'field', name, type: { text: type } });
       }
       return {
         kind: 'javascript-module',
@@ -124,8 +132,10 @@ export function buildReactWrapper(def) {
   const file = tagToFileBase(def.tag);
   const defaultProp = formDefaultProp(def);
   const lines = Object.entries(def.props).map(([key, decl]) => `  ${key}?: ${propTsType(decl)};`);
-  if (defaultProp === 'defaultChecked') lines.push('  defaultChecked?: boolean;');
-  if (defaultProp === 'defaultValue') lines.push('  defaultValue?: string;');
+  if (defaultProp) lines.push(`  ${defaultProp}?: ${defaultTsType(def)};`);
+  for (const [name, type] of Object.entries(def.properties ?? {})) {
+    lines.push(`  ${name}?: ${type};`);
+  }
   const events = reactEvents(def);
   for (const [prop] of events) lines.push(`  ${prop}?: (event: Event) => void;`);
   const eventMap = events.map(([prop, event]) => `${prop}: '${event}'`).join(', ');

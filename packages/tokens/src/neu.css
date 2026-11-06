@@ -163,12 +163,18 @@
   neu-avatar:not(:defined),
   neu-badge:not(:defined),
   neu-button:not(:defined),
+  neu-checkbox:not(:defined),
   neu-divider:not(:defined),
   neu-icon:not(:defined),
   neu-icon-button:not(:defined),
+  neu-number-field:not(:defined),
+  neu-radio:not(:defined),
+  neu-select:not(:defined),
+  neu-slider:not(:defined),
   neu-spinner:not(:defined),
   neu-switch:not(:defined),
-  neu-text-field:not(:defined) {
+  neu-text-field:not(:defined),
+  neu-textarea:not(:defined) {
     visibility: hidden;
   }
   neu-avatar:not(:defined) {
@@ -184,8 +190,34 @@
     display: inline-block;
     min-block-size: 2.5rem;
   }
+  neu-checkbox:not(:defined) {
+    display: inline-flex;
+    min-block-size: 1.25rem;
+  }
   neu-button-group:not(:defined) {
     display: inline-flex;
+  }
+  neu-radio:not(:defined) {
+    display: inline-flex;
+    min-block-size: 1.25rem;
+  }
+  neu-radio-group:not(:defined) {
+    display: block;
+  }
+  neu-select:not(:defined) {
+    display: block;
+    min-block-size: 2.75rem;
+  }
+  neu-select[label]:not(:defined) {
+    min-block-size: 4.125rem;
+  }
+  /* Options are data for their select; before it is defined their text would show. */
+  neu-option:not(:defined) {
+    display: none;
+  }
+  neu-slider:not(:defined) {
+    display: block;
+    min-block-size: 1.25rem;
   }
   neu-surface:not(:defined) {
     display: block;
@@ -219,5 +251,19 @@
   }
   neu-text-field[label]:not(:defined) {
     min-block-size: 4.125rem;
+  }
+  neu-number-field:not(:defined) {
+    display: block;
+    min-block-size: 2.75rem;
+  }
+  neu-number-field[label]:not(:defined) {
+    min-block-size: 4.125rem;
+  }
+  neu-textarea:not(:defined) {
+    display: block;
+    min-block-size: 5.1875rem;
+  }
+  neu-textarea[label]:not(:defined) {
+    min-block-size: 6.5625rem;
   }
 }

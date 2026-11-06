@@ -3,9 +3,11 @@ import {
   attributeName,
   coerceProperty,
   formDefaultProp,
+  optionLabel,
   renderShadowContents,
   serializeAttribute,
   type ComponentDef,
+  type OptionData,
 } from '@neumorphism-ui/elements/ssr.js';
 import * as React from 'react';
 
@@ -32,6 +34,47 @@ const isServer = typeof window === 'undefined';
 const useIsomorphicLayoutEffect = isServer ? React.useEffect : React.useLayoutEffect;
 const needsClassAttribute = Number.parseInt(React.version, 10) < 19;
 
+function textOf(node: React.ReactNode): string {
+  if (typeof node === 'string' || typeof node === 'number') return String(node);
+  if (Array.isArray(node)) return node.map(textOf).join('');
+  if (React.isValidElement(node))
+    return textOf((node.props as { children?: React.ReactNode }).children);
+  return '';
+}
+
+/**
+ * Option elements among the children at any depth, as the client reads them, looking through
+ * fragments, arrays and plain elements (spec §8.4). A component other than the option wrapper may
+ * render options the server cannot see, so meeting one returns no options at all: the select then
+ * leaves its display empty for the client to fill rather than guessing from part of the list.
+ */
+function collectOptions(children: React.ReactNode, optionTag: string): OptionData[] {
+  const options: OptionData[] = [];
+  let complete = true;
+  const walk = (node: React.ReactNode) => {
+    React.Children.forEach(node, (child) => {
+      if (!React.isValidElement(child)) return;
+      const props = child.props as Record<string, unknown> & { children?: React.ReactNode };
+      const type = child.type as string | { displayName?: string };
+      const isOption =
+        type === optionTag || (typeof type !== 'string' && type?.displayName === optionTag);
+      if (!isOption) {
+        if (child.type === React.Fragment || typeof type === 'string') walk(props.children);
+        else complete = false;
+        return;
+      }
+      const label = optionLabel(textOf(props.children));
+      options.push({
+        value: props.value === undefined || props.value === null ? label : String(props.value),
+        label,
+        disabled: !!props.disabled,
+      });
+    });
+  };
+  walk(children);
+  return complete ? options : [];
+}
+
 export function createComponent<P extends object, E extends HTMLElement>(
   elementClass: ElementClass<E>,
   config: WrapperConfig = {},
@@ -40,7 +83,7 @@ export function createComponent<P extends object, E extends HTMLElement>(
   const events = config.events ?? {};
   const valueProp = def.form?.valueProp;
   const defaultProp = formDefaultProp(def);
-  const elementKeys = new Set(Object.keys(def.props));
+  const elementKeys = new Set([...Object.keys(def.props), ...Object.keys(def.properties ?? {})]);
   if (defaultProp) elementKeys.add(defaultProp);
 
   const Wrapper = React.forwardRef<E, P>(function NeuWrapper(props, forwardedRef) {
@@ -77,7 +120,9 @@ export function createComponent<P extends object, E extends HTMLElement>(
     handlersRef.current = handlers;
     const applied = React.useRef(new Set<string>());
 
-    // Properties after every commit. Defaults go first so a controlled value set in the same pass wins.
+    // Properties after every commit. Defaults go first so a controlled value set in the same pass
+    // wins, and the value goes last so min, max and step are in place when it is clamped (as
+    // ReactDOM orders a native range input).
     useIsomorphicLayoutEffect(() => {
       const node = elementRef.current as unknown as Record<string, unknown> | null;
       if (!node) return;
@@ -95,9 +140,8 @@ export function createComponent<P extends object, E extends HTMLElement>(
         }
       }
       const next = new Set<string>();
-      const keys = Object.keys(element).sort(
-        (a, b) => Number(b === defaultProp) - Number(a === defaultProp),
-      );
+      const rank = (key: string) => (key === defaultProp ? 0 : key === valueProp ? 2 : 1);
+      const keys = Object.keys(element).sort((a, b) => rank(a) - rank(b));
       for (const key of keys) {
         const value = element[key];
         if (absent(key)) continue;
@@ -158,7 +202,13 @@ export function createComponent<P extends object, E extends HTMLElement>(
       }
       const templateProps: Record<string, unknown> = {
         shadowrootmode: 'open',
-        dangerouslySetInnerHTML: { __html: renderShadowContents(def, serverAttributes) },
+        dangerouslySetInnerHTML: {
+          __html: def.optionsFrom
+            ? renderShadowContents(def, serverAttributes, {
+                options: collectOptions(children, def.optionsFrom),
+              })
+            : renderShadowContents(def, serverAttributes),
+        },
       };
       if (def.delegatesFocus) templateProps.shadowrootdelegatesfocus = '';
       template = React.createElement('template', templateProps);

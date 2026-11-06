@@ -32,6 +32,10 @@
       "types": "./dist/button-group.d.ts",
       "default": "./dist/button-group.js"
     },
+    "./checkbox.js": {
+      "types": "./dist/checkbox.d.ts",
+      "default": "./dist/checkbox.js"
+    },
     "./icon-button.js": {
       "types": "./dist/icon-button.d.ts",
       "default": "./dist/icon-button.js"
@@ -48,6 +52,30 @@
       "types": "./dist/icons.d.ts",
       "default": "./dist/icons.js"
     },
+    "./number-field.js": {
+      "types": "./dist/number-field.d.ts",
+      "default": "./dist/number-field.js"
+    },
+    "./option.js": {
+      "types": "./dist/option.d.ts",
+      "default": "./dist/option.js"
+    },
+    "./radio.js": {
+      "types": "./dist/radio.d.ts",
+      "default": "./dist/radio.js"
+    },
+    "./radio-group.js": {
+      "types": "./dist/radio-group.d.ts",
+      "default": "./dist/radio-group.js"
+    },
+    "./select.js": {
+      "types": "./dist/select.d.ts",
+      "default": "./dist/select.js"
+    },
+    "./slider.js": {
+      "types": "./dist/slider.d.ts",
+      "default": "./dist/slider.js"
+    },
     "./spinner.js": {
       "types": "./dist/spinner.d.ts",
       "default": "./dist/spinner.js"
@@ -59,6 +87,10 @@
     "./switch.js": {
       "types": "./dist/switch.d.ts",
       "default": "./dist/switch.js"
+    },
+    "./textarea.js": {
+      "types": "./dist/textarea.d.ts",
+      "default": "./dist/textarea.js"
     },
     "./text-field.js": {
       "types": "./dist/text-field.d.ts",
@@ -81,13 +113,21 @@
     "./dist/badge.js",
     "./dist/button.js",
     "./dist/button-group.js",
+    "./dist/checkbox.js",
     "./dist/divider.js",
     "./dist/icon.js",
     "./dist/icon-button.js",
+    "./dist/number-field.js",
+    "./dist/option.js",
+    "./dist/radio.js",
+    "./dist/radio-group.js",
+    "./dist/select.js",
+    "./dist/slider.js",
     "./dist/spinner.js",
     "./dist/surface.js",
     "./dist/switch.js",
     "./dist/text-field.js",
+    "./dist/textarea.js",
     "./dist/all.js",
     "./cdn/neu.min.js"
   ],

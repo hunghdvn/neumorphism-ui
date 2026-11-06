@@ -17,6 +17,16 @@ const BLOCKING_TYPES = new Set([
 ]);
 
 /**
+ * Static brand of the custom elements that block implicit submission like a text input. A
+ * subclass inherits it, so it counts under any tag name.
+ */
+export const BLOCKS_IMPLICIT_SUBMIT = Symbol.for('neu-ui.blocks-implicit-submit');
+
+const blocks = (el: Element) =>
+  (el instanceof HTMLInputElement && BLOCKING_TYPES.has(el.type)) ||
+  (el.constructor as { [BLOCKS_IMPLICIT_SUBMIT]?: unknown })[BLOCKS_IMPLICIT_SUBMIT] === true;
+
+/**
  * Enter in a text control submits like a native input (HTML §4.10.21.2). With a default button
  * (the form's first submit button, form="id" ones included) it clicks that button unless it is
  * disabled, so the button's own guards and click listeners apply. Without one, it submits only
@@ -33,12 +43,7 @@ export function implicitSubmit(form: HTMLFormElement | null): void {
     defaultButton.click();
     return;
   }
-  const blocking = elements.filter(
-    (el) =>
-      (el instanceof HTMLInputElement && BLOCKING_TYPES.has(el.type)) ||
-      el.localName === 'neu-text-field',
-  );
-  if (blocking.length !== 1) return;
+  if (elements.filter(blocks).length !== 1) return;
   markSubmitAttempt(form);
   form.requestSubmit();
 }

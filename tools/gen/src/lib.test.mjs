@@ -54,6 +54,26 @@ describe('buildReactWrapper', () => {
     expect(source).not.toContain("'change'");
   });
 
+  test('JS-only properties reach the wrapper and the manifest; defaultValue follows the value prop type', () => {
+    const slider = definitions.get('neu-slider');
+    const source = buildReactWrapper(slider);
+    expect(source).toContain('  valueFormatter?: (value: number) => string;');
+    expect(source).toContain('  defaultValue?: number;');
+    expect(source).not.toContain('defaultValue?: string');
+    expect(buildReactWrapper(textFieldDef)).toContain('  defaultValue?: string;');
+    const declaration = buildManifest([slider]).modules[0].declarations[0];
+    expect(declaration.members).toContainEqual({
+      kind: 'field',
+      name: 'valueFormatter',
+      type: { text: '(value: number) => string' },
+    });
+    expect(declaration.members.find((m) => m.name === 'defaultValue').type).toEqual({
+      text: 'number',
+    });
+    const text = buildManifest([textFieldDef]).modules[0].declarations[0];
+    expect(text.members.find((m) => m.name === 'defaultValue').type).toEqual({ text: 'string' });
+  });
+
   test('click stays a native React prop and is not mapped', () => {
     const source = buildReactWrapper(buttonDef);
     expect(source).not.toContain('onClick');
@@ -71,13 +91,21 @@ describe('buildManifest', () => {
       'neu-badge',
       'neu-button',
       'neu-button-group',
+      'neu-checkbox',
       'neu-divider',
       'neu-icon',
       'neu-icon-button',
+      'neu-number-field',
+      'neu-option',
+      'neu-radio',
+      'neu-radio-group',
+      'neu-select',
+      'neu-slider',
       'neu-spinner',
       'neu-surface',
       'neu-switch',
       'neu-text-field',
+      'neu-textarea',
     ]);
     for (const mod of manifest.modules) {
       expect(mod.exports.some((e) => e.kind === 'custom-element-definition')).toBe(true);
