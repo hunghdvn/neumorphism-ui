@@ -740,6 +740,9 @@ describe('neu-select', () => {
     await tick();
     press(el, 'ArrowDown');
     window.scrollTo(0, 30);
+    // The browser fires scroll at its next rendering update, which a loaded CI runner can hold
+    // back past the wait (WebKit, run 42179203085): fire the event it would send right away.
+    document.dispatchEvent(new Event('scroll', { bubbles: true }));
     await vi.waitFor(() => {
       const trigger = combobox(el).getBoundingClientRect();
       expect(trigger.top).toBeLessThan(40);
