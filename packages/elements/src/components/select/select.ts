@@ -135,15 +135,15 @@ export class NeuSelect extends FormControlElement {
     );
   }
 
-  /** Makes option `i` the active one (none for -1) and scrolls it into view. */
-  private activate(i: number): void {
+  /** Makes option `i` the active one (none for -1); `scroll` brings it into view. */
+  private activate(i: number, scroll = true): void {
     const listbox = this.ref('listbox')!;
     this.activeSource = this.opts[i]?.source;
     const items = [...listbox.children] as HTMLElement[];
     items.forEach((item, n) => item.classList.toggle('active', n === i));
     const item = items[i];
     setOptionalAttribute(this.ref('combobox'), 'aria-activedescendant', item ? item.id : '');
-    if (!item) return;
+    if (!item || !scroll) return;
     // Keep the listbox padding in view too, so Home and End scroll to the very top and bottom.
     const pad = items[0]!.offsetTop;
     const bottom = item.offsetTop + item.offsetHeight + pad;
@@ -248,9 +248,10 @@ export class NeuSelect extends FormControlElement {
   }
 
   private onKey(event: KeyboardEvent): void {
-    if (this.isDisabled || event.ctrlKey || event.metaKey) return;
-    const { key, altKey } = event;
-    const printable = key.length === 1 && key !== ' ' && !altKey;
+    const { key, altKey, ctrlKey } = event;
+    // Ctrl+Alt is AltGr on many layouts: it types a character, so it is not a shortcut.
+    if (this.isDisabled || event.metaKey || (ctrlKey && !altKey)) return;
+    const printable = key.length === 1 && key !== ' ' && (!altKey || ctrlKey);
     const active = this.activeIndex();
     const last = this.opts.length - 1;
     const moves: Record<string, [number, number]> = {
@@ -311,7 +312,7 @@ export class NeuSelect extends FormControlElement {
     listbox.addEventListener('pointerdown', (event) => event.preventDefault());
     listbox.addEventListener('pointermove', (event) => {
       const i = this.optionAt(event);
-      if (i >= 0 && i !== this.activeIndex() && !this.opts[i]?.disabled) this.activate(i);
+      if (i >= 0 && i !== this.activeIndex() && !this.opts[i]?.disabled) this.activate(i, false);
     });
     listbox.addEventListener('click', (event) => {
       const i = this.optionAt(event);
@@ -337,7 +338,7 @@ export class NeuSelect extends FormControlElement {
 
   protected override update(changed: ReadonlySet<string>): void {
     const combobox = this.ref('combobox');
-    if (changed.has('label')) setText(this.ref('label'), String(this.props.label));
+    if (changed.has('label')) setText(this.ref('label-text'), String(this.props.label));
     if (changed.has('helpText')) setText(this.ref('help-text'), String(this.props.helpText));
     if (changed.has('required')) {
       setOptionalAttribute(combobox, 'aria-required', this.props.required ? 'true' : '');

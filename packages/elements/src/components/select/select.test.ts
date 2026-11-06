@@ -1078,3 +1078,42 @@ describe('neu-select', () => {
     expect(await axeViolations(wrap)).toEqual([]);
   });
 });
+
+describe('neu-select typeahead and hover', () => {
+  test('AltGr characters take part in typeahead', () => {
+    const el = select(
+      '',
+      '<neu-option value="b">b</neu-option><neu-option value="ä">ä</neu-option>',
+    );
+    press(el, 'ä', { ctrlKey: true, altKey: true });
+    expect(isOpen(el)).toBe(true);
+    expect(active(el)).toBe('option-1');
+    expect(el.value).toBe('');
+  });
+
+  test('Ctrl+letter without Alt is not typeahead', () => {
+    const el = select();
+    press(el, 'b', { ctrlKey: true });
+    expect(isOpen(el)).toBe(false);
+  });
+
+  test('hovering an option does not scroll the listbox', async () => {
+    const many = Array.from(
+      { length: 30 },
+      (_, i) => `<neu-option value="v${i}">Option ${i}</neu-option>`,
+    ).join('');
+    const el = select('', many);
+    press(el, 'ArrowDown');
+    await tick();
+    const box = listbox(el);
+    expect(box.scrollTop).toBe(0);
+    const options = optionsOf(el);
+    const boxRect = box.getBoundingClientRect();
+    // The last option that is only partly visible.
+    const target = options.findLast((o) => o.getBoundingClientRect().top < boxRect.bottom)!;
+    expect(target.getBoundingClientRect().bottom).toBeGreaterThan(boxRect.bottom);
+    target.dispatchEvent(new PointerEvent('pointermove', { bubbles: true, composed: true }));
+    expect(box.scrollTop).toBe(0);
+    expect(active(el)).toBe(target.id);
+  });
+});
