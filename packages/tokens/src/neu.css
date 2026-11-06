@@ -204,6 +204,9 @@
   neu-radio-group:not(:defined) {
     display: block;
   }
+  neu-radio-group[label]:not(:defined) {
+    min-block-size: 2.75rem;
+  }
   neu-select:not(:defined) {
     display: block;
     min-block-size: 2.75rem;
