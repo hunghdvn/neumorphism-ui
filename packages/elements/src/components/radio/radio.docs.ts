@@ -5,8 +5,8 @@ export const radioDocs: ComponentDocs = {
   summary:
     'One choice inside a neu-radio-group, which owns the value, the keyboard and the form. On its own it does nothing.',
   descriptions: {
-    value: 'TODO',
-    disabled: 'TODO',
+    value: 'The value the group takes when this radio is selected; defaults to "on".',
+    disabled: 'Prevents this radio from being selected or focused by arrow keys.',
   },
   events: [],
   slots: [{ name: '', description: 'Label; also the accessible name.' }],

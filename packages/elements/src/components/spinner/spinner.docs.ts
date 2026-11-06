@@ -4,8 +4,8 @@ import type { ComponentDocs } from '../../core/define.js';
 export const spinnerDocs: ComponentDocs = {
   summary: 'A rotating indicator for work in progress.',
   descriptions: {
-    label: 'TODO',
-    size: 'TODO',
+    label: 'Accessible name announced for the spinner; defaults to "Loading".',
+    size: 'The spinner size.',
   },
   events: [],
   slots: [],

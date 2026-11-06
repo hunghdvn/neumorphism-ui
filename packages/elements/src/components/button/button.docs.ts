@@ -4,11 +4,11 @@ import type { ComponentDocs } from '../../core/define.js';
 export const buttonDocs: ComponentDocs = {
   summary: 'A raised button. Use variant="primary" for the main action of a view.',
   descriptions: {
-    variant: 'TODO',
-    size: 'TODO',
-    disabled: 'TODO',
-    loading: 'TODO',
-    type: 'TODO',
+    variant: 'The visual emphasis of the button.',
+    size: 'The button size.',
+    disabled: 'Prevents interaction and dims the button.',
+    loading: 'Shows a spinner and blocks activation while work is in progress.',
+    type: 'What the button does inside a form; defaults to "button", which does nothing.',
   },
   events: [{ name: 'click', description: 'Fired on activation; never while disabled or loading.' }],
   slots: [
@@ -24,5 +24,8 @@ export const buttonDocs: ComponentDocs = {
     { name: 'spinner', description: 'Spinner shown while loading.' },
   ],
   cssProperties: themeCssProperties,
-  keyboard: [],
+  keyboard: [
+    { name: 'Enter', description: 'Activates the button on keydown.' },
+    { name: 'Space', description: 'Activates the button on keyup, like a native button.' },
+  ],
 };

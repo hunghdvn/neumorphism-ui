@@ -5,14 +5,16 @@ export const checkboxDocs: ComponentDocs = {
   summary:
     'A checkbox. The checked attribute is the default state; indeterminate is a property whose attribute only sets the initial state.',
   descriptions: {
-    checked: 'TODO',
-    indeterminate: 'TODO',
-    name: 'TODO',
-    value: 'TODO',
-    disabled: 'TODO',
-    required: 'TODO',
-    size: 'TODO',
-    defaultChecked: 'TODO',
+    checked: 'Whether the checkbox is currently checked.',
+    indeterminate:
+      'Shows the mixed state; it is a property, and the attribute only sets the initial state.',
+    name: 'The name under which the value is submitted with a form.',
+    value: 'The value submitted with the form while the checkbox is checked; defaults to "on".',
+    disabled: 'Prevents interaction and leaves the checkbox out of form submission.',
+    required: 'Makes the form invalid until the checkbox is checked.',
+    size: 'The checkbox size.',
+    defaultChecked:
+      'Whether the checkbox starts checked, which a form reset restores; set by the checked attribute.',
   },
   events: [
     { name: 'input', description: 'Fired when the user toggles the checkbox.' },
@@ -26,5 +28,5 @@ export const checkboxDocs: ComponentDocs = {
     { name: 'label', description: 'Wrapper around the default slot.' },
   ],
   cssProperties: themeCssProperties,
-  keyboard: [],
+  keyboard: [{ name: 'Space', description: 'Toggles the checkbox.' }],
 };

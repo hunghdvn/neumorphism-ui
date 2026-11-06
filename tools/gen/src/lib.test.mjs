@@ -1,5 +1,5 @@
 import { componentDocs } from '@neumorphism-ui/elements/docs.js';
-import { definitions } from '@neumorphism-ui/elements/ssr.js';
+import { definitions, formDefaultProp } from '@neumorphism-ui/elements/ssr.js';
 import { describe, expect, test } from 'vitest';
 import {
   buildManifest,
@@ -88,6 +88,43 @@ describe('buildReactWrapper', () => {
     expect(field(textFieldDef, 'value').reflects).toBeUndefined();
     expect(field(definitions.get('neu-checkbox'), 'indeterminate').reflects).toBe(false);
     expect(field(definitions.get('neu-checkbox'), 'value').reflects).toBe(true);
+  });
+
+  test('descriptions follow ruling P-2: the attribute row describes the default', () => {
+    const stub = (def) => {
+      const keys = [
+        ...Object.keys(def.props),
+        ...Object.keys(def.properties ?? {}),
+        ...(formDefaultProp(def) ? [formDefaultProp(def)] : []),
+      ];
+      return new Map([
+        [
+          def.tag,
+          {
+            ...docsOf(def),
+            descriptions: Object.fromEntries(keys.map((key) => [key, `description of ${key}`])),
+          },
+        ],
+      ]);
+    };
+    const declaration = (def) => buildManifest([def], stub(def)).modules[0].declarations[0];
+    const text = declaration(textFieldDef);
+    expect(text.attributes.find((a) => a.name === 'value').description).toBe(
+      'description of defaultValue',
+    );
+    expect(text.attributes.find((a) => a.name === 'label').description).toBe(
+      'description of label',
+    );
+    expect(text.members.find((m) => m.name === 'value').description).toBe('description of value');
+    expect(text.members.find((m) => m.name === 'defaultValue').description).toBe(
+      'description of defaultValue',
+    );
+    expect(text.members.find((m) => m.name === 'label').description).toBe('description of label');
+    const sw = declaration(switchDef);
+    expect(sw.attributes.find((a) => a.name === 'checked').description).toBe(
+      'description of defaultChecked',
+    );
+    expect(sw.members.find((m) => m.name === 'checked').description).toBe('description of checked');
   });
 
   test('click stays a native React prop and is not mapped', () => {

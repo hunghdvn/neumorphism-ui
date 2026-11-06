@@ -5,16 +5,17 @@ export const selectDocs: ComponentDocs = {
   summary:
     'A single-value select (the APG select-only combobox): a raised trigger and a popover listbox built from the neu-option children, which are data only. The value attribute is the default value.',
   descriptions: {
-    value: 'TODO',
-    name: 'TODO',
-    label: 'TODO',
-    placeholder: 'TODO',
-    helpText: 'TODO',
-    errorText: 'TODO',
-    required: 'TODO',
-    disabled: 'TODO',
-    size: 'TODO',
-    defaultValue: 'TODO',
+    value: 'The value of the currently chosen option.',
+    name: 'The name under which the value is submitted with a form.',
+    label: 'Visible label text that names the select.',
+    placeholder: 'Text shown while no option is chosen.',
+    helpText: 'Guidance shown below the select; the help-text slot replaces it.',
+    errorText: 'Message shown below the select, marking it invalid while it is set.',
+    required: 'Makes the form invalid until an option is chosen.',
+    disabled: 'Prevents interaction and leaves the select out of form submission.',
+    size: 'The select size.',
+    defaultValue:
+      'The value chosen at the start, which a form reset restores; set by the value attribute.',
   },
   events: [
     { name: 'input', description: 'Fired when the user chooses an option with a new value.' },
@@ -34,5 +35,33 @@ export const selectDocs: ComponentDocs = {
     { name: 'help-text', description: 'Help or error text area.' },
   ],
   cssProperties: themeCssProperties,
-  keyboard: [],
+  keyboard: [
+    { name: 'ArrowDown / ArrowUp / Enter / Space', description: 'When closed: opens the listbox.' },
+    {
+      name: 'Home / End',
+      description: 'When closed: opens the listbox on the first or last option.',
+    },
+    {
+      name: 'Printable characters',
+      description: 'When closed: opens the listbox on the first matching option.',
+    },
+    {
+      name: 'ArrowDown / ArrowUp',
+      description: 'When open: moves to the next or previous option.',
+    },
+    { name: 'Home / End', description: 'When open: moves to the first or last option.' },
+    { name: 'PageDown / PageUp', description: 'When open: moves ten options.' },
+    { name: 'Enter / Space', description: 'When open: chooses the active option and closes.' },
+    { name: 'Escape', description: 'When open: closes without changing the value.' },
+    {
+      name: 'Tab',
+      description: 'When open: chooses the active option, closes and moves focus on.',
+    },
+    { name: 'Alt+ArrowUp', description: 'When open: chooses the active option and closes.' },
+    {
+      name: 'Printable characters',
+      description:
+        'When open: moves to the matching option; characters typed within 500 ms add up.',
+    },
+  ],
 };

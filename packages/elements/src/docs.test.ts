@@ -1,17 +1,42 @@
 import { describe, expect, test } from 'vitest';
 import { componentDocs } from './docs.js';
-import { definitions } from './ssr.js';
+import { definitions, formDefaultProp } from './ssr.js';
 
 describe('component docs', () => {
   test('every definition has docs', () => {
     expect([...componentDocs.keys()].sort()).toEqual([...definitions.keys()].sort());
   });
 
-  // Task 4 fills the content and turns these into real tests: descriptions must cover exactly the
-  // props, the keys of def.properties and formDefaultProp(def), each non-empty and not 'TODO'.
-  test.todo('descriptions cover exactly the props and JS-only properties');
+  test('descriptions cover exactly the props and JS-only properties', () => {
+    for (const [tag, def] of definitions) {
+      const docs = componentDocs.get(tag)!;
+      const defaultProp = formDefaultProp(def);
+      const expected = [
+        ...Object.keys(def.props),
+        ...Object.keys(def.properties ?? {}),
+        ...(defaultProp ? [defaultProp] : []),
+      ].sort();
+      expect(Object.keys(docs.descriptions).sort(), tag).toEqual(expected);
+      for (const [key, text] of Object.entries(docs.descriptions)) {
+        expect(text.trim(), `${tag} ${key}`).not.toBe('');
+        expect(text, `${tag} ${key}`).not.toBe('TODO');
+      }
+    }
+  });
 
-  // Task 4: keyboard.length > 0 exactly for neu-button, neu-icon-button, neu-number-field,
-  // neu-checkbox, neu-radio-group, neu-switch, neu-slider and neu-select.
-  test.todo('keyboard is documented where spec §7 lists keys');
+  test('keyboard is documented where spec §7 lists keys', () => {
+    const withKeys = [
+      'neu-button',
+      'neu-icon-button',
+      'neu-number-field',
+      'neu-checkbox',
+      'neu-radio-group',
+      'neu-switch',
+      'neu-slider',
+      'neu-select',
+    ];
+    for (const [tag, docs] of componentDocs) {
+      expect(docs.keyboard.length > 0, tag).toBe(withKeys.includes(tag));
+    }
+  });
 });

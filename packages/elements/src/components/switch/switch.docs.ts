@@ -4,13 +4,14 @@ import type { ComponentDocs } from '../../core/define.js';
 export const switchDocs: ComponentDocs = {
   summary: 'An on/off switch. The checked attribute is the default state.',
   descriptions: {
-    checked: 'TODO',
-    name: 'TODO',
-    value: 'TODO',
-    disabled: 'TODO',
-    required: 'TODO',
-    size: 'TODO',
-    defaultChecked: 'TODO',
+    checked: 'Whether the switch is currently on.',
+    name: 'The name under which the value is submitted with a form.',
+    value: 'The value submitted with the form while the switch is on; defaults to "on".',
+    disabled: 'Prevents interaction and leaves the switch out of form submission.',
+    required: 'Makes the form invalid until the switch is on.',
+    size: 'The switch size.',
+    defaultChecked:
+      'Whether the switch starts on, which a form reset restores; set by the checked attribute.',
   },
   events: [
     { name: 'input', description: 'Fired when the user toggles the switch.' },
@@ -24,5 +25,5 @@ export const switchDocs: ComponentDocs = {
     { name: 'label', description: 'Wrapper around the default slot.' },
   ],
   cssProperties: themeCssProperties,
-  keyboard: [],
+  keyboard: [{ name: 'Space / Enter', description: 'Toggles the switch.' }],
 };

@@ -4,8 +4,8 @@ import type { ComponentDocs } from '../../core/define.js';
 export const badgeDocs: ComponentDocs = {
   summary: 'A small raised label for status or counts.',
   descriptions: {
-    variant: 'TODO',
-    pill: 'TODO',
+    variant: "The colour that conveys the badge's meaning.",
+    pill: 'Rounds the badge into a capsule shape.',
   },
   events: [],
   slots: [{ name: '', description: 'The badge text.' }],
