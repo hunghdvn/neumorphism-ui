@@ -965,9 +965,12 @@ describe('neu-select', () => {
     const rem = Number.parseFloat(getComputedStyle(document.documentElement).fontSize);
     const bare = mount<NeuSelect>(`<neu-select>${THREE}</neu-select>`);
     const labelled = select();
+    // A font whose `normal` line height is not 16px must not change the label row.
+    const mono = select(`style="font-family: 'Courier New', 'DejaVu Sans Mono', monospace"`);
     await tick();
     expect(bare.getBoundingClientRect().height).toBe(rem * 2.75);
     expect(labelled.getBoundingClientRect().height).toBe(rem * 4.125);
+    expect(mono.getBoundingClientRect().height).toBe(rem * 4.125);
     expect(getComputedStyle(bare).display).toBe('block');
     const sizes = ['sm', 'lg'].map(
       (size) => combobox(mount(`<neu-select size="${size}"></neu-select>`)).offsetHeight,

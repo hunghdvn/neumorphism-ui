@@ -3,7 +3,7 @@ import { fieldStyles } from '../shared/field.styles.js';
 export const selectStyles = `${fieldStyles}
 .label {
   display: block; margin-block-end: 0.375rem;
-  font-size: 0.8125rem; font-weight: 600; color: var(--_neu-fg-muted);
+  font-size: 0.8125rem; font-weight: 600; line-height: 1rem; color: var(--_neu-fg-muted);
 }
 .label:empty { display: none; }
 .combobox {

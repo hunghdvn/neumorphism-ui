@@ -31,6 +31,18 @@ describe('neu-text-field', () => {
     expect(el.shadowRoot!.activeElement).toBe(inputOf(el));
   });
 
+  test('a labelled field is 4.125rem tall, the height neu.css reserves, whatever the font', () => {
+    const rem = Number.parseFloat(getComputedStyle(document.documentElement).fontSize);
+    const fonts = ['inherit', "'Courier New', 'DejaVu Sans Mono', monospace", 'Georgia, serif'];
+    const heights = fonts.map(
+      (font) =>
+        mount(
+          `<neu-text-field label="Email" style="font-family: ${font}"></neu-text-field>`,
+        ).getBoundingClientRect().height,
+    );
+    expect(heights).toEqual(fonts.map(() => rem * 4.125));
+  });
+
   test('focus() puts the caret in the input without selecting the whole value', () => {
     const el = mount<NeuTextField>('<neu-text-field label="A"></neu-text-field>');
     el.value = 'abc';
