@@ -28,6 +28,7 @@ export default defineNuxtConfig({ modules: ['@neumorphism-ui/ssr/nuxt'], css: ['
   so streamed pages get no declarative shadow roots.
 - Every element gets a full shadow root, so a page with tens of thousands of components can exceed
   the engine's maximum string length; `transformHtml` then throws a `RangeError`.
-- A comment containing `</neu-select>` still ends the window in which options are read.
+- A comment containing `</neu-select>` still ends the window in which options are read, and one
+  containing `</neu-option>` or `<neu-option` ends the current option early.
 
 MIT licensed.

@@ -163,6 +163,17 @@ function findTag(html: string, prefix: string, from: number, cache?: SearchCache
   return index;
 }
 
+/** First '-->' at or after `from`, or -1; memoized per document like findTag. */
+function findCommentEnd(html: string, from: number, cache: SearchCache): number {
+  const known = cache.get('-->');
+  if (known && from >= known.from && (known.index === -1 || from <= known.index)) {
+    return known.index;
+  }
+  const index = html.indexOf('-->', from);
+  cache.set('-->', { from, index });
+  return index;
+}
+
 const closeTagIndex = (html: string, name: string, from: number) =>
   findTag(html, `</${name}`, from);
 
@@ -212,7 +223,7 @@ function scanOptions(
     const lt = html.indexOf('<', i);
     if (lt === -1 || lt >= stop) break;
     if (html.startsWith('<!--', lt)) {
-      const close = html.indexOf('-->', lt + 2);
+      const close = findCommentEnd(html, lt + 2, cache);
       i = close === -1 ? stop : close + 3;
       continue;
     }

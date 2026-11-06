@@ -166,9 +166,21 @@ describe('transformHtml', () => {
     const html = `<neu-select value="a"><neu-option value="a">${'<!--'.repeat(200_000)}</neu-option></neu-select>`;
     const started = performance.now();
     transformHtml(html);
-    const elapsed = performance.now() - started;
-    console.info(`unterminated comments: ${elapsed.toFixed(1)} ms`);
-    expect(elapsed).toBeLessThan(500);
+    expect(performance.now() - started).toBeLessThan(500);
+  });
+
+  test('stays linear on many selects each holding an unterminated comment', () => {
+    const html = '<neu-select><!--</neu-select>'.repeat(100_000);
+    const started = performance.now();
+    transformHtml(html);
+    expect(performance.now() - started).toBeLessThan(500);
+  });
+
+  test('stays linear on many closed comments between options', () => {
+    const html = `<neu-select value="a">${'<!--x--><neu-option value="a">a</neu-option>'.repeat(20_000)}</neu-select>`;
+    const started = performance.now();
+    transformHtml(html);
+    expect(performance.now() - started).toBeLessThan(500);
   });
 
   test('an unclosed select still gets its selected label', () => {
