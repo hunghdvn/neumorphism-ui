@@ -147,6 +147,30 @@ describe('transformHtml', () => {
     expect(out).toContain('data-ref="display">&amp;amp; &amp;eacute;</span>');
   });
 
+  test('an option inside a comment is not an option', () => {
+    const out = transformHtml(
+      '<neu-select value="b"><!-- <neu-option value="b">Wrong</neu-option> --><neu-option value="b">Right</neu-option></neu-select>',
+    );
+    expect(out).toContain('data-ref="display">Right</span>');
+    expect(out).not.toContain('data-ref="display">Wrong</span>');
+  });
+
+  test("a comment inside option text is dropped, '>' included", () => {
+    const out = transformHtml(
+      '<neu-select value="a"><neu-option value="a">A<!-- x > y -->B</neu-option></neu-select>',
+    );
+    expect(out).toContain('data-ref="display">AB</span>');
+  });
+
+  test('many unterminated comments stay linear', () => {
+    const html = `<neu-select value="a"><neu-option value="a">${'<!--'.repeat(200_000)}</neu-option></neu-select>`;
+    const started = performance.now();
+    transformHtml(html);
+    const elapsed = performance.now() - started;
+    console.info(`unterminated comments: ${elapsed.toFixed(1)} ms`);
+    expect(elapsed).toBeLessThan(500);
+  });
+
   test('an unclosed select still gets its selected label', () => {
     const out = transformHtml(
       '<neu-select value="b"><neu-option value="a">A</neu-option><neu-option value="b">B</neu-option>',

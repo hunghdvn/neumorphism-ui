@@ -170,6 +170,23 @@ const closeTagIndex = (html: string, name: string, from: number) =>
 const firstOf = (limit: number, ...indexes: number[]) =>
   Math.min(limit, ...indexes.filter((index) => index !== -1));
 
+/** Drops every `<!-- ... -->`; an unterminated comment runs to the end, as in the browser. */
+function stripComments(text: string): string {
+  let open = text.indexOf('<!--');
+  if (open === -1) return text;
+  let out = '';
+  let i = 0;
+  while (open !== -1) {
+    out += text.slice(i, open);
+    // Searching from open + 2 lets `<!-->` and `<!--->` close at once, like the tokenizer.
+    const close = text.indexOf('-->', open + 2);
+    if (close === -1) return out;
+    i = close + 3;
+    open = text.indexOf('<!--', i);
+  }
+  return out + text.slice(i);
+}
+
 /**
  * Reads the option elements of a host the way the client does: label is the whitespace-collapsed
  * text, value falls back to the label. Nested hosts are not supported: the window ends at the
@@ -194,6 +211,11 @@ function scanOptions(
   while (i < stop) {
     const lt = html.indexOf('<', i);
     if (lt === -1 || lt >= stop) break;
+    if (html.startsWith('<!--', lt)) {
+      const close = html.indexOf('-->', lt + 2);
+      i = close === -1 ? stop : close + 3;
+      continue;
+    }
     const tag = readStartTag(html, lt);
     if (!tag) {
       // An unterminated start tag runs to the end of input; retrying at each later '<' is quadratic.
@@ -211,8 +233,7 @@ function scanOptions(
       findTag(html, `<${optionTag}`, tag.end, cache),
     );
     // Each run of text between tags is decoded on its own, as the browser tokenizes it.
-    const text = html
-      .slice(tag.end, end)
+    const text = stripComments(html.slice(tag.end, end))
       .split(/<[^<>]*>/)
       .map((run) => decodeEntities(run))
       .join('');
