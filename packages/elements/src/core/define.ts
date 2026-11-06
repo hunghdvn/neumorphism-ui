@@ -8,10 +8,14 @@ export interface DocEntry {
 
 export interface ComponentDocs {
   readonly summary: string;
+  /** One line per prop of the def, per key of def.properties, and per defaultValue/defaultChecked. */
+  readonly descriptions: Readonly<Record<string, string>>;
   readonly events: readonly DocEntry[];
   readonly slots: readonly DocEntry[];
   readonly parts: readonly DocEntry[];
   readonly cssProperties: readonly DocEntry[];
+  /** name: the keys as spec §7 writes them; description: what they do. */
+  readonly keyboard: readonly DocEntry[];
 }
 
 export interface FormDef {
@@ -44,7 +48,6 @@ export interface ComponentDef<S extends PropsSchema = PropsSchema> {
   readonly properties?: Readonly<Record<string, string>>;
   /** Tag of the children a server renderer reads into `TemplateContext.options`. */
   readonly optionsFrom?: string;
-  readonly docs: ComponentDocs;
 }
 
 export function defineComponent<const S extends PropsSchema>(

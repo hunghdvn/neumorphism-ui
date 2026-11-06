@@ -15,7 +15,6 @@ const fieldDef = defineComponent({
   form: { valueProp: 'value' },
   styles: '',
   template: () => html`<span data-ref="anchor">field</span>`,
-  docs: { summary: '', events: [], slots: [], parts: [], cssProperties: [] },
 });
 
 class NeuProbeField extends FormControlElement {

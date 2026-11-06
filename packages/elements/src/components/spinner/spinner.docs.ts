@@ -1,0 +1,19 @@
+import { themeCssProperties } from '../../core/styles.js';
+import type { ComponentDocs } from '../../core/define.js';
+
+export const spinnerDocs: ComponentDocs = {
+  summary: 'A rotating indicator for work in progress.',
+  descriptions: {
+    label: 'TODO',
+    size: 'TODO',
+  },
+  events: [],
+  slots: [],
+  parts: [
+    { name: 'base', description: 'The sized wrapper.' },
+    { name: 'track', description: 'The inset ring behind the indicator.' },
+    { name: 'indicator', description: 'The rotating arc.' },
+  ],
+  cssProperties: themeCssProperties,
+  keyboard: [],
+};

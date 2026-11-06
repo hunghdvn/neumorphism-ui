@@ -100,6 +100,10 @@
       "types": "./dist/all.d.ts",
       "default": "./dist/all.js"
     },
+    "./docs.js": {
+      "types": "./dist/docs.d.ts",
+      "default": "./dist/docs.js"
+    },
     "./ssr.js": {
       "types": "./dist/ssr.d.ts",
       "default": "./dist/ssr.js"

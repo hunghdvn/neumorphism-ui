@@ -15,11 +15,4 @@ export const iconDef = defineComponent({
     const svg = p.library === 'system' ? systemIconSvg(p.name) : undefined;
     return html`<span class="box" data-ref="box">${svg === undefined ? '' : unsafeHTML(svg)}</span>`;
   },
-  docs: {
-    summary: 'A vector icon from the built-in set or a registered icon library.',
-    events: [],
-    slots: [],
-    parts: [{ name: 'svg', description: 'The rendered SVG element.' }],
-    cssProperties: [],
-  },
 });

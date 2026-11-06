@@ -12,7 +12,6 @@ test('defineComponent returns the definition unchanged and infers literal prop t
     },
     styles: '',
     template: (p) => html`<b>${p.size}</b>`,
-    docs: { summary: 'Demo', events: [], slots: [], parts: [], cssProperties: [] },
   });
   expect(def.tag).toBe('neu-demo');
   expect(def.template({ size: 'sm', on: false }).value).toBe('<b>sm</b>');
@@ -27,7 +26,6 @@ test('a template may take a context; the options it carries are typed', () => {
     styles: '',
     template: (p, ctx) =>
       html`<b>${ctx?.options?.find((option) => option.value === p.value)?.label ?? '-'}</b>`,
-    docs: { summary: 'Demo', events: [], slots: [], parts: [], cssProperties: [] },
   });
   const options: OptionData[] = [{ value: 'a', label: 'A', disabled: true }];
   expect(def.template({ value: 'a' }, { options }).value).toBe('<b>A</b>');

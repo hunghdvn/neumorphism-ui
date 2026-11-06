@@ -4,8 +4,6 @@ import { setText } from './dom.js';
 import { html } from './html.js';
 import { NeuElement } from './neu-element.js';
 
-const docs = { summary: '', events: [], slots: [], parts: [], cssProperties: [] };
-
 const probeDef = defineComponent({
   tag: 'neu-probe',
   props: {
@@ -17,7 +15,6 @@ const probeDef = defineComponent({
   },
   styles: ':host { display: block; }',
   template: (p) => html`<span data-ref="label" part="label">${p.label}</span>`,
-  docs,
 });
 
 class NeuProbe extends NeuElement {
@@ -107,7 +104,6 @@ describe('attributes and properties', () => {
         form: { valueProp: 'value' },
         styles: '',
         template: () => html`<span></span>`,
-        docs,
       });
     }
     NeuProbeValue.define();
@@ -183,7 +179,6 @@ describe('define()', () => {
       },
       styles: probeDef.styles,
       template: (p) => html`<span data-ref="label" part="label">${p.label}</span>`,
-      docs,
     });
     class NeuProbeWide extends NeuProbe {
       // TypeScript cannot express a subclass that redeclares one of its parent's props.

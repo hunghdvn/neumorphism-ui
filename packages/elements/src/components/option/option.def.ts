@@ -10,12 +10,4 @@ export const optionDef = defineComponent({
   },
   styles: optionStyles,
   template: () => html`<slot></slot>`,
-  docs: {
-    summary:
-      'One choice of a neu-select. It is data only and never rendered: the select reads its value (the value attribute, or the label when there is none), its text as the label, and disabled.',
-    events: [],
-    slots: [{ name: '', description: 'The label, as plain text.' }],
-    parts: [],
-    cssProperties: [],
-  },
 });

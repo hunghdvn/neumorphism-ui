@@ -1,6 +1,7 @@
 import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { componentDocs } from '@neumorphism-ui/elements/docs.js';
 import { definitions } from '@neumorphism-ui/elements/ssr.js';
 import {
   buildManifest,
@@ -15,11 +16,14 @@ const root = fileURLToPath(new URL('../../../', import.meta.url));
 const defs = [...definitions.values()];
 
 const outputs = new Map([
-  ['packages/elements/custom-elements.json', `${JSON.stringify(buildManifest(defs), null, 2)}\n`],
+  [
+    'packages/elements/custom-elements.json',
+    `${JSON.stringify(buildManifest(defs, componentDocs), null, 2)}\n`,
+  ],
   ['packages/react/src/generated/index.ts', buildReactIndex(defs)],
   ...defs.map((def) => [
     `packages/react/src/generated/${tagToFileBase(def.tag)}.ts`,
-    buildReactWrapper(def),
+    buildReactWrapper(def, componentDocs.get(def.tag)),
   ]),
 ]);
 

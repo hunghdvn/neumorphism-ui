@@ -19,7 +19,8 @@
               "type": {
                 "text": "string"
               },
-              "default": "''"
+              "default": "''",
+              "description": "TODO"
             },
             {
               "name": "label",
@@ -27,7 +28,8 @@
               "type": {
                 "text": "string"
               },
-              "default": "''"
+              "default": "''",
+              "description": "TODO"
             },
             {
               "name": "initials",
@@ -35,7 +37,8 @@
               "type": {
                 "text": "string"
               },
-              "default": "''"
+              "default": "''",
+              "description": "TODO"
             },
             {
               "name": "size",
@@ -43,7 +46,8 @@
               "type": {
                 "text": "'sm' | 'md' | 'lg'"
               },
-              "default": "'md'"
+              "default": "'md'",
+              "description": "TODO"
             },
             {
               "name": "shape",
@@ -51,7 +55,8 @@
               "type": {
                 "text": "'circle' | 'rounded'"
               },
-              "default": "'circle'"
+              "default": "'circle'",
+              "description": "TODO"
             }
           ],
           "members": [
@@ -63,7 +68,8 @@
               },
               "default": "''",
               "attribute": "src",
-              "reflects": true
+              "reflects": true,
+              "description": "TODO"
             },
             {
               "kind": "field",
@@ -73,7 +79,8 @@
               },
               "default": "''",
               "attribute": "label",
-              "reflects": true
+              "reflects": true,
+              "description": "TODO"
             },
             {
               "kind": "field",
@@ -83,7 +90,8 @@
               },
               "default": "''",
               "attribute": "initials",
-              "reflects": true
+              "reflects": true,
+              "description": "TODO"
             },
             {
               "kind": "field",
@@ -93,7 +101,8 @@
               },
               "default": "'md'",
               "attribute": "size",
-              "reflects": true
+              "reflects": true,
+              "description": "TODO"
             },
             {
               "kind": "field",
@@ -103,7 +112,8 @@
               },
               "default": "'circle'",
               "attribute": "shape",
-              "reflects": true
+              "reflects": true,
+              "description": "TODO"
             }
           ],
           "events": [],
@@ -190,7 +200,8 @@
               "type": {
                 "text": "'neutral' | 'accent' | 'success' | 'warning' | 'danger'"
               },
-              "default": "'neutral'"
+              "default": "'neutral'",
+              "description": "TODO"
             },
             {
               "name": "pill",
@@ -198,7 +209,8 @@
               "type": {
                 "text": "boolean"
               },
-              "default": "false"
+              "default": "false",
+              "description": "TODO"
             }
           ],
           "members": [
@@ -210,7 +222,8 @@
               },
               "default": "'neutral'",
               "attribute": "variant",
-              "reflects": true
+              "reflects": true,
+              "description": "TODO"
             },
             {
               "kind": "field",
@@ -220,7 +233,8 @@
               },
               "default": "false",
               "attribute": "pill",
-              "reflects": true
+              "reflects": true,
+              "description": "TODO"
             }
           ],
           "events": [],
@@ -304,7 +318,8 @@
               "type": {
                 "text": "'default' | 'primary' | 'flat'"
               },
-              "default": "'default'"
+              "default": "'default'",
+              "description": "TODO"
             },
             {
               "name": "size",
@@ -312,7 +327,8 @@
               "type": {
                 "text": "'sm' | 'md' | 'lg'"
               },
-              "default": "'md'"
+              "default": "'md'",
+              "description": "TODO"
             },
             {
               "name": "disabled",
@@ -320,7 +336,8 @@
               "type": {
                 "text": "boolean"
               },
-              "default": "false"
+              "default": "false",
+              "description": "TODO"
             },
             {
               "name": "loading",
@@ -328,7 +345,8 @@
               "type": {
                 "text": "boolean"
               },
-              "default": "false"
+              "default": "false",
+              "description": "TODO"
             },
             {
               "name": "type",
@@ -336,7 +354,8 @@
               "type": {
                 "text": "'button' | 'submit' | 'reset'"
               },
-              "default": "'button'"
+              "default": "'button'",
+              "description": "TODO"
             }
           ],
           "members": [
@@ -348,7 +367,8 @@
               },
               "default": "'default'",
               "attribute": "variant",
-              "reflects": true
+              "reflects": true,
+              "description": "TODO"
             },
             {
               "kind": "field",
@@ -358,7 +378,8 @@
               },
               "default": "'md'",
               "attribute": "size",
-              "reflects": true
+              "reflects": true,
+              "description": "TODO"
             },
             {
               "kind": "field",
@@ -368,7 +389,8 @@
               },
               "default": "false",
               "attribute": "disabled",
-              "reflects": true
+              "reflects": true,
+              "description": "TODO"
             },
             {
               "kind": "field",
@@ -378,7 +400,8 @@
               },
               "default": "false",
               "attribute": "loading",
-              "reflects": true
+              "reflects": true,
+              "description": "TODO"
             },
             {
               "kind": "field",
@@ -388,7 +411,8 @@
               },
               "default": "'button'",
               "attribute": "type",
-              "reflects": true
+              "reflects": true,
+              "description": "TODO"
             }
           ],
           "events": [
@@ -496,7 +520,8 @@
               "type": {
                 "text": "string"
               },
-              "default": "''"
+              "default": "''",
+              "description": "TODO"
             },
             {
               "name": "orientation",
@@ -504,7 +529,8 @@
               "type": {
                 "text": "'horizontal' | 'vertical'"
               },
-              "default": "'horizontal'"
+              "default": "'horizontal'",
+              "description": "TODO"
             }
           ],
           "members": [
@@ -516,7 +542,8 @@
               },
               "default": "''",
               "attribute": "label",
-              "reflects": true
+              "reflects": true,
+              "description": "TODO"
             },
             {
               "kind": "field",
@@ -526,7 +553,8 @@
               },
               "default": "'horizontal'",
               "attribute": "orientation",
-              "reflects": true
+              "reflects": true,
+              "description": "TODO"
             }
           ],
           "events": [],
@@ -602,7 +630,8 @@
               "type": {
                 "text": "boolean"
               },
-              "default": "false"
+              "default": "false",
+              "description": "TODO"
             },
             {
               "name": "indeterminate",
@@ -610,7 +639,8 @@
               "type": {
                 "text": "boolean"
               },
-              "default": "false"
+              "default": "false",
+              "description": "TODO"
             },
             {
               "name": "name",
@@ -618,7 +648,8 @@
               "type": {
                 "text": "string"
               },
-              "default": "''"
+              "default": "''",
+              "description": "TODO"
             },
             {
               "name": "value",
@@ -626,7 +657,8 @@
               "type": {
                 "text": "string"
               },
-              "default": "'on'"
+              "default": "'on'",
+              "description": "TODO"
             },
             {
               "name": "disabled",
@@ -634,7 +666,8 @@
               "type": {
                 "text": "boolean"
               },
-              "default": "false"
+              "default": "false",
+              "description": "TODO"
             },
             {
               "name": "required",
@@ -642,7 +675,8 @@
               "type": {
                 "text": "boolean"
               },
-              "default": "false"
+              "default": "false",
+              "description": "TODO"
             },
             {
               "name": "size",
@@ -650,7 +684,8 @@
               "type": {
                 "text": "'sm' | 'md' | 'lg'"
               },
-              "default": "'md'"
+              "default": "'md'",
+              "description": "TODO"
             }
           ],
           "members": [
@@ -660,7 +695,7 @@
               "type": {
                 "text": "boolean"
               },
-              "description": "Current checked. The checked attribute holds the default."
+              "description": "TODO"
             },
             {
               "kind": "field",
@@ -670,7 +705,8 @@
               },
               "default": "false",
               "attribute": "indeterminate",
-              "reflects": false
+              "reflects": false,
+              "description": "TODO"
             },
             {
               "kind": "field",
@@ -680,7 +716,8 @@
               },
               "default": "''",
               "attribute": "name",
-              "reflects": true
+              "reflects": true,
+              "description": "TODO"
             },
             {
               "kind": "field",
@@ -690,7 +727,8 @@
               },
               "default": "'on'",
               "attribute": "value",
-              "reflects": true
+              "reflects": true,
+              "description": "TODO"
             },
             {
               "kind": "field",
@@ -700,7 +738,8 @@
               },
               "default": "false",
               "attribute": "disabled",
-              "reflects": true
+              "reflects": true,
+              "description": "TODO"
             },
             {
               "kind": "field",
@@ -710,7 +749,8 @@
               },
               "default": "false",
               "attribute": "required",
-              "reflects": true
+              "reflects": true,
+              "description": "TODO"
             },
             {
               "kind": "field",
@@ -720,7 +760,8 @@
               },
               "default": "'md'",
               "attribute": "size",
-              "reflects": true
+              "reflects": true,
+              "description": "TODO"
             },
             {
               "kind": "field",
@@ -729,7 +770,8 @@
                 "text": "boolean"
               },
               "attribute": "checked",
-              "reflects": true
+              "reflects": true,
+              "description": "TODO"
             }
           ],
           "events": [
@@ -832,7 +874,8 @@
               "type": {
                 "text": "'horizontal' | 'vertical'"
               },
-              "default": "'horizontal'"
+              "default": "'horizontal'",
+              "description": "TODO"
             }
           ],
           "members": [
@@ -844,7 +887,8 @@
               },
               "default": "'horizontal'",
               "attribute": "orientation",
-              "reflects": true
+              "reflects": true,
+              "description": "TODO"
             }
           ],
           "events": [],
@@ -915,7 +959,8 @@
               "type": {
                 "text": "string"
               },
-              "default": "''"
+              "default": "''",
+              "description": "TODO"
             },
             {
               "name": "library",
@@ -923,7 +968,8 @@
               "type": {
                 "text": "string"
               },
-              "default": "'system'"
+              "default": "'system'",
+              "description": "TODO"
             },
             {
               "name": "label",
@@ -931,7 +977,8 @@
               "type": {
                 "text": "string"
               },
-              "default": "''"
+              "default": "''",
+              "description": "TODO"
             }
           ],
           "members": [
@@ -943,7 +990,8 @@
               },
               "default": "''",
               "attribute": "name",
-              "reflects": true
+              "reflects": true,
+              "description": "TODO"
             },
             {
               "kind": "field",
@@ -953,7 +1001,8 @@
               },
               "default": "'system'",
               "attribute": "library",
-              "reflects": true
+              "reflects": true,
+              "description": "TODO"
             },
             {
               "kind": "field",
@@ -963,7 +1012,8 @@
               },
               "default": "''",
               "attribute": "label",
-              "reflects": true
+              "reflects": true,
+              "description": "TODO"
             }
           ],
           "events": [],
@@ -1013,7 +1063,8 @@
               "type": {
                 "text": "string"
               },
-              "default": "''"
+              "default": "''",
+              "description": "TODO"
             },
             {
               "name": "library",
@@ -1021,7 +1072,8 @@
               "type": {
                 "text": "string"
               },
-              "default": "'system'"
+              "default": "'system'",
+              "description": "TODO"
             },
             {
               "name": "label",
@@ -1029,7 +1081,8 @@
               "type": {
                 "text": "string"
               },
-              "default": "''"
+              "default": "''",
+              "description": "TODO"
             },
             {
               "name": "shape",
@@ -1037,7 +1090,8 @@
               "type": {
                 "text": "'circle' | 'square'"
               },
-              "default": "'circle'"
+              "default": "'circle'",
+              "description": "TODO"
             },
             {
               "name": "variant",
@@ -1045,7 +1099,8 @@
               "type": {
                 "text": "'default' | 'primary' | 'flat'"
               },
-              "default": "'default'"
+              "default": "'default'",
+              "description": "TODO"
             },
             {
               "name": "size",
@@ -1053,7 +1108,8 @@
               "type": {
                 "text": "'sm' | 'md' | 'lg'"
               },
-              "default": "'md'"
+              "default": "'md'",
+              "description": "TODO"
             },
             {
               "name": "disabled",
@@ -1061,7 +1117,8 @@
               "type": {
                 "text": "boolean"
               },
-              "default": "false"
+              "default": "false",
+              "description": "TODO"
             },
             {
               "name": "type",
@@ -1069,7 +1126,8 @@
               "type": {
                 "text": "'button' | 'submit' | 'reset'"
               },
-              "default": "'button'"
+              "default": "'button'",
+              "description": "TODO"
             }
           ],
           "members": [
@@ -1081,7 +1139,8 @@
               },
               "default": "''",
               "attribute": "icon",
-              "reflects": true
+              "reflects": true,
+              "description": "TODO"
             },
             {
               "kind": "field",
@@ -1091,7 +1150,8 @@
               },
               "default": "'system'",
               "attribute": "library",
-              "reflects": true
+              "reflects": true,
+              "description": "TODO"
             },
             {
               "kind": "field",
@@ -1101,7 +1161,8 @@
               },
               "default": "''",
               "attribute": "label",
-              "reflects": true
+              "reflects": true,
+              "description": "TODO"
             },
             {
               "kind": "field",
@@ -1111,7 +1172,8 @@
               },
               "default": "'circle'",
               "attribute": "shape",
-              "reflects": true
+              "reflects": true,
+              "description": "TODO"
             },
             {
               "kind": "field",
@@ -1121,7 +1183,8 @@
               },
               "default": "'default'",
               "attribute": "variant",
-              "reflects": true
+              "reflects": true,
+              "description": "TODO"
             },
             {
               "kind": "field",
@@ -1131,7 +1194,8 @@
               },
               "default": "'md'",
               "attribute": "size",
-              "reflects": true
+              "reflects": true,
+              "description": "TODO"
             },
             {
               "kind": "field",
@@ -1141,7 +1205,8 @@
               },
               "default": "false",
               "attribute": "disabled",
-              "reflects": true
+              "reflects": true,
+              "description": "TODO"
             },
             {
               "kind": "field",
@@ -1151,7 +1216,8 @@
               },
               "default": "'button'",
               "attribute": "type",
-              "reflects": true
+              "reflects": true,
+              "description": "TODO"
             }
           ],
           "events": [
@@ -1238,7 +1304,8 @@
               "type": {
                 "text": "string"
               },
-              "default": "''"
+              "default": "''",
+              "description": "TODO"
             },
             {
               "name": "min",
@@ -1246,7 +1313,8 @@
               "type": {
                 "text": "number"
               },
-              "default": "NaN"
+              "default": "NaN",
+              "description": "TODO"
             },
             {
               "name": "max",
@@ -1254,7 +1322,8 @@
               "type": {
                 "text": "number"
               },
-              "default": "NaN"
+              "default": "NaN",
+              "description": "TODO"
             },
             {
               "name": "step",
@@ -1262,7 +1331,8 @@
               "type": {
                 "text": "number"
               },
-              "default": "1"
+              "default": "1",
+              "description": "TODO"
             },
             {
               "name": "name",
@@ -1270,7 +1340,8 @@
               "type": {
                 "text": "string"
               },
-              "default": "''"
+              "default": "''",
+              "description": "TODO"
             },
             {
               "name": "label",
@@ -1278,7 +1349,8 @@
               "type": {
                 "text": "string"
               },
-              "default": "''"
+              "default": "''",
+              "description": "TODO"
             },
             {
               "name": "placeholder",
@@ -1286,7 +1358,8 @@
               "type": {
                 "text": "string"
               },
-              "default": "''"
+              "default": "''",
+              "description": "TODO"
             },
             {
               "name": "help-text",
@@ -1294,7 +1367,8 @@
               "type": {
                 "text": "string"
               },
-              "default": "''"
+              "default": "''",
+              "description": "TODO"
             },
             {
               "name": "error-text",
@@ -1302,7 +1376,8 @@
               "type": {
                 "text": "string"
               },
-              "default": "''"
+              "default": "''",
+              "description": "TODO"
             },
             {
               "name": "required",
@@ -1310,7 +1385,8 @@
               "type": {
                 "text": "boolean"
               },
-              "default": "false"
+              "default": "false",
+              "description": "TODO"
             },
             {
               "name": "disabled",
@@ -1318,7 +1394,8 @@
               "type": {
                 "text": "boolean"
               },
-              "default": "false"
+              "default": "false",
+              "description": "TODO"
             },
             {
               "name": "readonly",
@@ -1326,7 +1403,8 @@
               "type": {
                 "text": "boolean"
               },
-              "default": "false"
+              "default": "false",
+              "description": "TODO"
             },
             {
               "name": "size",
@@ -1334,7 +1412,8 @@
               "type": {
                 "text": "'sm' | 'md' | 'lg'"
               },
-              "default": "'md'"
+              "default": "'md'",
+              "description": "TODO"
             },
             {
               "name": "increment-label",
@@ -1342,7 +1421,8 @@
               "type": {
                 "text": "string"
               },
-              "default": "'Increase'"
+              "default": "'Increase'",
+              "description": "TODO"
             },
             {
               "name": "decrement-label",
@@ -1350,7 +1430,8 @@
               "type": {
                 "text": "string"
               },
-              "default": "'Decrease'"
+              "default": "'Decrease'",
+              "description": "TODO"
             }
           ],
           "members": [
@@ -1360,7 +1441,7 @@
               "type": {
                 "text": "string"
               },
-              "description": "Current value. The value attribute holds the default."
+              "description": "TODO"
             },
             {
               "kind": "field",
@@ -1370,7 +1451,8 @@
               },
               "default": "NaN",
               "attribute": "min",
-              "reflects": true
+              "reflects": true,
+              "description": "TODO"
             },
             {
               "kind": "field",
@@ -1380,7 +1462,8 @@
               },
               "default": "NaN",
               "attribute": "max",
-              "reflects": true
+              "reflects": true,
+              "description": "TODO"
             },
             {
               "kind": "field",
@@ -1390,7 +1473,8 @@
               },
               "default": "1",
               "attribute": "step",
-              "reflects": true
+              "reflects": true,
+              "description": "TODO"
             },
             {
               "kind": "field",
@@ -1400,7 +1484,8 @@
               },
               "default": "''",
               "attribute": "name",
-              "reflects": true
+              "reflects": true,
+              "description": "TODO"
             },
             {
               "kind": "field",
@@ -1410,7 +1495,8 @@
               },
               "default": "''",
               "attribute": "label",
-              "reflects": true
+              "reflects": true,
+              "description": "TODO"
             },
             {
               "kind": "field",
@@ -1420,7 +1506,8 @@
               },
               "default": "''",
               "attribute": "placeholder",
-              "reflects": true
+              "reflects": true,
+              "description": "TODO"
             },
             {
               "kind": "field",
@@ -1430,7 +1517,8 @@
               },
               "default": "''",
               "attribute": "help-text",
-              "reflects": true
+              "reflects": true,
+              "description": "TODO"
             },
             {
               "kind": "field",
@@ -1440,7 +1528,8 @@
               },
               "default": "''",
               "attribute": "error-text",
-              "reflects": true
+              "reflects": true,
+              "description": "TODO"
             },
             {
               "kind": "field",
@@ -1450,7 +1539,8 @@
               },
               "default": "false",
               "attribute": "required",
-              "reflects": true
+              "reflects": true,
+              "description": "TODO"
             },
             {
               "kind": "field",
@@ -1460,7 +1550,8 @@
               },
               "default": "false",
               "attribute": "disabled",
-              "reflects": true
+              "reflects": true,
+              "description": "TODO"
             },
             {
               "kind": "field",
@@ -1470,7 +1561,8 @@
               },
               "default": "false",
               "attribute": "readonly",
-              "reflects": true
+              "reflects": true,
+              "description": "TODO"
             },
             {
               "kind": "field",
@@ -1480,7 +1572,8 @@
               },
               "default": "'md'",
               "attribute": "size",
-              "reflects": true
+              "reflects": true,
+              "description": "TODO"
             },
             {
               "kind": "field",
@@ -1490,7 +1583,8 @@
               },
               "default": "'Increase'",
               "attribute": "increment-label",
-              "reflects": true
+              "reflects": true,
+              "description": "TODO"
             },
             {
               "kind": "field",
@@ -1500,7 +1594,8 @@
               },
               "default": "'Decrease'",
               "attribute": "decrement-label",
-              "reflects": true
+              "reflects": true,
+              "description": "TODO"
             },
             {
               "kind": "field",
@@ -1509,7 +1604,8 @@
                 "text": "string"
               },
               "attribute": "value",
-              "reflects": true
+              "reflects": true,
+              "description": "TODO"
             }
           ],
           "events": [
@@ -1628,7 +1724,8 @@
               "type": {
                 "text": "string"
               },
-              "default": "''"
+              "default": "''",
+              "description": "TODO"
             },
             {
               "name": "disabled",
@@ -1636,7 +1733,8 @@
               "type": {
                 "text": "boolean"
               },
-              "default": "false"
+              "default": "false",
+              "description": "TODO"
             }
           ],
           "members": [
@@ -1648,7 +1746,8 @@
               },
               "default": "''",
               "attribute": "value",
-              "reflects": true
+              "reflects": true,
+              "description": "TODO"
             },
             {
               "kind": "field",
@@ -1658,7 +1757,8 @@
               },
               "default": "false",
               "attribute": "disabled",
-              "reflects": true
+              "reflects": true,
+              "description": "TODO"
             }
           ],
           "events": [],
@@ -1708,7 +1808,8 @@
               "type": {
                 "text": "string"
               },
-              "default": "'on'"
+              "default": "'on'",
+              "description": "TODO"
             },
             {
               "name": "disabled",
@@ -1716,7 +1817,8 @@
               "type": {
                 "text": "boolean"
               },
-              "default": "false"
+              "default": "false",
+              "description": "TODO"
             }
           ],
           "members": [
@@ -1728,7 +1830,8 @@
               },
               "default": "'on'",
               "attribute": "value",
-              "reflects": true
+              "reflects": true,
+              "description": "TODO"
             },
             {
               "kind": "field",
@@ -1738,7 +1841,8 @@
               },
               "default": "false",
               "attribute": "disabled",
-              "reflects": true
+              "reflects": true,
+              "description": "TODO"
             }
           ],
           "events": [],
@@ -1826,7 +1930,8 @@
               "type": {
                 "text": "string"
               },
-              "default": "''"
+              "default": "''",
+              "description": "TODO"
             },
             {
               "name": "name",
@@ -1834,7 +1939,8 @@
               "type": {
                 "text": "string"
               },
-              "default": "''"
+              "default": "''",
+              "description": "TODO"
             },
             {
               "name": "value",
@@ -1842,7 +1948,8 @@
               "type": {
                 "text": "string"
               },
-              "default": "''"
+              "default": "''",
+              "description": "TODO"
             },
             {
               "name": "required",
@@ -1850,7 +1957,8 @@
               "type": {
                 "text": "boolean"
               },
-              "default": "false"
+              "default": "false",
+              "description": "TODO"
             },
             {
               "name": "disabled",
@@ -1858,7 +1966,8 @@
               "type": {
                 "text": "boolean"
               },
-              "default": "false"
+              "default": "false",
+              "description": "TODO"
             },
             {
               "name": "orientation",
@@ -1866,7 +1975,8 @@
               "type": {
                 "text": "'vertical' | 'horizontal'"
               },
-              "default": "'vertical'"
+              "default": "'vertical'",
+              "description": "TODO"
             }
           ],
           "members": [
@@ -1878,7 +1988,8 @@
               },
               "default": "''",
               "attribute": "label",
-              "reflects": true
+              "reflects": true,
+              "description": "TODO"
             },
             {
               "kind": "field",
@@ -1888,7 +1999,8 @@
               },
               "default": "''",
               "attribute": "name",
-              "reflects": true
+              "reflects": true,
+              "description": "TODO"
             },
             {
               "kind": "field",
@@ -1896,7 +2008,7 @@
               "type": {
                 "text": "string"
               },
-              "description": "Current value. The value attribute holds the default."
+              "description": "TODO"
             },
             {
               "kind": "field",
@@ -1906,7 +2018,8 @@
               },
               "default": "false",
               "attribute": "required",
-              "reflects": true
+              "reflects": true,
+              "description": "TODO"
             },
             {
               "kind": "field",
@@ -1916,7 +2029,8 @@
               },
               "default": "false",
               "attribute": "disabled",
-              "reflects": true
+              "reflects": true,
+              "description": "TODO"
             },
             {
               "kind": "field",
@@ -1926,7 +2040,8 @@
               },
               "default": "'vertical'",
               "attribute": "orientation",
-              "reflects": true
+              "reflects": true,
+              "description": "TODO"
             },
             {
               "kind": "field",
@@ -1935,7 +2050,8 @@
                 "text": "string"
               },
               "attribute": "value",
-              "reflects": true
+              "reflects": true,
+              "description": "TODO"
             }
           ],
           "events": [
@@ -2030,7 +2146,8 @@
               "type": {
                 "text": "string"
               },
-              "default": "''"
+              "default": "''",
+              "description": "TODO"
             },
             {
               "name": "name",
@@ -2038,7 +2155,8 @@
               "type": {
                 "text": "string"
               },
-              "default": "''"
+              "default": "''",
+              "description": "TODO"
             },
             {
               "name": "label",
@@ -2046,7 +2164,8 @@
               "type": {
                 "text": "string"
               },
-              "default": "''"
+              "default": "''",
+              "description": "TODO"
             },
             {
               "name": "placeholder",
@@ -2054,7 +2173,8 @@
               "type": {
                 "text": "string"
               },
-              "default": "''"
+              "default": "''",
+              "description": "TODO"
             },
             {
               "name": "help-text",
@@ -2062,7 +2182,8 @@
               "type": {
                 "text": "string"
               },
-              "default": "''"
+              "default": "''",
+              "description": "TODO"
             },
             {
               "name": "error-text",
@@ -2070,7 +2191,8 @@
               "type": {
                 "text": "string"
               },
-              "default": "''"
+              "default": "''",
+              "description": "TODO"
             },
             {
               "name": "required",
@@ -2078,7 +2200,8 @@
               "type": {
                 "text": "boolean"
               },
-              "default": "false"
+              "default": "false",
+              "description": "TODO"
             },
             {
               "name": "disabled",
@@ -2086,7 +2209,8 @@
               "type": {
                 "text": "boolean"
               },
-              "default": "false"
+              "default": "false",
+              "description": "TODO"
             },
             {
               "name": "size",
@@ -2094,7 +2218,8 @@
               "type": {
                 "text": "'sm' | 'md' | 'lg'"
               },
-              "default": "'md'"
+              "default": "'md'",
+              "description": "TODO"
             }
           ],
           "members": [
@@ -2104,7 +2229,7 @@
               "type": {
                 "text": "string"
               },
-              "description": "Current value. The value attribute holds the default."
+              "description": "TODO"
             },
             {
               "kind": "field",
@@ -2114,7 +2239,8 @@
               },
               "default": "''",
               "attribute": "name",
-              "reflects": true
+              "reflects": true,
+              "description": "TODO"
             },
             {
               "kind": "field",
@@ -2124,7 +2250,8 @@
               },
               "default": "''",
               "attribute": "label",
-              "reflects": true
+              "reflects": true,
+              "description": "TODO"
             },
             {
               "kind": "field",
@@ -2134,7 +2261,8 @@
               },
               "default": "''",
               "attribute": "placeholder",
-              "reflects": true
+              "reflects": true,
+              "description": "TODO"
             },
             {
               "kind": "field",
@@ -2144,7 +2272,8 @@
               },
               "default": "''",
               "attribute": "help-text",
-              "reflects": true
+              "reflects": true,
+              "description": "TODO"
             },
             {
               "kind": "field",
@@ -2154,7 +2283,8 @@
               },
               "default": "''",
               "attribute": "error-text",
-              "reflects": true
+              "reflects": true,
+              "description": "TODO"
             },
             {
               "kind": "field",
@@ -2164,7 +2294,8 @@
               },
               "default": "false",
               "attribute": "required",
-              "reflects": true
+              "reflects": true,
+              "description": "TODO"
             },
             {
               "kind": "field",
@@ -2174,7 +2305,8 @@
               },
               "default": "false",
               "attribute": "disabled",
-              "reflects": true
+              "reflects": true,
+              "description": "TODO"
             },
             {
               "kind": "field",
@@ -2184,7 +2316,8 @@
               },
               "default": "'md'",
               "attribute": "size",
-              "reflects": true
+              "reflects": true,
+              "description": "TODO"
             },
             {
               "kind": "field",
@@ -2193,7 +2326,8 @@
                 "text": "string"
               },
               "attribute": "value",
-              "reflects": true
+              "reflects": true,
+              "description": "TODO"
             }
           ],
           "events": [
@@ -2326,7 +2460,8 @@
               "type": {
                 "text": "number"
               },
-              "default": "NaN"
+              "default": "NaN",
+              "description": "TODO"
             },
             {
               "name": "min",
@@ -2334,7 +2469,8 @@
               "type": {
                 "text": "number"
               },
-              "default": "0"
+              "default": "0",
+              "description": "TODO"
             },
             {
               "name": "max",
@@ -2342,7 +2478,8 @@
               "type": {
                 "text": "number"
               },
-              "default": "100"
+              "default": "100",
+              "description": "TODO"
             },
             {
               "name": "step",
@@ -2350,7 +2487,8 @@
               "type": {
                 "text": "number"
               },
-              "default": "1"
+              "default": "1",
+              "description": "TODO"
             },
             {
               "name": "name",
@@ -2358,7 +2496,8 @@
               "type": {
                 "text": "string"
               },
-              "default": "''"
+              "default": "''",
+              "description": "TODO"
             },
             {
               "name": "label",
@@ -2366,7 +2505,8 @@
               "type": {
                 "text": "string"
               },
-              "default": "''"
+              "default": "''",
+              "description": "TODO"
             },
             {
               "name": "disabled",
@@ -2374,7 +2514,8 @@
               "type": {
                 "text": "boolean"
               },
-              "default": "false"
+              "default": "false",
+              "description": "TODO"
             }
           ],
           "members": [
@@ -2384,7 +2525,7 @@
               "type": {
                 "text": "number"
               },
-              "description": "Current value. The value attribute holds the default."
+              "description": "TODO"
             },
             {
               "kind": "field",
@@ -2394,7 +2535,8 @@
               },
               "default": "0",
               "attribute": "min",
-              "reflects": true
+              "reflects": true,
+              "description": "TODO"
             },
             {
               "kind": "field",
@@ -2404,7 +2546,8 @@
               },
               "default": "100",
               "attribute": "max",
-              "reflects": true
+              "reflects": true,
+              "description": "TODO"
             },
             {
               "kind": "field",
@@ -2414,7 +2557,8 @@
               },
               "default": "1",
               "attribute": "step",
-              "reflects": true
+              "reflects": true,
+              "description": "TODO"
             },
             {
               "kind": "field",
@@ -2424,7 +2568,8 @@
               },
               "default": "''",
               "attribute": "name",
-              "reflects": true
+              "reflects": true,
+              "description": "TODO"
             },
             {
               "kind": "field",
@@ -2434,7 +2579,8 @@
               },
               "default": "''",
               "attribute": "label",
-              "reflects": true
+              "reflects": true,
+              "description": "TODO"
             },
             {
               "kind": "field",
@@ -2444,7 +2590,8 @@
               },
               "default": "false",
               "attribute": "disabled",
-              "reflects": true
+              "reflects": true,
+              "description": "TODO"
             },
             {
               "kind": "field",
@@ -2453,14 +2600,16 @@
                 "text": "number"
               },
               "attribute": "value",
-              "reflects": true
+              "reflects": true,
+              "description": "TODO"
             },
             {
               "kind": "field",
               "name": "valueFormatter",
               "type": {
                 "text": "(value: number) => string"
-              }
+              },
+              "description": "TODO"
             }
           ],
           "events": [
@@ -2558,7 +2707,8 @@
               "type": {
                 "text": "string"
               },
-              "default": "'Loading'"
+              "default": "'Loading'",
+              "description": "TODO"
             },
             {
               "name": "size",
@@ -2566,7 +2716,8 @@
               "type": {
                 "text": "'sm' | 'md' | 'lg'"
               },
-              "default": "'md'"
+              "default": "'md'",
+              "description": "TODO"
             }
           ],
           "members": [
@@ -2578,7 +2729,8 @@
               },
               "default": "'Loading'",
               "attribute": "label",
-              "reflects": true
+              "reflects": true,
+              "description": "TODO"
             },
             {
               "kind": "field",
@@ -2588,7 +2740,8 @@
               },
               "default": "'md'",
               "attribute": "size",
-              "reflects": true
+              "reflects": true,
+              "description": "TODO"
             }
           ],
           "events": [],
@@ -2667,7 +2820,8 @@
               "type": {
                 "text": "'raised' | 'inset' | 'flat' | 'convex' | 'concave'"
               },
-              "default": "'raised'"
+              "default": "'raised'",
+              "description": "TODO"
             },
             {
               "name": "elevation",
@@ -2675,7 +2829,8 @@
               "type": {
                 "text": "'sm' | 'md' | 'lg'"
               },
-              "default": "'md'"
+              "default": "'md'",
+              "description": "TODO"
             },
             {
               "name": "radius",
@@ -2683,7 +2838,8 @@
               "type": {
                 "text": "'sm' | 'md' | 'lg' | 'full'"
               },
-              "default": "'md'"
+              "default": "'md'",
+              "description": "TODO"
             },
             {
               "name": "padding",
@@ -2691,7 +2847,8 @@
               "type": {
                 "text": "'none' | 'sm' | 'md' | 'lg'"
               },
-              "default": "'md'"
+              "default": "'md'",
+              "description": "TODO"
             }
           ],
           "members": [
@@ -2703,7 +2860,8 @@
               },
               "default": "'raised'",
               "attribute": "shape",
-              "reflects": true
+              "reflects": true,
+              "description": "TODO"
             },
             {
               "kind": "field",
@@ -2713,7 +2871,8 @@
               },
               "default": "'md'",
               "attribute": "elevation",
-              "reflects": true
+              "reflects": true,
+              "description": "TODO"
             },
             {
               "kind": "field",
@@ -2723,7 +2882,8 @@
               },
               "default": "'md'",
               "attribute": "radius",
-              "reflects": true
+              "reflects": true,
+              "description": "TODO"
             },
             {
               "kind": "field",
@@ -2733,7 +2893,8 @@
               },
               "default": "'md'",
               "attribute": "padding",
-              "reflects": true
+              "reflects": true,
+              "description": "TODO"
             }
           ],
           "events": [],
@@ -2809,7 +2970,8 @@
               "type": {
                 "text": "boolean"
               },
-              "default": "false"
+              "default": "false",
+              "description": "TODO"
             },
             {
               "name": "name",
@@ -2817,7 +2979,8 @@
               "type": {
                 "text": "string"
               },
-              "default": "''"
+              "default": "''",
+              "description": "TODO"
             },
             {
               "name": "value",
@@ -2825,7 +2988,8 @@
               "type": {
                 "text": "string"
               },
-              "default": "'on'"
+              "default": "'on'",
+              "description": "TODO"
             },
             {
               "name": "disabled",
@@ -2833,7 +2997,8 @@
               "type": {
                 "text": "boolean"
               },
-              "default": "false"
+              "default": "false",
+              "description": "TODO"
             },
             {
               "name": "required",
@@ -2841,7 +3006,8 @@
               "type": {
                 "text": "boolean"
               },
-              "default": "false"
+              "default": "false",
+              "description": "TODO"
             },
             {
               "name": "size",
@@ -2849,7 +3015,8 @@
               "type": {
                 "text": "'sm' | 'md' | 'lg'"
               },
-              "default": "'md'"
+              "default": "'md'",
+              "description": "TODO"
             }
           ],
           "members": [
@@ -2859,7 +3026,7 @@
               "type": {
                 "text": "boolean"
               },
-              "description": "Current checked. The checked attribute holds the default."
+              "description": "TODO"
             },
             {
               "kind": "field",
@@ -2869,7 +3036,8 @@
               },
               "default": "''",
               "attribute": "name",
-              "reflects": true
+              "reflects": true,
+              "description": "TODO"
             },
             {
               "kind": "field",
@@ -2879,7 +3047,8 @@
               },
               "default": "'on'",
               "attribute": "value",
-              "reflects": true
+              "reflects": true,
+              "description": "TODO"
             },
             {
               "kind": "field",
@@ -2889,7 +3058,8 @@
               },
               "default": "false",
               "attribute": "disabled",
-              "reflects": true
+              "reflects": true,
+              "description": "TODO"
             },
             {
               "kind": "field",
@@ -2899,7 +3069,8 @@
               },
               "default": "false",
               "attribute": "required",
-              "reflects": true
+              "reflects": true,
+              "description": "TODO"
             },
             {
               "kind": "field",
@@ -2909,7 +3080,8 @@
               },
               "default": "'md'",
               "attribute": "size",
-              "reflects": true
+              "reflects": true,
+              "description": "TODO"
             },
             {
               "kind": "field",
@@ -2918,7 +3090,8 @@
                 "text": "boolean"
               },
               "attribute": "checked",
-              "reflects": true
+              "reflects": true,
+              "description": "TODO"
             }
           ],
           "events": [
@@ -3021,7 +3194,8 @@
               "type": {
                 "text": "'text' | 'email' | 'password' | 'search' | 'tel' | 'url'"
               },
-              "default": "'text'"
+              "default": "'text'",
+              "description": "TODO"
             },
             {
               "name": "value",
@@ -3029,7 +3203,8 @@
               "type": {
                 "text": "string"
               },
-              "default": "''"
+              "default": "''",
+              "description": "TODO"
             },
             {
               "name": "name",
@@ -3037,7 +3212,8 @@
               "type": {
                 "text": "string"
               },
-              "default": "''"
+              "default": "''",
+              "description": "TODO"
             },
             {
               "name": "label",
@@ -3045,7 +3221,8 @@
               "type": {
                 "text": "string"
               },
-              "default": "''"
+              "default": "''",
+              "description": "TODO"
             },
             {
               "name": "placeholder",
@@ -3053,7 +3230,8 @@
               "type": {
                 "text": "string"
               },
-              "default": "''"
+              "default": "''",
+              "description": "TODO"
             },
             {
               "name": "help-text",
@@ -3061,7 +3239,8 @@
               "type": {
                 "text": "string"
               },
-              "default": "''"
+              "default": "''",
+              "description": "TODO"
             },
             {
               "name": "error-text",
@@ -3069,7 +3248,8 @@
               "type": {
                 "text": "string"
               },
-              "default": "''"
+              "default": "''",
+              "description": "TODO"
             },
             {
               "name": "required",
@@ -3077,7 +3257,8 @@
               "type": {
                 "text": "boolean"
               },
-              "default": "false"
+              "default": "false",
+              "description": "TODO"
             },
             {
               "name": "disabled",
@@ -3085,7 +3266,8 @@
               "type": {
                 "text": "boolean"
               },
-              "default": "false"
+              "default": "false",
+              "description": "TODO"
             },
             {
               "name": "readonly",
@@ -3093,7 +3275,8 @@
               "type": {
                 "text": "boolean"
               },
-              "default": "false"
+              "default": "false",
+              "description": "TODO"
             },
             {
               "name": "minlength",
@@ -3101,7 +3284,8 @@
               "type": {
                 "text": "number"
               },
-              "default": "-1"
+              "default": "-1",
+              "description": "TODO"
             },
             {
               "name": "maxlength",
@@ -3109,7 +3293,8 @@
               "type": {
                 "text": "number"
               },
-              "default": "-1"
+              "default": "-1",
+              "description": "TODO"
             },
             {
               "name": "pattern",
@@ -3117,7 +3302,8 @@
               "type": {
                 "text": "string"
               },
-              "default": "''"
+              "default": "''",
+              "description": "TODO"
             },
             {
               "name": "autocomplete",
@@ -3125,7 +3311,8 @@
               "type": {
                 "text": "string"
               },
-              "default": "''"
+              "default": "''",
+              "description": "TODO"
             },
             {
               "name": "inputmode",
@@ -3133,7 +3320,8 @@
               "type": {
                 "text": "string"
               },
-              "default": "''"
+              "default": "''",
+              "description": "TODO"
             },
             {
               "name": "enterkeyhint",
@@ -3141,7 +3329,8 @@
               "type": {
                 "text": "string"
               },
-              "default": "''"
+              "default": "''",
+              "description": "TODO"
             },
             {
               "name": "size",
@@ -3149,7 +3338,8 @@
               "type": {
                 "text": "'sm' | 'md' | 'lg'"
               },
-              "default": "'md'"
+              "default": "'md'",
+              "description": "TODO"
             }
           ],
           "members": [
@@ -3161,7 +3351,8 @@
               },
               "default": "'text'",
               "attribute": "type",
-              "reflects": true
+              "reflects": true,
+              "description": "TODO"
             },
             {
               "kind": "field",
@@ -3169,7 +3360,7 @@
               "type": {
                 "text": "string"
               },
-              "description": "Current value. The value attribute holds the default."
+              "description": "TODO"
             },
             {
               "kind": "field",
@@ -3179,7 +3370,8 @@
               },
               "default": "''",
               "attribute": "name",
-              "reflects": true
+              "reflects": true,
+              "description": "TODO"
             },
             {
               "kind": "field",
@@ -3189,7 +3381,8 @@
               },
               "default": "''",
               "attribute": "label",
-              "reflects": true
+              "reflects": true,
+              "description": "TODO"
             },
             {
               "kind": "field",
@@ -3199,7 +3392,8 @@
               },
               "default": "''",
               "attribute": "placeholder",
-              "reflects": true
+              "reflects": true,
+              "description": "TODO"
             },
             {
               "kind": "field",
@@ -3209,7 +3403,8 @@
               },
               "default": "''",
               "attribute": "help-text",
-              "reflects": true
+              "reflects": true,
+              "description": "TODO"
             },
             {
               "kind": "field",
@@ -3219,7 +3414,8 @@
               },
               "default": "''",
               "attribute": "error-text",
-              "reflects": true
+              "reflects": true,
+              "description": "TODO"
             },
             {
               "kind": "field",
@@ -3229,7 +3425,8 @@
               },
               "default": "false",
               "attribute": "required",
-              "reflects": true
+              "reflects": true,
+              "description": "TODO"
             },
             {
               "kind": "field",
@@ -3239,7 +3436,8 @@
               },
               "default": "false",
               "attribute": "disabled",
-              "reflects": true
+              "reflects": true,
+              "description": "TODO"
             },
             {
               "kind": "field",
@@ -3249,7 +3447,8 @@
               },
               "default": "false",
               "attribute": "readonly",
-              "reflects": true
+              "reflects": true,
+              "description": "TODO"
             },
             {
               "kind": "field",
@@ -3259,7 +3458,8 @@
               },
               "default": "-1",
               "attribute": "minlength",
-              "reflects": true
+              "reflects": true,
+              "description": "TODO"
             },
             {
               "kind": "field",
@@ -3269,7 +3469,8 @@
               },
               "default": "-1",
               "attribute": "maxlength",
-              "reflects": true
+              "reflects": true,
+              "description": "TODO"
             },
             {
               "kind": "field",
@@ -3279,7 +3480,8 @@
               },
               "default": "''",
               "attribute": "pattern",
-              "reflects": true
+              "reflects": true,
+              "description": "TODO"
             },
             {
               "kind": "field",
@@ -3289,7 +3491,8 @@
               },
               "default": "''",
               "attribute": "autocomplete",
-              "reflects": true
+              "reflects": true,
+              "description": "TODO"
             },
             {
               "kind": "field",
@@ -3299,7 +3502,8 @@
               },
               "default": "''",
               "attribute": "inputmode",
-              "reflects": true
+              "reflects": true,
+              "description": "TODO"
             },
             {
               "kind": "field",
@@ -3309,7 +3513,8 @@
               },
               "default": "''",
               "attribute": "enterkeyhint",
-              "reflects": true
+              "reflects": true,
+              "description": "TODO"
             },
             {
               "kind": "field",
@@ -3319,7 +3524,8 @@
               },
               "default": "'md'",
               "attribute": "size",
-              "reflects": true
+              "reflects": true,
+              "description": "TODO"
             },
             {
               "kind": "field",
@@ -3328,7 +3534,8 @@
                 "text": "string"
               },
               "attribute": "value",
-              "reflects": true
+              "reflects": true,
+              "description": "TODO"
             }
           ],
           "events": [
@@ -3455,7 +3662,8 @@
               "type": {
                 "text": "string"
               },
-              "default": "''"
+              "default": "''",
+              "description": "TODO"
             },
             {
               "name": "name",
@@ -3463,7 +3671,8 @@
               "type": {
                 "text": "string"
               },
-              "default": "''"
+              "default": "''",
+              "description": "TODO"
             },
             {
               "name": "label",
@@ -3471,7 +3680,8 @@
               "type": {
                 "text": "string"
               },
-              "default": "''"
+              "default": "''",
+              "description": "TODO"
             },
             {
               "name": "placeholder",
@@ -3479,7 +3689,8 @@
               "type": {
                 "text": "string"
               },
-              "default": "''"
+              "default": "''",
+              "description": "TODO"
             },
             {
               "name": "help-text",
@@ -3487,7 +3698,8 @@
               "type": {
                 "text": "string"
               },
-              "default": "''"
+              "default": "''",
+              "description": "TODO"
             },
             {
               "name": "error-text",
@@ -3495,7 +3707,8 @@
               "type": {
                 "text": "string"
               },
-              "default": "''"
+              "default": "''",
+              "description": "TODO"
             },
             {
               "name": "required",
@@ -3503,7 +3716,8 @@
               "type": {
                 "text": "boolean"
               },
-              "default": "false"
+              "default": "false",
+              "description": "TODO"
             },
             {
               "name": "disabled",
@@ -3511,7 +3725,8 @@
               "type": {
                 "text": "boolean"
               },
-              "default": "false"
+              "default": "false",
+              "description": "TODO"
             },
             {
               "name": "readonly",
@@ -3519,7 +3734,8 @@
               "type": {
                 "text": "boolean"
               },
-              "default": "false"
+              "default": "false",
+              "description": "TODO"
             },
             {
               "name": "minlength",
@@ -3527,7 +3743,8 @@
               "type": {
                 "text": "number"
               },
-              "default": "-1"
+              "default": "-1",
+              "description": "TODO"
             },
             {
               "name": "maxlength",
@@ -3535,7 +3752,8 @@
               "type": {
                 "text": "number"
               },
-              "default": "-1"
+              "default": "-1",
+              "description": "TODO"
             },
             {
               "name": "autocomplete",
@@ -3543,7 +3761,8 @@
               "type": {
                 "text": "string"
               },
-              "default": "''"
+              "default": "''",
+              "description": "TODO"
             },
             {
               "name": "enterkeyhint",
@@ -3551,7 +3770,8 @@
               "type": {
                 "text": "string"
               },
-              "default": "''"
+              "default": "''",
+              "description": "TODO"
             },
             {
               "name": "rows",
@@ -3559,7 +3779,8 @@
               "type": {
                 "text": "number"
               },
-              "default": "3"
+              "default": "3",
+              "description": "TODO"
             },
             {
               "name": "resize",
@@ -3567,7 +3788,8 @@
               "type": {
                 "text": "'none' | 'vertical' | 'auto'"
               },
-              "default": "'vertical'"
+              "default": "'vertical'",
+              "description": "TODO"
             },
             {
               "name": "size",
@@ -3575,7 +3797,8 @@
               "type": {
                 "text": "'sm' | 'md' | 'lg'"
               },
-              "default": "'md'"
+              "default": "'md'",
+              "description": "TODO"
             }
           ],
           "members": [
@@ -3585,7 +3808,7 @@
               "type": {
                 "text": "string"
               },
-              "description": "Current value. The value attribute holds the default."
+              "description": "TODO"
             },
             {
               "kind": "field",
@@ -3595,7 +3818,8 @@
               },
               "default": "''",
               "attribute": "name",
-              "reflects": true
+              "reflects": true,
+              "description": "TODO"
             },
             {
               "kind": "field",
@@ -3605,7 +3829,8 @@
               },
               "default": "''",
               "attribute": "label",
-              "reflects": true
+              "reflects": true,
+              "description": "TODO"
             },
             {
               "kind": "field",
@@ -3615,7 +3840,8 @@
               },
               "default": "''",
               "attribute": "placeholder",
-              "reflects": true
+              "reflects": true,
+              "description": "TODO"
             },
             {
               "kind": "field",
@@ -3625,7 +3851,8 @@
               },
               "default": "''",
               "attribute": "help-text",
-              "reflects": true
+              "reflects": true,
+              "description": "TODO"
             },
             {
               "kind": "field",
@@ -3635,7 +3862,8 @@
               },
               "default": "''",
               "attribute": "error-text",
-              "reflects": true
+              "reflects": true,
+              "description": "TODO"
             },
             {
               "kind": "field",
@@ -3645,7 +3873,8 @@
               },
               "default": "false",
               "attribute": "required",
-              "reflects": true
+              "reflects": true,
+              "description": "TODO"
             },
             {
               "kind": "field",
@@ -3655,7 +3884,8 @@
               },
               "default": "false",
               "attribute": "disabled",
-              "reflects": true
+              "reflects": true,
+              "description": "TODO"
             },
             {
               "kind": "field",
@@ -3665,7 +3895,8 @@
               },
               "default": "false",
               "attribute": "readonly",
-              "reflects": true
+              "reflects": true,
+              "description": "TODO"
             },
             {
               "kind": "field",
@@ -3675,7 +3906,8 @@
               },
               "default": "-1",
               "attribute": "minlength",
-              "reflects": true
+              "reflects": true,
+              "description": "TODO"
             },
             {
               "kind": "field",
@@ -3685,7 +3917,8 @@
               },
               "default": "-1",
               "attribute": "maxlength",
-              "reflects": true
+              "reflects": true,
+              "description": "TODO"
             },
             {
               "kind": "field",
@@ -3695,7 +3928,8 @@
               },
               "default": "''",
               "attribute": "autocomplete",
-              "reflects": true
+              "reflects": true,
+              "description": "TODO"
             },
             {
               "kind": "field",
@@ -3705,7 +3939,8 @@
               },
               "default": "''",
               "attribute": "enterkeyhint",
-              "reflects": true
+              "reflects": true,
+              "description": "TODO"
             },
             {
               "kind": "field",
@@ -3715,7 +3950,8 @@
               },
               "default": "3",
               "attribute": "rows",
-              "reflects": true
+              "reflects": true,
+              "description": "TODO"
             },
             {
               "kind": "field",
@@ -3725,7 +3961,8 @@
               },
               "default": "'vertical'",
               "attribute": "resize",
-              "reflects": true
+              "reflects": true,
+              "description": "TODO"
             },
             {
               "kind": "field",
@@ -3735,7 +3972,8 @@
               },
               "default": "'md'",
               "attribute": "size",
-              "reflects": true
+              "reflects": true,
+              "description": "TODO"
             },
             {
               "kind": "field",
@@ -3744,7 +3982,8 @@
                 "text": "string"
               },
               "attribute": "value",
-              "reflects": true
+              "reflects": true,
+              "description": "TODO"
             }
           ],
           "events": [

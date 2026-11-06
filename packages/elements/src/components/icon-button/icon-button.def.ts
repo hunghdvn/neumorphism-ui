@@ -1,6 +1,5 @@
 import { defineComponent } from '../../core/define.js';
 import { html, unsafeHTML } from '../../core/html.js';
-import { themeCssProperties } from '../../core/styles.js';
 import { systemIconSvg } from '../icon/system-icons.js';
 import { iconButtonStyles } from './icon-button.styles.js';
 
@@ -28,16 +27,5 @@ export const iconButtonDef = defineComponent({
   template: (p) => {
     const svg = p.library === 'system' ? systemIconSvg(p.icon) : undefined;
     return html`<span part="base" class="base"><span part="icon" class="icon" data-ref="icon">${svg === undefined ? '' : unsafeHTML(svg)}</span></span>`;
-  },
-  docs: {
-    summary: 'A raised button that shows an icon instead of a label. Name it with label.',
-    events: [{ name: 'click', description: 'Fired on activation; never while disabled.' }],
-    slots: [],
-    parts: [
-      { name: 'base', description: 'The raised surface.' },
-      { name: 'icon', description: 'Wrapper around the icon.' },
-      { name: 'svg', description: 'The rendered SVG element.' },
-    ],
-    cssProperties: themeCssProperties,
   },
 });

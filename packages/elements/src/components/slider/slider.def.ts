@@ -1,6 +1,5 @@
 import { defineComponent } from '../../core/define.js';
 import { html } from '../../core/html.js';
-import { themeCssProperties } from '../../core/styles.js';
 import { stepUnit } from '../shared/step.js';
 import { sliderStyles } from './slider.styles.js';
 
@@ -57,26 +56,4 @@ export const sliderDef = defineComponent({
   styles: sliderStyles,
   template: (p) =>
     html`<span part="base" class="base" data-ref="base" style="${sliderStyle(sliderValue(p.value, p.min, p.max, p.step), p.min, p.max)}"><span part="track" class="track" data-ref="track"><span part="fill" class="fill"></span><span part="thumb" class="thumb"></span></span></span>`,
-  docs: {
-    summary:
-      'A horizontal slider for a number. The value attribute is the default; the value property is the current value. The valueFormatter property turns the value into the text a screen reader announces.',
-    events: [
-      {
-        name: 'input',
-        description: 'Fired on every change while the user drags or presses a key.',
-      },
-      {
-        name: 'change',
-        description: 'Fired after the user commits a change: on release, or per key.',
-      },
-    ],
-    slots: [],
-    parts: [
-      { name: 'base', description: 'Wrapper around the track.' },
-      { name: 'track', description: 'The inset groove.' },
-      { name: 'fill', description: 'The part of the track up to the thumb.' },
-      { name: 'thumb', description: 'The raised handle.' },
-    ],
-    cssProperties: themeCssProperties,
-  },
 });
