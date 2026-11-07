@@ -89,13 +89,13 @@ import '@neumorphism-ui/elements/all.js'; // or one tag at a time: '@neumorphism
 ```html
 <link
   rel="stylesheet"
-  href="https://cdn.jsdelivr.net/npm/@neumorphism-ui/tokens@1.0.0-next.3/neu.css"
+  href="https://cdn.jsdelivr.net/npm/@neumorphism-ui/tokens@1.0.0-next.4/neu.css"
   integrity="sha384-ZO0aY5pvfYCq8aInHo5CqaKrG0o0+pd91Ex/YBRLnjKWe3pOiVO6rNPKQLwGPfwS"
   crossorigin="anonymous"
 />
 <script
   type="module"
-  src="https://cdn.jsdelivr.net/npm/@neumorphism-ui/elements@1.0.0-next.3/cdn/neu.min.js"
+  src="https://cdn.jsdelivr.net/npm/@neumorphism-ui/elements@1.0.0-next.4/cdn/neu.min.js"
   integrity="sha384-DiDBee0Ugd7uameYNtrmn80+MJNitRUQ9CHZIpUTsFww58fsijVckD0eemz5fQtC"
   crossorigin="anonymous"
 ></script>
