@@ -1,5 +1,12 @@
 # @neumorphism-ui/react
 
+## 1.0.0-next.4
+
+### Patch Changes
+
+- Updated dependencies [350a74e]
+  - @neumorphism-ui/elements@1.0.0-next.4
+
 ## 1.0.0-next.3
 
 ### Minor Changes
