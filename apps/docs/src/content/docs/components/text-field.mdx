@@ -1,0 +1,90 @@
+---
+title: Text field
+description: A text input field with an inset field.
+---
+
+import { Code } from '@astrojs/starlight/components';
+import Demo from '../../../components/Demo.astro';
+import ApiTables from '../../../components/ApiTables.astro';
+import { componentDocs } from '@neumorphism-ui/elements/docs.js';
+
+{componentDocs.get('neu-text-field')?.summary}
+
+## Label, help text and error text
+
+`label` names the field and `help-text` is guidance below it. `error-text` replaces the browser's
+validation message once the field is invalid after user interaction; it does not make the field
+invalid by itself. Try leaving the second field empty after typing in it and clearing it.
+
+<Demo
+  code={`<neu-text-field label="Name" placeholder="Ada Lovelace" help-text="As on your passport"></neu-text-field>
+<neu-text-field label="Nickname" required error-text="A nickname is required"></neu-text-field>`}
+/>
+
+## Prefix and suffix
+
+The `prefix` and `suffix` slots hold content on either side of the input.
+
+<Demo
+  code={`<neu-text-field label="Price" placeholder="0.00">
+  <span slot="prefix">$</span>
+  <span slot="suffix">USD</span>
+</neu-text-field>`}
+/>
+
+## Types
+
+<Demo
+  code={`<neu-text-field label="Text" type="text"></neu-text-field>
+<neu-text-field label="Email" type="email"></neu-text-field>
+<neu-text-field label="Password" type="password"></neu-text-field>`}
+/>
+
+## Sizes
+
+<Demo
+  code={`<neu-text-field size="sm" label="Small"></neu-text-field>
+<neu-text-field size="md" label="Medium"></neu-text-field>
+<neu-text-field size="lg" label="Large"></neu-text-field>`}
+/>
+
+## Required and disabled
+
+<Demo
+  code={`<neu-text-field required label="Required"></neu-text-field>
+<neu-text-field disabled label="Disabled"></neu-text-field>`}
+/>
+
+## In a form
+
+A submit shows the form data and Reset restores the defaults.
+
+<Demo
+  code={`<form name="demo-form">
+  <neu-text-field name="username" label="Username" required></neu-text-field>
+  <neu-text-field name="email" type="email" label="Email" help-text="Enter your email"></neu-text-field>
+  <neu-button type="submit" variant="primary">Submit</neu-button>
+  <neu-button type="reset">Reset</neu-button>
+  <output></output>
+</form>`}
+/>
+
+## React
+
+<Code
+  lang="tsx"
+  code={`import { NeuTextField } from '@neumorphism-ui/react';
+
+export function UserInput({ onChange }: { onChange: (value: string) => void }) {
+  return (
+    <NeuTextField
+      placeholder="Enter username"
+      onInput={(e) => onChange((e.target as HTMLElement & { value: string }).value)}
+    />
+  );
+}`}
+/>
+
+## API
+
+<ApiTables tag="neu-text-field" />

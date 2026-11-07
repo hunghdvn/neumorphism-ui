@@ -1,0 +1,76 @@
+---
+title: Slider
+description: A horizontal slider for a number.
+---
+
+import { Code } from '@astrojs/starlight/components';
+import Demo from '../../../components/Demo.astro';
+import ApiTables from '../../../components/ApiTables.astro';
+import KeyboardTable from '../../../components/KeyboardTable.astro';
+import { componentDocs } from '@neumorphism-ui/elements/docs.js';
+
+{componentDocs.get('neu-slider')?.summary}
+
+## Min, max, and step
+
+The range and increment of the slider.
+
+<Demo
+  code={`<neu-slider label="Volume" min="0" max="100" step="10"></neu-slider>
+<neu-slider label="Price" min="0" max="1000" step="50"></neu-slider>`}
+/>
+
+## Value
+
+The current value of the slider.
+
+<Demo
+  code={`<neu-slider label="Brightness" value="50"></neu-slider>
+<neu-slider label="Speed" value="75"></neu-slider>`}
+/>
+
+## Disabled
+
+A disabled slider prevents interaction and leaves the slider out of form submission.
+
+<Demo
+  code={`<neu-slider label="Disabled slider" disabled value="30"></neu-slider>`}
+/>
+
+## In a form
+
+Submitting shows the form data and Reset restores the defaults.
+
+<Demo
+  code={`<form>
+  <neu-slider label="Volume" name="volume" value="50"></neu-slider>
+  <neu-button type="submit" variant="primary">Submit</neu-button>
+  <neu-button type="reset">Reset</neu-button>
+  <output></output>
+</form>`}
+/>
+
+## React
+
+<Code
+  lang="tsx"
+  code={`import { NeuSlider } from '@neumorphism-ui/react';
+
+export function Volume({ onChange }: { onChange: (value: number) => void }) {
+  return (
+    <NeuSlider
+      label="Volume"
+      name="volume"
+      onChange={(e) => onChange((e.target as HTMLElement & { value: number }).value)}
+    />
+  );
+}`}
+/>
+
+## Keyboard
+
+<KeyboardTable tag="neu-slider" />
+
+## API
+
+<ApiTables tag="neu-slider" />

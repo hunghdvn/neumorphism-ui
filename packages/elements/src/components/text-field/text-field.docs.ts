@@ -5,7 +5,7 @@ export const textFieldDocs: ComponentDocs = {
   summary:
     'A single-line text input with an inset field. The value attribute is the default value.',
   descriptions: {
-    type: 'The kind of text the field accepts, which sets its keyboard and masking and drives email, url and tel validation.',
+    type: 'The kind of text the field accepts, which sets its keyboard and masking and drives email and url validation.',
     value: 'The current text as typed or set by script.',
     name: 'The name under which the text is submitted with a form.',
     label: 'Visible label text; the label slot replaces it.',

@@ -1,0 +1,133 @@
+---
+title: Radio group
+description: A group of radios with one selected value, arrow-key navigation and form support.
+---
+
+import { Code } from '@astrojs/starlight/components';
+import Demo from '../../../components/Demo.astro';
+import ApiTables from '../../../components/ApiTables.astro';
+import KeyboardTable from '../../../components/KeyboardTable.astro';
+import { componentDocs } from '@neumorphism-ui/elements/docs.js';
+
+{componentDocs.get('neu-radio-group')?.summary}
+
+`neu-radio` is one choice inside the group. The group owns the value, the keyboard and the form;
+a radio on its own does nothing. A radio's `value` defaults to `"on"`, so give each radio its own.
+
+## Label and initial value
+
+`label` names the group, and the `label` slot replaces it with markup. The `value` attribute is
+the default selection, which a form reset restores.
+
+<Demo
+  code={`<neu-radio-group label="Plan" value="pro">
+  <neu-radio value="free">Free</neu-radio>
+  <neu-radio value="pro">Pro</neu-radio>
+  <neu-radio value="team">Team</neu-radio>
+</neu-radio-group>`}
+/>
+
+## Orientation
+
+The radios are laid out vertically by default.
+
+<Demo
+  code={`<neu-radio-group label="Horizontal" orientation="horizontal" value="a">
+  <neu-radio value="a">Option A</neu-radio>
+  <neu-radio value="b">Option B</neu-radio>
+</neu-radio-group>
+<neu-radio-group label="Vertical" value="a">
+  <neu-radio value="a">Option A</neu-radio>
+  <neu-radio value="b">Option B</neu-radio>
+</neu-radio-group>`}
+/>
+
+## Disabled
+
+`disabled` on the group prevents interaction with every radio. Disable a single `neu-radio` to
+skip it, including in arrow-key navigation.
+
+<Demo
+  code={`<neu-radio-group label="Whole group" disabled value="a">
+  <neu-radio value="a">Option A</neu-radio>
+  <neu-radio value="b">Option B</neu-radio>
+</neu-radio-group>
+<neu-radio-group label="One radio" value="a">
+  <neu-radio value="a">Option A</neu-radio>
+  <neu-radio value="b" disabled>Option B</neu-radio>
+  <neu-radio value="c">Option C</neu-radio>
+</neu-radio-group>`}
+/>
+
+## Required
+
+A required group makes the form invalid until a radio is selected.
+
+<Demo
+  code={`<neu-radio-group label="Choice" required name="choice">
+  <neu-radio value="option-1">Option 1</neu-radio>
+  <neu-radio value="option-2">Option 2</neu-radio>
+</neu-radio-group>`}
+/>
+
+## In a form
+
+Submitting shows the form data and Reset restores the default selection.
+
+<Demo
+  code={`<form>
+  <neu-radio-group label="Survey" required name="survey" value="b">
+    <neu-radio value="a">Option A</neu-radio>
+    <neu-radio value="b">Option B</neu-radio>
+    <neu-radio value="c">Option C</neu-radio>
+  </neu-radio-group>
+  <neu-button type="submit" variant="primary">Submit</neu-button>
+  <neu-button type="reset">Reset</neu-button>
+  <output></output>
+</form>`}
+/>
+
+## A radio with an empty value
+
+A radio whose value is `""` can be selected and then submits `name=` (an empty value). It is selected
+only when asked for: by the user, by script, or by `value=""` on the group. A group without a
+`value` attribute starts with nothing selected and submits nothing until a choice is made.
+
+<Demo
+  code={`<form>
+  <neu-radio-group label="Filter" name="filter">
+    <neu-radio value="">Any</neu-radio>
+    <neu-radio value="open">Open</neu-radio>
+  </neu-radio-group>
+  <neu-button type="submit" variant="primary">Submit</neu-button>
+  <output></output>
+</form>`}
+/>
+
+## React
+
+<Code
+  lang="tsx"
+  code={`import { NeuRadio, NeuRadioGroup } from '@neumorphism-ui/react';
+
+export function Plan({ onChange }: { onChange: (event: Event) => void }) {
+  return (
+    <NeuRadioGroup label="Plan" name="plan" required onChange={onChange}>
+      <NeuRadio value="free">Free</NeuRadio>
+      <NeuRadio value="pro">Pro</NeuRadio>
+    </NeuRadioGroup>
+  );
+}`}
+/>
+
+## Keyboard
+
+<KeyboardTable tag="neu-radio-group" />
+
+## API: neu-radio-group
+
+<ApiTables tag="neu-radio-group" />
+
+## API: neu-radio
+
+<ApiTables tag="neu-radio" />

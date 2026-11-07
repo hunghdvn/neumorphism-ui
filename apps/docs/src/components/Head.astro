@@ -1,0 +1,23 @@
+---
+import Default from '@astrojs/starlight/components/Head.astro';
+---
+
+<Default {...Astro.props}>
+  <slot />
+</Default>
+{/*
+ * Inline so it runs before the first paint. Starlight's ThemeProvider, later in <head>, sets
+ * data-theme on <html>; mirroring it to data-neu-theme makes every neu-* element on the page
+ * follow the site theme instead of the OS theme. The playground preview sets its own theme.
+ */}
+<script is:inline>
+  (() => {
+    const root = document.documentElement;
+    const sync = () => {
+      const theme = root.dataset.theme;
+      if (theme === 'light' || theme === 'dark') root.dataset.neuTheme = theme;
+    };
+    sync();
+    new MutationObserver(sync).observe(root, { attributes: true, attributeFilter: ['data-theme'] });
+  })();
+</script>

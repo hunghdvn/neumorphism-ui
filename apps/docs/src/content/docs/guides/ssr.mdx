@@ -1,0 +1,135 @@
+---
+title: Server-side rendering
+description: Render declarative shadow DOM on the server so components look right before JavaScript loads.
+---
+
+On the server, every `<neu-*>` element gets a `<template shadowrootmode="open">` as its first child.
+The browser turns it into a shadow root while it parses the HTML, so the component is styled and
+laid out before (or without) JavaScript. When the element definitions load, they hydrate that root
+instead of rendering a new one.
+
+The shadow root depends only on the element's **attributes**. Data you set only as a property
+shows up once JavaScript runs.
+
+## Next.js App Router
+
+Use the React wrappers. They render the shadow root on the server and work with streaming and
+Suspense.
+
+```sh
+npm install @neumorphism-ui/react@next @neumorphism-ui/tokens@next
+```
+
+```tsx
+// app/layout.tsx
+import '@neumorphism-ui/tokens/neu.css';
+import type { ReactNode } from 'react';
+
+export default function RootLayout({ children }: { children: ReactNode }) {
+  return (
+    <html lang="en" data-neu-theme="light">
+      <body>{children}</body>
+    </html>
+  );
+}
+```
+
+```tsx
+// app/subscribe.tsx
+'use client';
+import { NeuButton, NeuSwitch, NeuTextField } from '@neumorphism-ui/react';
+
+export function Subscribe() {
+  return (
+    <form>
+      <NeuTextField name="email" label="Email" type="email" defaultValue="a@b.co" />
+      <NeuSwitch name="notify" defaultChecked>
+        Notifications
+      </NeuSwitch>
+      <NeuButton type="submit" variant="primary">
+        Save
+      </NeuButton>
+    </form>
+  );
+}
+```
+
+## Nuxt
+
+Add the module and the theme CSS. The module registers `neu-*` as custom elements for Vue and
+transforms the rendered HTML on the server.
+
+```sh
+npm install @neumorphism-ui/ssr@next @neumorphism-ui/elements@next @neumorphism-ui/tokens@next
+```
+
+```ts
+// nuxt.config.ts
+export default defineNuxtConfig({
+  modules: ['@neumorphism-ui/ssr/nuxt'],
+  css: ['@neumorphism-ui/tokens/neu.css'],
+});
+```
+
+Then write the tags in any template:
+
+```html
+<neu-text-field name="email" label="Email" type="email" value="a@b.co" />
+<neu-switch name="notify" checked>Notifications</neu-switch>
+```
+
+## Any other server
+
+Astro, SvelteKit, Express and static site generators call `transformHtml` on the HTML they are about
+to send. It inserts the template after the opening tag of every known `neu-*` element, and leaves
+unknown tags and broken HTML alone. It skips comments, `<script>`, `<style>`, `<textarea>` and
+`<title>`, and an element that already has a shadow root template, so calling it twice is safe.
+
+```sh
+npm install @neumorphism-ui/ssr@next @neumorphism-ui/elements@next @neumorphism-ui/tokens@next
+```
+
+```ts
+import { transformHtml } from '@neumorphism-ui/ssr';
+
+const html = transformHtml('<neu-button variant="primary">Save</neu-button>');
+// <neu-button variant="primary"><template shadowrootmode="open">…</template>Save</neu-button>
+```
+
+This documentation site is built that way: an Astro middleware passes every page through
+`transformHtml`.
+
+```ts
+// src/middleware.ts
+import { defineMiddleware } from 'astro:middleware';
+import { transformHtml } from '@neumorphism-ui/ssr';
+
+export const onRequest = defineMiddleware(async (_context, next) => {
+  const response = await next();
+  if (!response.headers.get('content-type')?.includes('text/html')) return response;
+  const html = transformHtml(await response.text());
+  const headers = new Headers(response.headers);
+  headers.delete('content-length');
+  return new Response(html, { status: response.status, headers });
+});
+```
+
+To render one element yourself, use `renderDSD(tag, attrs)`. It returns the shadow root markup, or
+an empty string for an unknown tag.
+
+You still load the definitions on the client, for example with
+`import '@neumorphism-ui/elements/all.js'`.
+
+## Select
+
+`neu-select` renders only its trigger on the server: the selected label, or the placeholder. The
+listbox is built in the browser the first time it opens.
+
+## Limitations
+
+- Nuxt's experimental SSR streaming (`experimental.ssrStreaming`) bypasses the `render:html` hook,
+  so streamed pages get no declarative shadow roots.
+- Every element gets a full shadow root, so a page with tens of thousands of components can exceed
+  the engine's maximum string length; `transformHtml` then throws a `RangeError`.
+- A comment containing `</neu-select>` still ends the window in which options are read, and one
+  containing `</neu-option>` or `<neu-option` ends the current option early.

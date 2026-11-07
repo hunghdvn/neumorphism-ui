@@ -1,0 +1,143 @@
+---
+import manifest from '@neumorphism-ui/elements/custom-elements.json';
+
+interface Props {
+  tag: string;
+}
+
+interface Named {
+  name: string;
+  description?: string;
+}
+interface Attribute extends Named {
+  fieldName: string;
+  type: { text: string };
+  default: string;
+}
+interface Member extends Named {
+  type: { text: string };
+  attribute?: string;
+  reflects?: boolean;
+}
+interface Declaration {
+  tagName?: string;
+  attributes?: Attribute[];
+  members?: Member[];
+  events?: Named[];
+  slots?: Named[];
+  cssParts?: Named[];
+  cssProperties?: Named[];
+}
+
+const { tag } = Astro.props;
+const declarations: Declaration[] = manifest.modules.flatMap(
+  (module: { declarations?: Declaration[] }) => module.declarations ?? [],
+);
+const declaration = declarations.find((entry) => entry.tagName === tag);
+if (!declaration) throw new Error(`No manifest entry for <${tag}>`);
+
+const attributes = declaration.attributes ?? [];
+const members = declaration.members ?? [];
+const properties = members.filter((member) => member.attribute === undefined);
+const reflects = (attribute: string) =>
+  members.find((member) => member.attribute === attribute)?.reflects === true;
+
+const lists: { id: string; title: string; entries: Named[] }[] = [
+  { id: 'events', title: 'Events', entries: declaration.events ?? [] },
+  { id: 'slots', title: 'Slots', entries: declaration.slots ?? [] },
+  { id: 'parts', title: 'CSS parts', entries: declaration.cssParts ?? [] },
+  {
+    id: 'css-properties',
+    title: 'CSS custom properties',
+    entries: declaration.cssProperties ?? [],
+  },
+];
+---
+
+{attributes.length > 0 && (
+  <>
+    <h3>Attributes</h3>
+    <table data-table="attributes">
+      <thead>
+        <tr>
+          <th>Attribute</th>
+          <th>Property</th>
+          <th>Type</th>
+          <th>Default</th>
+          <th>Reflects</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        {attributes.map((attribute) => (
+          <tr>
+            <td>
+              <code>{attribute.name}</code>
+            </td>
+            <td>
+              <code>{attribute.fieldName}</code>
+            </td>
+            <td>
+              <code>{attribute.type.text}</code>
+            </td>
+            <td>
+              <code>{attribute.default}</code>
+            </td>
+            <td>{reflects(attribute.name) ? 'yes' : 'no'}</td>
+            <td>{attribute.description}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </>
+)}
+{properties.length > 0 && (
+  <>
+    <h3>Properties</h3>
+    <table data-table="properties">
+      <thead>
+        <tr>
+          <th>Property</th>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        {properties.map((property) => (
+          <tr>
+            <td>
+              <code>{property.name}</code>
+            </td>
+            <td>
+              <code>{property.type.text}</code>
+            </td>
+            <td>{property.description}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </>
+)}
+{lists
+  .filter((list) => list.entries.length > 0)
+  .map((list) => (
+    <>
+      <h3>{list.title}</h3>
+      <table data-table={list.id}>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          {list.entries.map((entry) => (
+            <tr>
+              <td>{entry.name === '' ? '(default)' : <code>{entry.name}</code>}</td>
+              <td>{entry.description}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </>
+  ))}

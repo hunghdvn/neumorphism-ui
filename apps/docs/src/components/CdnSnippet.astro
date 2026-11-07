@@ -1,0 +1,32 @@
+---
+import { existsSync, readFileSync } from 'node:fs';
+import { dirname, resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { Code } from '@astrojs/starlight/components';
+
+function findRepoRoot(): string {
+  let dir = dirname(fileURLToPath(import.meta.url));
+  for (;;) {
+    if (existsSync(resolve(dir, 'pnpm-workspace.yaml'))) return dir;
+    const parent = dirname(dir);
+    if (parent === dir) throw new Error('CdnSnippet: repo root (pnpm-workspace.yaml) not found.');
+    dir = parent;
+  }
+}
+
+const readme = readFileSync(resolve(findRepoRoot(), 'README.md'), 'utf8');
+const section = readme.split(/^### From a CDN\s*$/m)[1];
+const code = section?.match(/```html\n([\s\S]*?)```/)?.[1].trimEnd();
+if (
+  !code ||
+  !/tokens@[^/"]+\/neu\.css/.test(code) ||
+  !/elements@[^/"]+\/cdn\/neu\.min\.js/.test(code) ||
+  (code.match(/integrity="sha384-[A-Za-z0-9+/=]+"/g) ?? []).length !== 2
+) {
+  throw new Error(
+    'CdnSnippet: the "### From a CDN" html snippet in README.md was not found, or does not hold the tokens link, the elements script and two sha384 integrity values.',
+  );
+}
+---
+
+<Code lang="html" code={code} />

@@ -1,0 +1,88 @@
+---
+title: Icon
+description: A vector icon from the built-in set or a registered icon library.
+---
+
+import { Code } from '@astrojs/starlight/components';
+import Demo from '../../../components/Demo.astro';
+import ApiTables from '../../../components/ApiTables.astro';
+import { componentDocs } from '@neumorphism-ui/elements/docs.js';
+
+{componentDocs.get('neu-icon')?.summary}
+
+## Built-in icons
+
+These eight icons ship with the element: `check`, `chevron-down`, `chevron-up`, `plus`, `minus`,
+`x`, `alert-circle` and `user`.
+
+<Demo
+  code={`<neu-icon name="check" label="Checked"></neu-icon>
+<neu-icon name="chevron-down" label="Chevron down"></neu-icon>
+<neu-icon name="chevron-up" label="Chevron up"></neu-icon>
+<neu-icon name="plus" label="Add"></neu-icon>
+<neu-icon name="minus" label="Remove"></neu-icon>
+<neu-icon name="x" label="Close"></neu-icon>
+<neu-icon name="alert-circle" label="Alert"></neu-icon>
+<neu-icon name="user" label="User"></neu-icon>`}
+/>
+
+## Accessibility
+
+With `label`, the icon is an image named by the label. Without it, the icon is decorative and
+hidden from assistive technology.
+
+<Demo
+  code={`<neu-icon name="alert-circle" label="Warning"></neu-icon>
+<neu-icon name="alert-circle"></neu-icon>`}
+/>
+
+## Your own icons
+
+Register a library with `registerIconLibrary`, then select it with the `library` attribute.
+
+```js
+import { registerIconLibrary } from '@neumorphism-ui/elements/icons.js';
+
+registerIconLibrary('myLib', {
+  resolve(name) {
+    return `https://example.com/icons/${name}.svg`;
+  },
+});
+```
+
+<Code lang="html" code={`<neu-icon library="myLib" name="check" label="Done"></neu-icon>`} />
+
+React users get the same export from `@neumorphism-ui/react`.
+
+`resolve(name)` may return:
+
+- SVG markup, a string that starts with `<`, which is drawn as is.
+- Any other string, or a `URL`, which is fetched and drawn.
+
+Things to know:
+
+- The built-in `system` library cannot be replaced.
+- Registering a name again replaces that library and reloads every icon that uses it.
+- Icons from a registered library render empty on the server. Only the built-in icons are
+  server-rendered.
+
+## Paint containment
+
+The inner box that fills the host has `contain: paint`, so anything painted outside it is cut off. A
+`drop-shadow` filter on `::part(svg)` is therefore clipped at that box; leave room inside the
+icon, or put the shadow on an element around it.
+
+## React
+
+<Code
+  lang="tsx"
+  code={`import { NeuIcon } from '@neumorphism-ui/react';
+
+export function Done() {
+  return <NeuIcon name="check" label="Done" />;
+}`}
+/>
+
+## API
+
+<ApiTables tag="neu-icon" />

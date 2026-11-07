@@ -1,0 +1,81 @@
+---
+title: Button
+description: A raised button. Use variant="primary" for the main action of a view.
+---
+
+import { Code } from '@astrojs/starlight/components';
+import Demo from '../../../components/Demo.astro';
+import ApiTables from '../../../components/ApiTables.astro';
+import KeyboardTable from '../../../components/KeyboardTable.astro';
+import { componentDocs } from '@neumorphism-ui/elements/docs.js';
+
+{componentDocs.get('neu-button')?.summary}
+
+## Variants
+
+`default` is the standard raised button, `primary` marks the main action of a view, and `flat` is
+the quietest emphasis.
+
+<Demo
+  code={`<neu-button>Default</neu-button>
+<neu-button variant="primary">Primary</neu-button>
+<neu-button variant="flat">Flat</neu-button>`}
+/>
+
+## Sizes
+
+<Demo
+  code={`<neu-button size="sm">Small</neu-button>
+<neu-button size="md">Medium</neu-button>
+<neu-button size="lg">Large</neu-button>`}
+/>
+
+## Disabled
+
+A disabled button ignores clicks and keyboard activation.
+
+<Demo code={`<neu-button disabled>Disabled</neu-button>`} />
+
+## Loading
+
+`loading` shows a spinner and blocks activation while work is in progress.
+
+<Demo code={`<neu-button variant="primary" loading>Saving</neu-button>`} />
+
+## Prefix and suffix
+
+Use the `prefix` and `suffix` slots for content around the label, such as an icon.
+
+<Demo
+  code={`<neu-button>
+  <span slot="prefix" aria-hidden="true">+</span>
+  Add item
+</neu-button>
+<neu-button variant="primary">
+  Next
+  <span slot="suffix" aria-hidden="true">→</span>
+</neu-button>`}
+/>
+
+## React
+
+<Code
+  lang="tsx"
+  code={`import { NeuButton } from '@neumorphism-ui/react';
+
+export function SaveButton({ onClick }: { onClick: () => void }) {
+  return (
+    <NeuButton variant="primary" onClick={onClick}>
+      Save
+    </NeuButton>
+  );
+}`}
+/>
+
+## Keyboard
+
+<KeyboardTable tag="neu-button" />
+
+## API
+
+<ApiTables tag="neu-button" />

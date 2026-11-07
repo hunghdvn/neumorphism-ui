@@ -1,0 +1,62 @@
+---
+title: Avatar
+description: A user picture that falls back to initials, then to a generic user icon.
+---
+
+import { Code } from '@astrojs/starlight/components';
+import Demo from '../../../components/Demo.astro';
+import ApiTables from '../../../components/ApiTables.astro';
+import { componentDocs } from '@neumorphism-ui/elements/docs.js';
+
+{componentDocs.get('neu-avatar')?.summary}
+
+## Fallback order
+
+The avatar shows the picture when `src` is set and loads. When there is no `src`, or the picture
+fails to load, it shows `initials`; with no initials either, it shows the built-in user icon.
+
+<Demo
+  code={`<neu-avatar src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='64'%3E%3Crect width='64' height='64' fill='%236c8ebf'/%3E%3C/svg%3E" label="Picture"></neu-avatar>
+<neu-avatar initials="JD" label="John Doe"></neu-avatar>
+<neu-avatar label="Unknown user"></neu-avatar>`}
+/>
+
+Use an inline `data:` URL, or a file that exists, for `src`: a picture that fails to load falls
+back to the initials but the browser still logs the failed request.
+
+## Sizes and shapes
+
+Choose a size (`sm`, `md`, `lg`) and a shape (`circle`, `rounded`).
+
+<Demo
+  code={`<neu-avatar size="sm" initials="AB" label="Alice Brown"></neu-avatar>
+<neu-avatar size="md" initials="CD" label="Bob Davis"></neu-avatar>
+<neu-avatar size="lg" initials="EF" label="Eve Foster"></neu-avatar>
+<neu-avatar size="md" shape="rounded" initials="GH" label="Grace Hill"></neu-avatar>`}
+/>
+
+## Accessibility
+
+With `label`, the avatar is an image (`role="img"`) named by the label. Without `label`, the
+avatar is a decorative picture and is hidden from assistive technology, so always set `label`
+when the avatar is the only thing that identifies a person.
+
+<Demo
+  code={`<neu-avatar initials="JD" label="John Doe"></neu-avatar>
+<neu-avatar initials="JD"></neu-avatar>`}
+/>
+
+## React
+
+<Code
+  lang="tsx"
+  code={`import { NeuAvatar } from '@neumorphism-ui/react';
+
+export function UserAvatar({ name, initials }: { name: string; initials: string }) {
+  return <NeuAvatar initials={initials} label={name} size="lg" shape="rounded" />;
+}`}
+/>
+
+## API
+
+<ApiTables tag="neu-avatar" />

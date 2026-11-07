@@ -3203,7 +3203,7 @@
                 "text": "'text' | 'email' | 'password' | 'search' | 'tel' | 'url'"
               },
               "default": "'text'",
-              "description": "The kind of text the field accepts, which sets its keyboard and masking and drives email, url and tel validation."
+              "description": "The kind of text the field accepts, which sets its keyboard and masking and drives email and url validation."
             },
             {
               "name": "value",
@@ -3360,7 +3360,7 @@
               "default": "'text'",
               "attribute": "type",
               "reflects": true,
-              "description": "The kind of text the field accepts, which sets its keyboard and masking and drives email, url and tel validation."
+              "description": "The kind of text the field accepts, which sets its keyboard and masking and drives email and url validation."
             },
             {
               "kind": "field",

@@ -1,0 +1,78 @@
+---
+title: Icon button
+description: A button that shows an icon; name it with label for accessibility.
+---
+
+import { Code } from '@astrojs/starlight/components';
+import Demo from '../../../components/Demo.astro';
+import ApiTables from '../../../components/ApiTables.astro';
+import KeyboardTable from '../../../components/KeyboardTable.astro';
+import { componentDocs } from '@neumorphism-ui/elements/docs.js';
+
+{componentDocs.get('neu-icon-button')?.summary}
+
+## Icon variants
+
+Use built-in icons from the system library or custom icons from external libraries.
+
+<Demo
+  code={`<neu-icon-button icon="check" label="Confirm"></neu-icon-button>
+<neu-icon-button icon="chevron-down" label="Expand"></neu-icon-button>
+<neu-icon-button icon="plus" label="Add"></neu-icon-button>
+<neu-icon-button icon="x" label="Cancel"></neu-icon-button>`}
+/>
+
+## Variants
+
+`default` is the standard raised button, `primary` marks the main action of a view, and `flat` is
+the quietest emphasis.
+
+<Demo
+  code={`<neu-icon-button icon="check" label="Confirm" variant="default"></neu-icon-button>
+<neu-icon-button icon="check" label="Confirm" variant="primary"></neu-icon-button>
+<neu-icon-button icon="check" label="Confirm" variant="flat"></neu-icon-button>`}
+/>
+
+## Sizes
+
+<Demo
+  code={`<neu-icon-button icon="check" label="Confirm" size="sm"></neu-icon-button>
+<neu-icon-button icon="check" label="Confirm" size="md"></neu-icon-button>
+<neu-icon-button icon="check" label="Confirm" size="lg"></neu-icon-button>`}
+/>
+
+## Shapes
+
+The button can be either a circle or a square.
+
+<Demo
+  code={`<neu-icon-button icon="user" label="Profile" shape="circle"></neu-icon-button>
+<neu-icon-button icon="alert-circle" label="Alert" shape="square"></neu-icon-button>`}
+/>
+
+## Disabled
+
+A disabled button ignores clicks and keyboard activation.
+
+<Demo code={`<neu-icon-button icon="check" label="Confirm" disabled></neu-icon-button>`} />
+
+## React
+
+<Code
+  lang="tsx"
+  code={`import { NeuIconButton } from '@neumorphism-ui/react';
+
+export function IconButtonExample() {
+  return (
+    <NeuIconButton icon="check" label="Confirm" variant="primary" />
+  );
+}`}
+/>
+
+## Keyboard
+
+<KeyboardTable tag="neu-icon-button" />
+
+## API
+
+<ApiTables tag="neu-icon-button" />

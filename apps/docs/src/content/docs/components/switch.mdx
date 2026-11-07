@@ -1,0 +1,78 @@
+---
+title: Switch
+description: An on/off switch.
+---
+
+import { Code } from '@astrojs/starlight/components';
+import Demo from '../../../components/Demo.astro';
+import ApiTables from '../../../components/ApiTables.astro';
+import KeyboardTable from '../../../components/KeyboardTable.astro';
+import { componentDocs } from '@neumorphism-ui/elements/docs.js';
+
+{componentDocs.get('neu-switch')?.summary}
+
+## Checked
+
+The checked state of the switch.
+
+<Demo
+  code={`<neu-switch>Off</neu-switch>
+<neu-switch checked>Checked</neu-switch>`}
+/>
+
+## Disabled
+
+A disabled switch prevents interaction and leaves the switch out of form submission.
+
+<Demo code={`<neu-switch disabled>Disabled</neu-switch>`} />
+
+## Size
+
+The size of the switch.
+
+<Demo
+  code={`<neu-switch size="sm">Small</neu-switch>
+<neu-switch size="md">Medium</neu-switch>
+<neu-switch size="lg">Large</neu-switch>`}
+/>
+
+## In a form
+
+Submitting shows the form data and Reset restores the defaults.
+
+<Demo
+  code={`<form>
+  <neu-switch name="notifications" checked>
+    Enable notifications
+  </neu-switch>
+  <neu-button type="submit" variant="primary">Submit</neu-button>
+  <neu-button type="reset">Reset</neu-button>
+  <output></output>
+</form>`}
+/>
+
+## React
+
+<Code
+  lang="tsx"
+  code={`import { NeuSwitch } from '@neumorphism-ui/react';
+
+export function Notifications({ onChange }: { onChange: () => void }) {
+  return (
+    <NeuSwitch
+      name="notifications"
+      onChange={onChange}
+    >
+      Enable notifications
+    </NeuSwitch>
+  );
+}`}
+/>
+
+## Keyboard
+
+<KeyboardTable tag="neu-switch" />
+
+## API
+
+<ApiTables tag="neu-switch" />

@@ -48,7 +48,7 @@
 1. **SSR bằng middleware, không dùng hook `astro:build:done`.** Middleware chạy cả khi dev lẫn lúc prerender, nên dev và production cho ra cùng HTML. Middleware chỉ xử lý response có `content-type` là `text/html`.
 2. **Phần khung của trang vẫn là của Starlight; demo nằm trong khối `.neu-surface` riêng.** `neu.css` nằm trong `@layer neu`, nên style không layer của Starlight vẫn thắng. Demo đồng bộ `data-neu-theme` với `data-theme` của Starlight bằng một `MutationObserver` nhỏ.
 3. **Bảng API lấy từ `custom-elements.json`, không gọi helper của `tools/gen`.** Manifest là định dạng chuẩn, đã có type, default, `reflects` và description. Docs không phụ thuộc vào package private.
-4. **Snippet CDN trong docs được tính lúc build:** version lấy từ `packages/elements/package.json`, SRI tính trên `cdn/neu.min.js` và `tokens/neu.css` vừa build. Task 6 kiểm tra snippet này khớp file trên npm sau khi publish.
+4. **Snippet CDN trong docs lấy từ README:** `CdnSnippet` đọc version và hai mã SRI từ snippet "From a CDN" của `README.md` (tính trên file working tree sẽ gán version cũ cho file mới). Task 6 (`check-cdn-sri.mjs`) kiểm tra README khớp file trên npm.
 5. **Thoát chế độ pre của Changesets bằng `changeset pre exit`.** Version PR do bot mở sẽ đưa cả 4 package lên đúng `1.0.0`; Task 6 kiểm tra trước trên một nhánh nháp.
 
 ---
@@ -186,7 +186,7 @@ Task này có hai cổng, đều do người dùng quyết định:
 3. Trang docs trên Pages chạy được.
 
 **Files:**
-- Modify: `.changeset/pre.json` (do `changeset pre exit` sửa), `README.md`, `packages/*/README.md`, spec §13 (bỏ câu "Trong lúc xây…" hoặc chuyển sang thì quá khứ)
+- Modify: `.changeset/pre.json` (do `changeset pre exit` sửa), `README.md`, `packages/*/README.md`, `apps/docs/src/content/docs/**` (`getting-started/installation.mdx`, `guides/react.mdx`, `guides/ssr.mdx`), spec §13 (bỏ câu "Trong lúc xây…" hoặc chuyển sang thì quá khứ)
 - Create: `.changeset/v1-stable.md`, `scripts/check-cdn-sri.mjs`
 
 **Interfaces:**
@@ -204,12 +204,13 @@ Task này có hai cổng, đều do người dùng quyết định:
   - README gốc và README của các package:
     - bỏ dòng "Pre-release";
     - lệnh cài bỏ `@next`;
-    - snippet CDN **giữ nguyên** `next.2` cho tới Step 5.
-- [ ] **Step 3: Viết `scripts/check-cdn-sri.mjs`** và chạy với `1.0.0-next.2` trên README hiện tại → exit 0.
+    - snippet CDN **giữ nguyên** version README đang ghim (lúc viết là `1.0.0-next.3`) cho tới Step 5.
+  - Docs (`apps/docs/src/content/docs/**`): bỏ ghi chú pre-release và `@next` khỏi các lệnh cài trong `getting-started/installation.mdx`, `guides/react.mdx` và `guides/ssr.mdx`.
+- [ ] **Step 3: Viết `scripts/check-cdn-sri.mjs`** và chạy với version README đang ghim (đọc từ snippet "From a CDN", lúc viết là `1.0.0-next.3`) → exit 0. Có check này rồi thì thêm lại vào đoạn "From a CDN" của `getting-started/installation.mdx` câu nói snippet đã được so với file trên npm.
 - [ ] **Step 4: PR → merge → Version PR.** Người dùng duyệt việc merge. Bot mở Version PR đưa 4 package lên `1.0.0`. CI của PR do bot mở cần người dùng duyệt cho chạy. Merge Version PR (theo lệnh của người dùng) thì workflow Release publish với dist-tag `latest`.
 - [ ] **Step 5: Sau khi publish.**
   - Chờ registry trả `latest = 1.0.0` cho cả 4 package.
   - Cập nhật snippet CDN trong README sang `1.0.0` với SRI lấy từ tarball, rồi chạy `node scripts/check-cdn-sri.mjs 1.0.0` → exit 0.
-  - So `<CdnSnippet />` trên trang docs đã deploy với README: hai mã SRI phải giống nhau. Nếu lệch thì sửa `CdnSnippet` để đọc SRI từ README, và ghi lý do vào commit.
+  - `<CdnSnippet />` của docs giờ đọc version và hai mã SRI từ snippet "From a CDN" trong `README.md` (quyết định P-9), nên cập nhật README là cập nhật luôn trang docs. Sau khi docs deploy lại, so snippet trên trang với README để chắc chắn chúng giống nhau.
   - Mở PR cho các thay đổi này.
 - [ ] **Step 6 (người dùng, tuỳ chọn):** chuyển dist-tag `next` sang `1.0.0` (`npm dist-tag add @neumorphism-ui/<pkg>@1.0.0 next` cho từng package). Lệnh này cần đăng nhập npm và 2FA của người dùng.

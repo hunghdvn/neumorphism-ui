@@ -1,0 +1,18 @@
+---
+import { Code } from '@astrojs/starlight/components';
+
+interface Props {
+  code: string;
+}
+
+const { code } = Astro.props;
+---
+
+<div class="demo neu-surface not-content" set:html={code} />
+<Code lang="html" code={code} />
+
+<script>
+  // Only pages with a demo load the components.
+  import '@neumorphism-ui/elements/all.js';
+  import '../scripts/form-demo';
+</script>

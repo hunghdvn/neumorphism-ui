@@ -1,0 +1,67 @@
+---
+title: Button group
+description: Group adjacent buttons into one raised block.
+---
+
+import { Code } from '@astrojs/starlight/components';
+import Demo from '../../../components/Demo.astro';
+import ApiTables from '../../../components/ApiTables.astro';
+import { componentDocs } from '@neumorphism-ui/elements/docs.js';
+
+{componentDocs.get('neu-button-group')?.summary}
+
+## Horizontal orientation
+
+The default layout places buttons side by side horizontally.
+
+<Demo
+  code={`<neu-button-group label="Document actions">
+  <neu-button>Save</neu-button>
+  <neu-button variant="primary">Save</neu-button>
+  <neu-button disabled>Save</neu-button>
+</neu-button-group>`}
+/>
+
+## Vertical orientation
+
+Use `orientation="vertical"` to stack buttons on top of each other.
+
+<Demo
+  code={`<neu-button-group orientation="vertical" label="Document actions">
+  <neu-button>Save</neu-button>
+  <neu-button variant="primary">Save</neu-button>
+  <neu-button disabled>Save</neu-button>
+</neu-button-group>`}
+/>
+
+## Icon buttons
+
+Icon buttons can also be included inside a button group.
+
+<Demo
+  code={`<neu-button-group label="Document actions">
+  <neu-icon-button icon="check" label="Confirm"></neu-icon-button>
+  <neu-icon-button icon="chevron-down" label="Expand"></neu-icon-button>
+  <neu-icon-button icon="x" label="Cancel"></neu-icon-button>
+</neu-button-group>`}
+/>
+
+## React
+
+<Code
+  lang="tsx"
+  code={`import { NeuButton, NeuButtonGroup } from '@neumorphism-ui/react';
+
+export function ButtonGroupExample() {
+  return (
+    <NeuButtonGroup label="Document actions">
+      <NeuButton>Save</NeuButton>
+      <NeuButton variant="primary">Save</NeuButton>
+    </NeuButtonGroup>
+  );
+}`}
+/>
+
+## API
+
+<ApiTables tag="neu-button-group" />

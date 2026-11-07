@@ -1,0 +1,119 @@
+---
+title: Surface
+description: A neumorphic container with its own shape, elevation, radius and padding.
+---
+
+import { Code } from '@astrojs/starlight/components';
+import Demo from '../../../components/Demo.astro';
+import ApiTables from '../../../components/ApiTables.astro';
+import { componentDocs } from '@neumorphism-ui/elements/docs.js';
+
+{componentDocs.get('neu-surface')?.summary}
+
+## Shapes
+
+The surface can be raised, inset, flat, convex or concave to create different lighting effects.
+
+<Demo
+  code={`<neu-surface shape="raised">
+  Raised
+</neu-surface>
+<neu-surface shape="inset">
+  Inset
+</neu-surface>
+<neu-surface shape="flat">
+  Flat
+</neu-surface>
+<neu-surface shape="convex">
+  Convex
+</neu-surface>
+<neu-surface shape="concave">
+  Concave
+</neu-surface>`}
+/>
+
+## Elevation levels
+
+Controls how far the surface appears to lift off its background.
+
+<Demo
+  code={`<neu-surface elevation="sm">
+  Small elevation
+</neu-surface>
+<neu-surface elevation="md">
+  Medium elevation
+</neu-surface>
+<neu-surface elevation="lg">
+  Large elevation
+</neu-surface>`}
+/>
+
+## Corner radius
+
+Adjusts how rounded the corners are.
+
+<Demo
+  code={`<neu-surface radius="sm">
+  Small radius
+</neu-surface>
+<neu-surface radius="md">
+  Medium radius
+</neu-surface>
+<neu-surface radius="lg">
+  Large radius
+</neu-surface>
+<neu-surface radius="full">
+  Full radius
+</neu-surface>`}
+/>
+
+## Padding
+
+Sets the space between the edge and the content.
+
+<Demo
+  code={`<neu-surface padding="none">
+  No padding
+</neu-surface>
+<neu-surface padding="sm">
+  Small padding
+</neu-surface>
+<neu-surface padding="md">
+  Medium padding
+</neu-surface>
+<neu-surface padding="lg">
+  Large padding
+</neu-surface>`}
+/>
+
+## Content
+
+Wrap any content inside a surface component.
+
+<Demo
+  code={`<neu-surface shape="raised" elevation="md" padding="md">
+  <h3>Card Title</h3>
+  <p>This is a surface component containing arbitrary content.</p>
+  <neu-button variant="primary">Action</neu-button>
+</neu-surface>`}
+/>
+
+## React
+
+<Code
+  lang="tsx"
+  code={`import { NeuSurface } from '@neumorphism-ui/react';
+
+export function SurfaceExample() {
+  return (
+    <NeuSurface shape="raised" elevation="md" padding="md">
+      <h3>Card Title</h3>
+      <p>This is a surface component containing arbitrary content.</p>
+    </NeuSurface>
+  );
+}`}
+/>
+
+## API
+
+<ApiTables tag="neu-surface" />

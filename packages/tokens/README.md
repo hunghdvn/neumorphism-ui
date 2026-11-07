@@ -13,7 +13,9 @@ npm install @neumorphism-ui/tokens@next
 ```css
 @import '@neumorphism-ui/tokens/neu.css';
 
-:root {
+/* [data-neu-theme] too: each theme sets --neu-bg and --neu-accent on the element that picks it. */
+:root,
+[data-neu-theme] {
   --neu-accent: #0f9d76;
 }
 ```
