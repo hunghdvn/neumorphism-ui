@@ -242,8 +242,11 @@ export abstract class NeuElement extends ServerSafeHTMLElement {
   private ensureRoot(loaded?: Event): void {
     if (this.root) return;
     let root = this.internals.shadowRoot;
-    // A root is unfinished while it has fewer data-ref nodes than the template renders.
-    const refs = root ? this.def.template(this.props).value.split('data-ref="').length - 1 : 0;
+    // The data-ref names the template renders. A root that lacks one is unfinished, or was rendered
+    // by another version of this component (a page cached before an upgrade).
+    const refs = root
+      ? [...this.def.template(this.props).value.matchAll(/data-ref="([^"]+)"/g)].map((m) => m[1]!)
+      : [];
     if (!loaded && document.readyState === 'loading' && this.parsing(root, refs)) {
       this.waitForParser(root, refs);
       return;
@@ -264,11 +267,11 @@ export abstract class NeuElement extends ServerSafeHTMLElement {
    * While the document loads, the parser may still be writing this element's declarative shadow
    * root (spec §8.1). Before the root exists, that is only possible while nothing has been parsed
    * inside or after the element; one created by script in the middle of the page renders at once.
-   * Once it exists, its contents may still be streaming in: it is unfinished while it has fewer
-   * than `refs` data-ref nodes, and adopting it then would run rendered() without them.
+   * Once it exists, its contents may still be streaming in: it is unfinished while one of the
+   * `refs` data-ref nodes is missing, and adopting it then would run rendered() without them.
    */
-  private parsing(root: ShadowRoot | null, refs: number): boolean {
-    if (root) return root.querySelectorAll('[data-ref]').length < refs;
+  private parsing(root: ShadowRoot | null, refs: readonly string[]): boolean {
+    if (root) return refs.some((name) => !root.querySelector(`[data-ref="${name}"]`));
     if (this.firstChild !== null || this.nextSibling !== null) return false;
     for (let node = this.parentNode; node !== null; node = node.parentNode) {
       if (node.nextSibling !== null) return false;
@@ -282,7 +285,7 @@ export abstract class NeuElement extends ServerSafeHTMLElement {
    * ensureRoot() decides again. DOMContentLoaded is the fallback, after which a root that is still
    * unfinished is rendered afresh.
    */
-  private waitForParser(root: ShadowRoot | null, refs: number): void {
+  private waitForParser(root: ShadowRoot | null, refs: readonly string[]): void {
     const resume = (loaded?: Event) => {
       observer.disconnect();
       document.removeEventListener('DOMContentLoaded', resume);

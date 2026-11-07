@@ -257,6 +257,21 @@ describe('declarative shadow DOM', () => {
     expect(el.renders).toBe(1);
   });
 
+  test('a declarative root rendered by another version of the template is rendered afresh', () => {
+    // Same number of data-ref nodes as the current template, but not the same ones (a page cached
+    // before an upgrade): adopting it would leave update() and rendered() without their nodes.
+    const doc = document.implementation.createHTMLDocument('');
+    doc.body.setHTMLUnsafe(
+      '<neu-probe label="SSR"><template shadowrootmode="open">' +
+        '<span data-ref="old-label" part="label">SSR</span></template></neu-probe>',
+    );
+    const el = doc.body.firstElementChild as NeuProbe;
+    document.body.append(document.adoptNode(el));
+    expect(el.shadowRoot!.querySelector('[data-ref="old-label"]')).toBeNull();
+    expect(el.shadowRoot!.querySelector('[data-ref="label"]')?.textContent).toBe('SSR');
+    expect(el.renders).toBe(1);
+  });
+
   test('while the document is loading it waits for a declarative root instead of creating one', () => {
     // An own property shadows Document.prototype.readyState; deleting it restores the real getter.
     Object.defineProperty(document, 'readyState', { configurable: true, get: () => 'loading' });
