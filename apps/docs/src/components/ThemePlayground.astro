@@ -2,7 +2,7 @@
 ---
 
 <div class="playground not-content" data-playground>
-  <div class="controls" data-theme-sync>
+  <div class="controls">
     <label class="color">
       <span>--neu-bg</span>
       <input type="color" data-color="bg" value="#e0e5ec" />
@@ -14,7 +14,6 @@
     <neu-slider
       data-var="--neu-distance"
       data-unit="px"
-      data-default="6"
       label="--neu-distance"
       min="0"
       max="20"
@@ -24,7 +23,6 @@
     <neu-slider
       data-var="--neu-intensity"
       data-unit=""
-      data-default="1"
       label="--neu-intensity"
       min="0"
       max="2"
@@ -34,7 +32,6 @@
     <neu-slider
       data-var="--neu-radius"
       data-unit="px"
-      data-default="12"
       label="--neu-radius"
       min="0"
       max="32"
@@ -54,6 +51,10 @@
   </div>
 
   <pre class="css" data-playground-css aria-label="CSS for the changed variables"></pre>
+
+  <!-- The defaults are read from the tokens through these, so they never go stale. -->
+  <div hidden data-playground-probe="light" data-neu-theme="light"></div>
+  <div hidden data-playground-probe="dark" data-neu-theme="dark"></div>
 </div>
 
 <style>
@@ -103,17 +104,40 @@
 </style>
 
 <script>
-  type ThemeName = 'light' | 'dark';
-  type Colors = { bg?: string; accent?: string };
+  import '@neumorphism-ui/elements/all.js';
 
-  const defaults: Record<ThemeName, Required<Colors>> = {
-    light: { bg: '#e0e5ec', accent: '#6d5dfc' },
-    dark: { bg: '#2b2f36', accent: '#8b7dff' },
-  };
-  const selectors: Record<ThemeName, string> = {
-    light: ":root, [data-neu-theme='light']",
-    dark: "[data-neu-theme='dark']",
-  };
+  type ThemeName = 'light' | 'dark';
+  type ColorKey = 'bg' | 'accent';
+  type Colors = Partial<Record<ColorKey, string>>;
+
+  const colorVars: Record<ColorKey, string> = { bg: '--neu-bg', accent: '--neu-accent' };
+
+  /** Lower-case `#rrggbb`, the form `<input type="color">` reads and writes. */
+  function hex(color: string): string {
+    const value = color.trim().toLowerCase();
+    const short = /^#([0-9a-f])([0-9a-f])([0-9a-f])$/.exec(value);
+    return short ? `#${short[1]!.repeat(2)}${short[2]!.repeat(2)}${short[3]!.repeat(2)}` : value;
+  }
+
+  /**
+   * One theme's overrides, written for where that theme is active: on an element that sets it,
+   * and on a page that follows the OS. Unlayered CSS beats the tokens' layer, so a block that
+   * also matched elsewhere (a bare `:root`) would put one theme's colours under the other.
+   */
+  function themeCss(name: ThemeName, lines: string[]): string {
+    const other: ThemeName = name === 'light' ? 'dark' : 'light';
+    const nested = lines.map((line) => `  ${line}`);
+    return [
+      `[data-neu-theme='${name}'] {`,
+      ...lines,
+      '}',
+      `@media (prefers-color-scheme: ${name}) {`,
+      `  :root:not([data-neu-theme='${other}']) {`,
+      ...nested,
+      '  }',
+      '}',
+    ].join('\n');
+  }
 
   const root = document.querySelector<HTMLElement>('[data-playground]');
   if (root) {
@@ -122,31 +146,37 @@
     const darkSwitch = root.querySelector<HTMLElement & { checked: boolean }>(
       '[data-playground-dark]',
     )!;
-    const sliders = [...root.querySelectorAll<HTMLElement & { value: unknown }>('neu-slider[data-var]')];
+    const sliders = [
+      ...root.querySelectorAll<HTMLElement & { value: unknown }>('neu-slider[data-var]'),
+    ];
     const pickers = [...root.querySelectorAll<HTMLInputElement>('input[data-color]')];
-    // Colors are only written once the user edits them, per theme.
+    const token = (theme: ThemeName, name: string) =>
+      getComputedStyle(root.querySelector(`[data-playground-probe="${theme}"]`)!)
+        .getPropertyValue(name)
+        .trim();
+    const defaults: Record<ThemeName, Record<ColorKey, string>> = {
+      light: { bg: hex(token('light', '--neu-bg')), accent: hex(token('light', '--neu-accent')) },
+      dark: { bg: hex(token('dark', '--neu-bg')), accent: hex(token('dark', '--neu-accent')) },
+    };
+    // Colours are written only once the user changes them, per theme.
     const edited: Record<ThemeName, Colors> = { light: {}, dark: {} };
-    let theme: ThemeName = 'light';
+    // Read from the switch on every render: a reload or a back navigation may restore it after
+    // this script has run, and a restore fires no event (pageshow re-renders after it).
+    const theme = (): ThemeName => (darkSwitch.checked ? 'dark' : 'light');
 
     const sliderValue = (el: HTMLElement & { value: unknown }) => Number(el.value);
-    const lengths = () =>
+    const changedLengths = () =>
       sliders
-        .map((el) => ({
-          name: el.dataset.var!,
-          value: sliderValue(el),
-          text: `${sliderValue(el)}${el.dataset.unit ?? ''}`,
-          changed: sliderValue(el) !== Number(el.dataset.default),
-        }))
-        .filter((entry) => entry.changed);
+        .filter(
+          (el) => sliderValue(el) !== Number.parseFloat(token('light', el.dataset.var!)),
+        )
+        .map((el) => `  ${el.dataset.var}: ${sliderValue(el)}${el.dataset.unit ?? ''};`);
 
     function render(): void {
-      preview.dataset.neuTheme = theme;
-      const current = edited[theme];
-      for (const [key, name] of [
-        ['bg', '--neu-bg'],
-        ['accent', '--neu-accent'],
-      ] as const) {
-        const value = current[key];
+      const current = theme();
+      preview.dataset.neuTheme = current;
+      for (const [key, name] of Object.entries(colorVars) as [ColorKey, string][]) {
+        const value = edited[current][key];
         if (value) preview.style.setProperty(name, value);
         else preview.style.removeProperty(name);
       }
@@ -154,21 +184,18 @@
         preview.style.setProperty(el.dataset.var!, `${sliderValue(el)}${el.dataset.unit ?? ''}`);
       }
       for (const picker of pickers) {
-        const key = picker.dataset.color as keyof Colors;
-        picker.value = current[key] ?? defaults[theme][key as 'bg' | 'accent'];
+        const key = picker.dataset.color as ColorKey;
+        picker.value = edited[current][key] ?? defaults[current][key];
       }
 
       const blocks: string[] = [];
-      const shared = lengths();
-      if (shared.length) {
-        blocks.push(`:root {\n${shared.map((e) => `  ${e.name}: ${e.text};`).join('\n')}\n}`);
-      }
+      const lengths = changedLengths();
+      if (lengths.length) blocks.push(`:root {\n${lengths.join('\n')}\n}`);
       for (const name of ['light', 'dark'] as const) {
-        const lines = [
-          edited[name].bg && `  --neu-bg: ${edited[name].bg};`,
-          edited[name].accent && `  --neu-accent: ${edited[name].accent};`,
-        ].filter(Boolean);
-        if (lines.length) blocks.push(`${selectors[name]} {\n${lines.join('\n')}\n}`);
+        const lines = (Object.entries(colorVars) as [ColorKey, string][])
+          .filter(([key]) => edited[name][key])
+          .map(([key, variable]) => `  ${variable}: ${edited[name][key]};`);
+        if (lines.length) blocks.push(themeCss(name, lines));
       }
       output.textContent = blocks.length
         ? blocks.join('\n\n')
@@ -178,14 +205,16 @@
     for (const el of sliders) el.addEventListener('input', render);
     for (const picker of pickers) {
       picker.addEventListener('input', () => {
-        edited[theme][picker.dataset.color as keyof Colors] = picker.value;
+        const key = picker.dataset.color as ColorKey;
+        const current = theme();
+        const value = hex(picker.value);
+        if (value === defaults[current][key]) delete edited[current][key];
+        else edited[current][key] = value;
         render();
       });
     }
-    darkSwitch.addEventListener('change', () => {
-      theme = darkSwitch.checked ? 'dark' : 'light';
-      render();
-    });
+    darkSwitch.addEventListener('change', render);
+    window.addEventListener('pageshow', render);
     render();
   }
 </script>

@@ -26,11 +26,16 @@ reduced motion).
 Override any of them in your own CSS:
 
 ```css
-:root {
+:root,
+[data-neu-theme] {
   --neu-accent: #0f9d76;
   --neu-radius: 20px;
 }
 ```
+
+Include `[data-neu-theme]`: the tokens set `--neu-bg` and `--neu-accent` again on every element
+that carries the attribute, and a value set on an element beats the one it would inherit from
+`:root`. The other variables are set on `:root` only.
 
 ## Optional overrides
 
@@ -46,7 +51,8 @@ not what you want:
 | `--neu-font`         | Font family of every component |
 
 Without them the shadows and the text colour are mixed from `--neu-bg`, so changing the
-background alone gives a matching shadow and readable text.
+background alone gives a matching shadow and readable text, as long as the colour suits the theme:
+light in the light theme, dark in the dark one.
 
 ## Light and dark
 
@@ -62,27 +68,45 @@ subtree. Without the attribute the page follows `prefers-color-scheme`.
 </div>`}
 />
 
-To give each theme its own value, override with the same selectors the tokens use. A bare `:root`
-override applies to both themes:
+To give each theme its own value, write each block for where that theme is active: on an element
+that sets it, and on a page that follows the OS. Your CSS is unlayered, so it beats the tokens
+wherever its selector matches. A light value on a bare `:root` would also reach a page that follows
+a dark OS, and give it a light background with dark-theme text.
 
 ```css
-:root,
 [data-neu-theme='light'] {
   --neu-bg: #f2e9e4;
 }
+@media (prefers-color-scheme: light) {
+  :root:not([data-neu-theme='dark']) {
+    --neu-bg: #f2e9e4;
+  }
+}
+
 [data-neu-theme='dark'] {
   --neu-bg: #22223b;
 }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-neu-theme='light']) {
+    --neu-bg: #22223b;
+  }
+}
 ```
+
+The [theme playground](/neumorphism-ui/) on the home page writes this CSS for you.
 
 ## Changing the background of one area
 
 Shadows, text and the accent tint are computed again wherever `--neu-bg` can change: on `:root`,
 on any `[data-neu-theme]` element, on `.neu-surface` and on `<neu-surface>`. So a surface with its
-own background gets matching shadows and text for everything inside it:
+own background gets matching shadows and text for everything inside it.
+
+How dark the text is and how strong the shadows are still comes from the theme. For a light
+background inside a dark theme, or a dark one inside a light theme, also set the matching
+`data-neu-theme` on the surface. The demo below does, so it stays readable in both site themes:
 
 <Demo
-  code={`<div class="neu-surface" style="--neu-bg: #f5d0d8">
+  code={`<div class="neu-surface" data-neu-theme="light" style="--neu-bg: #f5d0d8">
   <neu-button>Pink</neu-button>
   <neu-switch checked>On pink</neu-switch>
 </div>`}
@@ -113,8 +137,8 @@ for your own `box-shadow` declarations.
 ## Your CSS always wins
 
 All the token CSS sits in `@layer neu`. Unlayered CSS beats any layered rule whatever its
-specificity, so a plain `:root { --neu-accent: ... }` in your stylesheet is enough, with no
-`!important` and no selector tricks.
+specificity, so a plain `:root, [data-neu-theme] { --neu-accent: ... }` in your stylesheet is
+enough, with no `!important`.
 
 ## Before the components are defined
 

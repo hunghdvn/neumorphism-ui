@@ -152,10 +152,13 @@ const html = transformHtml('<neu-button variant="primary">Save</neu-button>');
 ## Theming
 
 Set `data-neu-theme="light"` or `"dark"` on any element to pick a theme for that subtree. Without
-it, pages follow `prefers-color-scheme`. Override any token in your own CSS:
+it, pages follow `prefers-color-scheme`. Override any token in your own CSS. Include
+`[data-neu-theme]`, because the themes set `--neu-bg` and `--neu-accent` on every element that
+carries it:
 
 ```css
-:root {
+:root,
+[data-neu-theme] {
   --neu-accent: #0f9d76;
 }
 ```
