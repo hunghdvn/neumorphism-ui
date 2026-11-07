@@ -1,6 +1,6 @@
 // Spec §10 budgets, min+gzip, measured with esbuild + zlib.
 import { readdirSync, readFileSync } from 'node:fs';
-import { fileURLToPath } from 'node:url';
+import { fileURLToPath, pathToFileURL } from 'node:url';
 import { gzipSync } from 'node:zlib';
 import { build } from 'esbuild';
 
@@ -84,20 +84,29 @@ for (const [tag, file, name, { base, limit = 3 } = {}] of components) {
 }
 
 // Docs strings live in dist/docs.js only; the CDN bundle must not carry them (spec §10).
-const { componentDocs } = await import(`file:///${elements}/dist/docs.js`);
+const { componentDocs } = await import(pathToFileURL(`${elements}/dist/docs.js`).href);
 const cdnText = readFileSync(`${elements}/cdn/neu.min.js`, 'utf8');
+const docsStrings = (docs) => [
+  docs.summary,
+  ...Object.values(docs.descriptions),
+  ...[docs.events, docs.slots, docs.parts, docs.cssProperties, docs.keyboard]
+    .flat()
+    .map((entry) => entry.description),
+];
 const docsLeaks = (text) =>
   [...componentDocs].flatMap(([tag, docs]) =>
-    [docs.summary, ...Object.values(docs.descriptions)]
+    docsStrings(docs)
       .filter((s) => text.includes(s))
       .map((s) => `${tag}: ${s}`),
   );
 
 let failed = componentDocs.size === 0; // an empty map would make the guard vacuous
 if (failed) console.log('FAIL  componentDocs is empty');
-// SIZE_GUARD_PROBE appends a docs summary to the scanned text, to prove the guard can fail.
+// SIZE_GUARD_PROBE appends docs strings to the scanned text, to prove the guard can fail: the
+// first tag's summary and its last entry (a keyboard, CSS property or part description).
+const probeDocs = docsStrings([...componentDocs.values()][0]);
 const scanned = process.env.SIZE_GUARD_PROBE
-  ? `${cdnText}${[...componentDocs.values()][0].summary}`
+  ? `${cdnText}${probeDocs[0]}${probeDocs.at(-1)}`
   : cdnText;
 for (const leak of docsLeaks(scanned)) {
   failed = true;
