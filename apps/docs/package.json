@@ -1,0 +1,17 @@
+{
+  "name": "docs",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview"
+  },
+  "dependencies": {
+    "@astrojs/starlight": "0.42.10",
+    "@neumorphism-ui/elements": "workspace:*",
+    "@neumorphism-ui/ssr": "workspace:*",
+    "@neumorphism-ui/tokens": "workspace:*",
+    "astro": "7.4.7"
+  }
+}

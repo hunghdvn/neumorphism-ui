@@ -13,3 +13,4 @@ e2e/__screenshots__/
 # Written by Changesets on every release.
 .changeset/pre.json
 **/CHANGELOG.md
+**/.astro/

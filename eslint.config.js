@@ -9,6 +9,7 @@ export default defineConfig([
     '**/cdn/**',
     '**/.next/**',
     '**/.nuxt/**',
+    '**/.astro/**',
     '**/.output/**',
     '**/next-env.d.ts',
     '.superpowers/**',

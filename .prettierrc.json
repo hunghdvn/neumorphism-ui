@@ -1,5 +1,6 @@
 {
   "singleQuote": true,
   "printWidth": 100,
-  "embeddedLanguageFormatting": "off"
+  "embeddedLanguageFormatting": "off",
+  "plugins": ["prettier-plugin-astro"]
 }
