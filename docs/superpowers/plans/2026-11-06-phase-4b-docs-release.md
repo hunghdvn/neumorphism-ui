@@ -204,9 +204,9 @@ Task này có hai cổng, đều do người dùng quyết định:
   - README gốc và README của các package:
     - bỏ dòng "Pre-release";
     - lệnh cài bỏ `@next`;
-    - snippet CDN **giữ nguyên** `next.2` cho tới Step 5.
+    - snippet CDN **giữ nguyên** version README đang ghim (lúc viết là `1.0.0-next.3`) cho tới Step 5.
   - Docs (`apps/docs/src/content/docs/**`): bỏ ghi chú pre-release và `@next` khỏi các lệnh cài trong `getting-started/installation.mdx`, `guides/react.mdx` và `guides/ssr.mdx`.
-- [ ] **Step 3: Viết `scripts/check-cdn-sri.mjs`** và chạy với `1.0.0-next.2` trên README hiện tại → exit 0.
+- [ ] **Step 3: Viết `scripts/check-cdn-sri.mjs`** và chạy với version README đang ghim (đọc từ snippet "From a CDN", lúc viết là `1.0.0-next.3`) → exit 0. Có check này rồi thì thêm lại vào đoạn "From a CDN" của `getting-started/installation.mdx` câu nói snippet đã được so với file trên npm.
 - [ ] **Step 4: PR → merge → Version PR.** Người dùng duyệt việc merge. Bot mở Version PR đưa 4 package lên `1.0.0`. CI của PR do bot mở cần người dùng duyệt cho chạy. Merge Version PR (theo lệnh của người dùng) thì workflow Release publish với dist-tag `latest`.
 - [ ] **Step 5: Sau khi publish.**
   - Chờ registry trả `latest = 1.0.0` cho cả 4 package.

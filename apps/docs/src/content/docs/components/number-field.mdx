@@ -11,6 +11,10 @@ import { componentDocs } from '@neumorphism-ui/elements/docs.js';
 
 {componentDocs.get('neu-number-field')?.summary}
 
+Like a native number input, the element also has a `valueAsNumber` property: the value as a
+number, or `NaN` when the field is empty or the text is not a number. Setting it to a finite
+number sets `value`; setting it to `NaN` clears the field.
+
 ## Label, help text and error text
 
 `error-text` replaces the browser's validation message once the field is invalid after user
@@ -69,8 +73,8 @@ export function QuantityInput({ onChange }: { onChange: (value: number | null) =
     <NeuNumberField
       placeholder="Enter quantity"
       onChange={(e) => {
-        const { value } = e.target as HTMLElement & { value: string };
-        onChange(value === '' ? null : Number(value));
+        const { valueAsNumber } = e.target as HTMLElement & { valueAsNumber: number };
+        onChange(Number.isNaN(valueAsNumber) ? null : valueAsNumber);
       }}
     />
   );
