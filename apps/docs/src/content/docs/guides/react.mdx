@@ -1,0 +1,95 @@
+---
+title: React
+description: Generated React 18.3 and 19 wrappers that work controlled or uncontrolled and render on the server.
+---
+
+`@neumorphism-ui/react` has one wrapper per element: `NeuButton`, `NeuSwitch`, `NeuTextField`,
+`NeuSelect`, `NeuOption` and so on. They are generated from the element definitions, work with
+React 18.3 and 19, and every file starts with `'use client'`.
+
+```sh
+npm install @neumorphism-ui/react@next @neumorphism-ui/tokens@next
+```
+
+```tsx
+import '@neumorphism-ui/tokens/neu.css';
+import { NeuButton, NeuTextField } from '@neumorphism-ui/react';
+
+export function Subscribe() {
+  return (
+    <form>
+      <NeuTextField label="Email" type="email" name="email" required />
+      <NeuButton type="submit" variant="primary">
+        Subscribe
+      </NeuButton>
+    </form>
+  );
+}
+```
+
+## How props work
+
+- Props are set as **properties** on the element, not as attributes, so React 18 and 19 behave the
+  same. On the server they render as attributes, so the shadow root can be server-rendered.
+- `ref` points at the real custom element.
+- Handlers receive the original DOM event. Events map by name: `onChange` to `change`, `onInput`
+  to `input`, `onNeuOpen` to `neu-open`.
+
+## onChange matches input
+
+Like React's `<input>`, controls that have a text value (such as `NeuTextField`) listen for the
+DOM `input` event in both `onInput` and `onChange`, so the handler runs on every edit. The DOM
+`change` event has no prop in v1.
+
+```tsx
+<NeuTextField
+  label="Name"
+  value={name}
+  onChange={(event) => setName((event.target as HTMLInputElement).value)}
+/>
+```
+
+## Uncontrolled
+
+`defaultValue` and `defaultChecked` become the default attributes. They are what a form reset
+returns to.
+
+```tsx
+<NeuSwitch name="notify" defaultChecked>
+  Notifications
+</NeuSwitch>
+
+<NeuSelect label="Plan" name="plan" defaultValue="pro">
+  <NeuOption value="free">Free</NeuOption>
+  <NeuOption value="pro">Pro</NeuOption>
+</NeuSelect>
+```
+
+## Controlled
+
+Pass `value` (or `checked`) and the wrapper sets the property back to your prop on the next commit
+after each `input` or `change`, as React does for `<input>`.
+
+```tsx
+const [on, setOn] = useState(false);
+
+<NeuSwitch checked={on} onChange={(event) => setOn((event.target as HTMLInputElement).checked)}>
+  Dark mode
+</NeuSwitch>;
+```
+
+## Icon libraries
+
+`registerIconLibrary` is re-exported, so you need no second import:
+
+```tsx
+import { NeuIcon, registerIconLibrary } from '@neumorphism-ui/react';
+
+registerIconLibrary('brand', { resolve: (name) => `/icons/${name}.svg` });
+
+<NeuIcon library="brand" name="logo" label="Acme" />;
+```
+
+`system` is reserved; registering a library with that name is ignored.
+
+For server rendering with Next.js, see the [SSR guide](/neumorphism-ui/guides/ssr/).

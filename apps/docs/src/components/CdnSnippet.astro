@@ -1,0 +1,36 @@
+---
+import { createHash } from 'node:crypto';
+import { readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
+import { Code } from '@astrojs/starlight/components';
+
+const packages = resolve(process.cwd(), '../../packages');
+const { version } = JSON.parse(
+  readFileSync(resolve(packages, 'elements/package.json'), 'utf8'),
+) as {
+  version: string;
+};
+
+function sha384(file: string): string {
+  return `sha384-${createHash('sha384').update(readFileSync(file)).digest('base64')}`;
+}
+
+const cssIntegrity = sha384(resolve(packages, 'tokens/neu.css'));
+const jsIntegrity = sha384(resolve(packages, 'elements/cdn/neu.min.js'));
+const base = 'https://cdn.jsdelivr.net/npm/@neumorphism-ui';
+
+const code = `<link
+  rel="stylesheet"
+  href="${base}/tokens@${version}/neu.css"
+  integrity="${cssIntegrity}"
+  crossorigin="anonymous"
+/>
+<script
+  type="module"
+  src="${base}/elements@${version}/cdn/neu.min.js"
+  integrity="${jsIntegrity}"
+  crossorigin="anonymous"
+></script>`;
+---
+
+<Code lang="html" code={code} />

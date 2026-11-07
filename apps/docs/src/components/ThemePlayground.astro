@@ -1,0 +1,191 @@
+---
+---
+
+<div class="playground" data-playground>
+  <div class="controls">
+    <label class="color">
+      <span>--neu-bg</span>
+      <input type="color" data-color="bg" value="#e0e5ec" />
+    </label>
+    <label class="color">
+      <span>--neu-accent</span>
+      <input type="color" data-color="accent" value="#6d5dfc" />
+    </label>
+    <neu-slider
+      data-var="--neu-distance"
+      data-unit="px"
+      data-default="6"
+      label="--neu-distance"
+      min="0"
+      max="20"
+      step="1"
+      value="6"
+    ></neu-slider>
+    <neu-slider
+      data-var="--neu-intensity"
+      data-unit=""
+      data-default="1"
+      label="--neu-intensity"
+      min="0"
+      max="2"
+      step="0.1"
+      value="1"
+    ></neu-slider>
+    <neu-slider
+      data-var="--neu-radius"
+      data-unit="px"
+      data-default="12"
+      label="--neu-radius"
+      min="0"
+      max="32"
+      step="1"
+      value="12"
+    ></neu-slider>
+    <neu-switch data-playground-dark>Dark theme</neu-switch>
+  </div>
+
+  <div class="preview neu-surface" data-playground-preview data-neu-theme="light">
+    <neu-button variant="primary">Save</neu-button>
+    <neu-text-field label="Name" value="Ada"></neu-text-field>
+    <neu-switch checked>Notifications</neu-switch>
+    <neu-checkbox checked>Remember me</neu-checkbox>
+    <neu-slider label="Volume" value="40"></neu-slider>
+    <neu-surface class="sample">A raised surface</neu-surface>
+  </div>
+
+  <pre class="css" data-playground-css aria-label="CSS for the changed variables"></pre>
+</div>
+
+<style>
+  .playground {
+    display: grid;
+    gap: 1.5rem;
+    margin-block: 2rem;
+  }
+  .controls {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+    gap: 1.25rem;
+    align-items: center;
+  }
+  .color {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-family: var(--sl-font-mono);
+    font-size: var(--sl-text-sm);
+  }
+  .color input {
+    inline-size: 3rem;
+    block-size: 2rem;
+    padding: 0;
+    border: 0;
+    background: none;
+  }
+  .preview {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+    gap: 1.5rem;
+    align-items: center;
+    padding: 1.5rem;
+  }
+  .sample {
+    padding: 1rem;
+  }
+  .css {
+    margin: 0;
+    padding: 1rem;
+    overflow-x: auto;
+    border: 1px solid var(--sl-color-gray-5);
+    background: var(--sl-color-bg-nav);
+    font-size: var(--sl-text-sm);
+  }
+</style>
+
+<script>
+  type ThemeName = 'light' | 'dark';
+  type Colors = { bg?: string; accent?: string };
+
+  const defaults: Record<ThemeName, Required<Colors>> = {
+    light: { bg: '#e0e5ec', accent: '#6d5dfc' },
+    dark: { bg: '#2b2f36', accent: '#8b7dff' },
+  };
+  const selectors: Record<ThemeName, string> = {
+    light: ":root, [data-neu-theme='light']",
+    dark: "[data-neu-theme='dark']",
+  };
+
+  const root = document.querySelector<HTMLElement>('[data-playground]');
+  if (root) {
+    const preview = root.querySelector<HTMLElement>('[data-playground-preview]')!;
+    const output = root.querySelector<HTMLElement>('[data-playground-css]')!;
+    const darkSwitch = root.querySelector<HTMLElement & { checked: boolean }>(
+      '[data-playground-dark]',
+    )!;
+    const sliders = [...root.querySelectorAll<HTMLElement & { value: unknown }>('neu-slider[data-var]')];
+    const pickers = [...root.querySelectorAll<HTMLInputElement>('input[data-color]')];
+    // Colors are only written once the user edits them, per theme.
+    const edited: Record<ThemeName, Colors> = { light: {}, dark: {} };
+    let theme: ThemeName = 'light';
+
+    const sliderValue = (el: HTMLElement & { value: unknown }) => Number(el.value);
+    const lengths = () =>
+      sliders
+        .map((el) => ({
+          name: el.dataset.var!,
+          value: sliderValue(el),
+          text: `${sliderValue(el)}${el.dataset.unit ?? ''}`,
+          changed: sliderValue(el) !== Number(el.dataset.default),
+        }))
+        .filter((entry) => entry.changed);
+
+    function render(): void {
+      preview.dataset.neuTheme = theme;
+      const current = edited[theme];
+      for (const [key, name] of [
+        ['bg', '--neu-bg'],
+        ['accent', '--neu-accent'],
+      ] as const) {
+        const value = current[key];
+        if (value) preview.style.setProperty(name, value);
+        else preview.style.removeProperty(name);
+      }
+      for (const el of sliders) {
+        preview.style.setProperty(el.dataset.var!, `${sliderValue(el)}${el.dataset.unit ?? ''}`);
+      }
+      for (const picker of pickers) {
+        const key = picker.dataset.color as keyof Colors;
+        picker.value = current[key] ?? defaults[theme][key as 'bg' | 'accent'];
+      }
+
+      const blocks: string[] = [];
+      const shared = lengths();
+      if (shared.length) {
+        blocks.push(`:root {\n${shared.map((e) => `  ${e.name}: ${e.text};`).join('\n')}\n}`);
+      }
+      for (const name of ['light', 'dark'] as const) {
+        const lines = [
+          edited[name].bg && `  --neu-bg: ${edited[name].bg};`,
+          edited[name].accent && `  --neu-accent: ${edited[name].accent};`,
+        ].filter(Boolean);
+        if (lines.length) blocks.push(`${selectors[name]} {\n${lines.join('\n')}\n}`);
+      }
+      output.textContent = blocks.length
+        ? blocks.join('\n\n')
+        : '/* Nothing changed: every variable has its default. */';
+    }
+
+    for (const el of sliders) el.addEventListener('input', render);
+    for (const picker of pickers) {
+      picker.addEventListener('input', () => {
+        edited[theme][picker.dataset.color as keyof Colors] = picker.value;
+        render();
+      });
+    }
+    darkSwitch.addEventListener('change', () => {
+      theme = darkSwitch.checked ? 'dark' : 'light';
+      render();
+    });
+    render();
+  }
+</script>

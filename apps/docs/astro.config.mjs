@@ -10,6 +10,13 @@ export default defineConfig({
       customCss: ['@neumorphism-ui/tokens/neu.css', './src/styles/docs.css'],
       sidebar: [
         { label: 'Home', slug: '' },
+        { label: 'Getting started', items: [{ slug: 'getting-started/installation' }] },
+        {
+          label: 'Guides',
+          items: ['guides/theming', 'guides/ssr', 'guides/react', 'guides/forms'].map((slug) => ({
+            slug,
+          })),
+        },
         {
           label: 'Components',
           items: [

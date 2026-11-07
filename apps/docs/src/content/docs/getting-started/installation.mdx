@@ -1,0 +1,75 @@
+---
+title: Installation
+description: Install neumorphism-ui from npm or a CDN, and import only the components you use.
+---
+
+import CdnSnippet from '../../../components/CdnSnippet.astro';
+
+neumorphism-ui is published as four packages. Pick the ones that match your setup.
+
+| Package                    | Use it when                                                                       |
+| -------------------------- | --------------------------------------------------------------------------------- |
+| `@neumorphism-ui/elements` | You use the `<neu-*>` custom elements directly: plain HTML, Vue, Svelte, Angular. |
+| `@neumorphism-ui/tokens`   | Always. It holds the theme CSS (`neu.css`) that every component needs.            |
+| `@neumorphism-ui/react`    | You use React 18.3 or 19, including Next.js. It brings generated wrappers.        |
+| `@neumorphism-ui/ssr`      | You render on a server: `transformHtml`, `renderDSD` and a Nuxt module.           |
+
+:::note
+While v1 is being built, `1.0.0-next.x` versions are published under the `next` tag. Install them
+with `@next`, and expect APIs to change before `1.0.0`.
+:::
+
+## With a bundler
+
+```sh
+npm install @neumorphism-ui/elements@next @neumorphism-ui/tokens@next
+```
+
+```js
+import '@neumorphism-ui/tokens/neu.css';
+import '@neumorphism-ui/elements/all.js';
+```
+
+`all.js` defines every component. Then use the tags anywhere in your HTML:
+
+```html
+<form>
+  <neu-text-field label="Email" type="email" name="email" required></neu-text-field>
+  <neu-switch name="updates" checked>Email me updates</neu-switch>
+  <neu-button type="submit" variant="primary">Subscribe</neu-button>
+</form>
+```
+
+## One component at a time
+
+Every tag has its own module, so a bundler only ships what you import:
+
+```js
+import '@neumorphism-ui/tokens/neu.css';
+import '@neumorphism-ui/elements/button.js';
+import '@neumorphism-ui/elements/text-field.js';
+```
+
+The module name is the tag name without the `neu-` prefix, for example `button.js`,
+`text-field.js` or `radio-group.js`.
+
+## The theme file
+
+`@neumorphism-ui/tokens/neu.css` defines the light and dark themes as custom properties inside
+`@layer neu`, so your own CSS always wins. It also keeps `neu-*` elements sized until their
+definitions load. See [Theming](/neumorphism-ui/guides/theming/) for the variables.
+
+## From a CDN
+
+No build step needed. Pin an exact version as shown: the `integrity` hash only matches that
+version's files, and an unpinned URL cannot be protected this way. Both hashes below are computed
+when this site is built, from the files of the version in the URL.
+
+<CdnSnippet />
+
+`cdn/neu.min.js` is a single minified ES module that defines every component.
+
+## React, Nuxt and other servers
+
+Next steps depend on your framework: see the [React guide](/neumorphism-ui/guides/react/) and the
+[server-side rendering guide](/neumorphism-ui/guides/ssr/).

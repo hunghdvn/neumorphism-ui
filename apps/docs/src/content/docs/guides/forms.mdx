@@ -1,0 +1,109 @@
+---
+title: Forms
+description: Form controls submit, reset, validate and restore like native inputs.
+---
+
+import Demo from '../../../components/Demo.astro';
+
+The controls with a value (`neu-text-field`, `neu-textarea`, `neu-number-field`, `neu-checkbox`,
+`neu-radio-group`, `neu-switch`, `neu-slider` and `neu-select`) are form-associated custom
+elements. They work inside a `<form>` like built-in inputs, with `name`, `value`, `disabled` and
+`required`, and a `form` property that returns the owning form. `neu-button` is form-associated
+too, so `type="submit"` and `type="reset"` work.
+
+## FormData
+
+A control contributes its value to `FormData` under its `name`. A checkbox or switch that is off
+contributes nothing. Submit the form below to see what would be sent.
+
+<Demo
+  code={`<form>
+  <neu-text-field name="email" label="Email" type="email" value="a@b.co"></neu-text-field>
+  <neu-switch name="updates" checked>Email me updates</neu-switch>
+  <neu-button type="submit" variant="primary">Submit</neu-button>
+  <output></output>
+</form>`}
+/>
+
+## Reset
+
+`form.reset()` and a `type="reset"` button put every control back to its default. For `value` and
+`checked` the default is the **attribute**; the property is the current value and does not write
+back to the attribute. To style the current state use `:state(checked)`, not `[checked]`.
+
+<Demo
+  code={`<form>
+  <neu-text-field name="name" label="Name" value="Ada"></neu-text-field>
+  <neu-checkbox name="agree" checked>I agree</neu-checkbox>
+  <neu-button type="reset">Reset</neu-button>
+</form>`}
+/>
+
+Controls also restore their value when the user navigates back or forward, as native inputs do.
+
+## Validation
+
+`required` and the type-specific rules (such as an email `type`) set the control's `validity`,
+`validationMessage` and `willValidate`, and `checkValidity()` and `reportValidity()` work as on a
+native input.
+
+Style errors with the custom state `:state(user-invalid)`. It turns on when the control is invalid
+**and** the user has interacted with it: after leaving the field following an edit, or after a
+submit attempt. Untouched required fields stay calm until then.
+
+```css
+neu-text-field:state(user-invalid) {
+  outline: 2px solid var(--neu-danger);
+}
+```
+
+<Demo
+  code={`<form>
+  <neu-text-field name="email" label="Email" type="email" required></neu-text-field>
+  <neu-button type="submit" variant="primary">Submit</neu-button>
+  <output></output>
+</form>`}
+/>
+
+## Implicit submission
+
+Pressing Enter inside a text field or number field submits the form, as with a native `<input>`,
+and counts as a submit attempt, so invalid fields show their errors. Enter in a textarea, a select
+or a switch does not submit.
+
+## Which button submitted
+
+For a `neu-button type="submit"`, `event.submitter` on the `submit` event is `null`: the browser
+only reports native buttons as submitters. If you need to know which button was used, make those
+buttons native:
+
+```html
+<form>
+  <button type="submit" name="intent" value="save">Save</button>
+  <button type="submit" name="intent" value="publish">Publish</button>
+</form>
+```
+
+```js
+form.addEventListener('submit', (event) => {
+  console.log(event.submitter?.value); // "save" or "publish"
+});
+```
+
+## Radio groups
+
+`neu-radio-group` holds one value for its `neu-radio` children and supports arrow-key navigation.
+A radio with `value=""` can be selected, and then the group submits `name=` with an empty value.
+It is never selected by default, though, and it is not restored from history: with no selection
+there is nothing to restore.
+
+<Demo
+  code={`<form>
+  <neu-radio-group name="plan" label="Plan" value="pro">
+    <neu-radio value="free">Free</neu-radio>
+    <neu-radio value="pro">Pro</neu-radio>
+  </neu-radio-group>
+  <neu-button type="submit">Submit</neu-button>
+  <output></output>
+</form>`}
+/>

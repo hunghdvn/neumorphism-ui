@@ -98,7 +98,15 @@ const componentSlugs = [
 ];
 
 // The home page plus every docs page; later tasks extend this list.
-const pagePaths = ['', ...componentSlugs.map((slug) => `components/${slug}/`)];
+const pagePaths = [
+  '',
+  'getting-started/installation/',
+  'guides/theming/',
+  'guides/ssr/',
+  'guides/react/',
+  'guides/forms/',
+  ...componentSlugs.map((slug) => `components/${slug}/`),
+];
 
 test('every component page loads without errors and lists its API', async ({ page }) => {
   const errors: string[] = [];
@@ -132,4 +140,36 @@ test('every internal link resolves', async ({ page, request }) => {
     const response = await request.get(href);
     expect(response.status(), href).toBe(200);
   }
+});
+
+test('the playground updates the preview and the CSS', async ({ page }) => {
+  await page.goto('./');
+  const preview = page.locator('[data-playground-preview]');
+  await page.locator('neu-slider[data-var="--neu-distance"]').evaluate((el) => {
+    (el as HTMLInputElement).value = '10';
+    el.dispatchEvent(new Event('input', { bubbles: true }));
+  });
+  await expect
+    .poll(() =>
+      preview.evaluate((el) => getComputedStyle(el).getPropertyValue('--neu-distance').trim()),
+    )
+    .toBe('10px');
+  await expect(page.locator('[data-playground-css]')).toContainText('--neu-distance: 10px;');
+});
+
+test('the playground dark switch', async ({ page }) => {
+  await page.goto('./');
+  const preview = page.locator('[data-playground-preview]');
+  await page.locator('neu-switch[data-playground-dark]').click();
+  await expect(preview).toHaveAttribute('data-neu-theme', 'dark');
+});
+
+test('the CDN snippet pins the package version', async ({ page }) => {
+  const { version } = JSON.parse(readFileSync(resolve(elementsDir, 'package.json'), 'utf8')) as {
+    version: string;
+  };
+  await page.goto('getting-started/installation/');
+  const text = await page.locator('main').innerText();
+  expect(text).toContain(`elements@${version}/cdn/neu.min.js`);
+  expect(text).toMatch(/integrity="sha384-/);
 });

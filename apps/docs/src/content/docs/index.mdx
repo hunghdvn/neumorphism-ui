@@ -1,12 +1,35 @@
 ---
 title: neumorphism-ui
 description: Soft-UI web components, tokens and server-side rendering helpers.
+template: splash
+hero:
+  tagline: Soft-UI custom elements that render on the server and work in any framework.
+  actions:
+    - text: Get started
+      link: /neumorphism-ui/getting-started/installation/
+      icon: right-arrow
+    - text: Browse components
+      link: /neumorphism-ui/components/button/
+      variant: minimal
 ---
 
-Soft-UI custom elements that render on the server and work in any framework.
+import ThemePlayground from '../../components/ThemePlayground.astro';
 
 <div class="demo neu-surface">
   <neu-button variant="primary">Save</neu-button>
+  <neu-button>Cancel</neu-button>
+  <neu-switch checked>Notifications</neu-switch>
 </div>
 
-[Introduction](/neumorphism-ui/)
+The components are standard Custom Elements: they take part in native forms, render as declarative
+shadow DOM so they look right before JavaScript loads, and follow a light or dark theme made of
+five CSS variables. Start with [Installation](/neumorphism-ui/getting-started/installation/), read
+the [Theming guide](/neumorphism-ui/guides/theming/), or open a component such as the
+[button](/neumorphism-ui/components/button/) or the [text field](/neumorphism-ui/components/text-field/).
+
+## Theme playground
+
+Change the five variables and watch the preview. The box below lists exactly the variables that
+differ from their defaults, ready to paste into your own CSS.
+
+<ThemePlayground />
