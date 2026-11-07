@@ -94,6 +94,13 @@ describe('serializeAttribute', () => {
     expect(serializeAttribute(max, 3)).toBe('3');
     expect(serializeAttribute(size, 'lg')).toBe('lg');
   });
+
+  test('the empty string stays an attribute when the default is not empty', () => {
+    // Removing it would parse back to the default: label="" on a spinner would read "Loading".
+    const named = { type: 'string', default: 'Loading' } as const;
+    expect(serializeAttribute(named, '')).toBe('');
+    expect(parseAttribute(named, serializeAttribute(named, '')!)).toBe('');
+  });
 });
 
 describe('serializeAttribute edge cases', () => {

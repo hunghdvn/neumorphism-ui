@@ -79,7 +79,10 @@ export function coerceProperty(decl: PropDecl, value: unknown): PropValue {
   return parseAttribute(decl, value === null || value === undefined ? null : String(value));
 }
 
-/** Prop value → attribute text for reflection and SSR; null means "remove the attribute". */
+/**
+ * Prop value → attribute text for reflection and SSR; null means "remove the attribute". The empty
+ * string is removed only when that parses back to it, i.e. when the default is empty too.
+ */
 export function serializeAttribute(decl: PropDecl, value: PropValue): string | null {
   switch (decl.type) {
     case 'boolean':
@@ -87,7 +90,7 @@ export function serializeAttribute(decl: PropDecl, value: PropValue): string | n
     case 'number':
       return Number.isFinite(value) ? String(value) : null;
     case 'string':
-      return value === '' ? null : String(value);
+      return value === '' && !decl.default ? null : String(value);
   }
 }
 

@@ -21,6 +21,16 @@ describe('neu-spinner', () => {
     expect(spinner(' label="Saving"').label).toBe('Saving');
   });
 
+  test('an empty label survives a copy of the markup instead of turning back into "Loading"', () => {
+    const el = spinner();
+    el.label = '';
+    expect(el.getAttribute('label')).toBe('');
+    const copy = el.cloneNode() as NeuSpinner;
+    document.body.append(copy);
+    expect(copy.label).toBe('');
+    expect(internalsOf(copy).ariaLabel).toBeNull();
+  });
+
   test('is a status named by its label, and exposes the documented parts', async () => {
     const el = spinner();
     expect(internalsOf(el).role).toBe('status');
