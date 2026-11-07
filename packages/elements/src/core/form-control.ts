@@ -1,3 +1,4 @@
+import { composing } from './dom.js';
 import { NeuElement } from './neu-element.js';
 
 /** Forms the user is trying to submit during the current task (click on a submitter, or Enter). */
@@ -58,7 +59,12 @@ function watchSubmitAttempts(): void {
     (event) => {
       // Only a native input submits on Enter (neu text/number fields use their inner input); Enter
       // in a textarea, select or switch is no attempt and must not reveal untouched fields.
-      if (event.key !== 'Enter' || !(event.composedPath()[0] instanceof HTMLInputElement)) return;
+      if (
+        event.key !== 'Enter' ||
+        composing(event) ||
+        !(event.composedPath()[0] instanceof HTMLInputElement)
+      )
+        return;
       for (const node of event.composedPath()) {
         // Not document or window: their named properties make `.form` a <form id|name="form">.
         if (!(node instanceof Element)) continue;

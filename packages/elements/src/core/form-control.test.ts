@@ -15,7 +15,6 @@ const fieldDef = defineComponent({
   form: { valueProp: 'value' },
   styles: '',
   template: () => html`<span data-ref="anchor">field</span>`,
-  docs: { summary: '', events: [], slots: [], parts: [], cssProperties: [] },
 });
 
 class NeuProbeField extends FormControlElement {
@@ -153,6 +152,7 @@ test('formStateRestoreCallback restores a saved state', () => {
 test('form.checkValidity() and a programmatic requestSubmit() stay silent; reportValidity() reveals', () => {
   const form = mountForm('<neu-probe-field name="a" required></neu-probe-field>');
   const field = form.querySelector('neu-probe-field') as NeuProbeField;
+  suppressValidationPopup(form);
   form.checkValidity();
   expect(field.matches(':state(user-invalid)')).toBe(false);
   form.addEventListener('submit', (event) => {
@@ -169,6 +169,7 @@ test('Enter followed by a submit in the same task counts as a submit attempt', (
   const form = mountForm('<input name="q"><neu-probe-field name="a" required></neu-probe-field>');
   const field = form.querySelector('neu-probe-field') as NeuProbeField;
   const input = form.querySelector('input') as HTMLInputElement;
+  suppressValidationPopup(form);
   form.addEventListener('submit', (event) => {
     event.preventDefault();
   });
@@ -244,4 +245,39 @@ test('implicitSubmit submits only when the form has a submit button or a single 
   implicitSubmit(withButton);
   implicitSubmit(null);
   expect(submitted).toEqual([single, withButton]);
+});
+
+test('Enter that commits an IME composition is not a submit attempt', () => {
+  const form = mountForm('<input name="q"><neu-probe-field name="a" required></neu-probe-field>');
+  const field = form.querySelector('neu-probe-field') as NeuProbeField;
+  suppressValidationPopup(form);
+  form.addEventListener('submit', (event) => {
+    event.preventDefault();
+  });
+  form
+    .querySelector('input')!
+    .dispatchEvent(
+      new KeyboardEvent('keydown', { key: 'Enter', isComposing: true, bubbles: true }),
+    );
+  form.requestSubmit();
+  expect(field.matches(':state(user-invalid)')).toBe(false);
+});
+
+// WebKit ends an IME composition before the Enter keydown: isComposing is already false, keyCode 229.
+const imeEnter = () => {
+  const ev = new KeyboardEvent('keydown', { key: 'Enter', bubbles: true, composed: true });
+  Object.defineProperty(ev, 'keyCode', { value: 229 });
+  return ev;
+};
+
+test('an IME-commit Enter (keyCode 229, isComposing false) is no submit attempt', () => {
+  const form = mountForm('<input name="q"><neu-probe-field name="a" required></neu-probe-field>');
+  const field = form.querySelector('neu-probe-field') as NeuProbeField;
+  suppressValidationPopup(form);
+  form.addEventListener('submit', (event) => {
+    event.preventDefault();
+  });
+  form.querySelector('input')!.dispatchEvent(imeEnter());
+  form.requestSubmit();
+  expect(field.matches(':state(user-invalid)')).toBe(false);
 });

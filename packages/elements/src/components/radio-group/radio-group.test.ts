@@ -1,4 +1,4 @@
-import { afterEach, describe, expect, test } from 'vitest';
+import { afterEach, describe, expect, test, vi } from 'vitest';
 import { userEvent } from 'vitest/browser';
 import { NeuRadio } from '../../radio.js';
 import { NeuRadioGroup } from '../../radio-group.js';
@@ -65,7 +65,7 @@ describe('neu-radio-group', () => {
     expect(internalsOf(el).ariaRequired).toBeNull();
   });
 
-  test('reflection: name, required, disabled and orientation reflect; value and label do not', () => {
+  test('reflection: name, required, disabled and orientation and label reflect; value does not', () => {
     const el = group();
     el.name = 'n';
     el.required = true;
@@ -80,7 +80,7 @@ describe('neu-radio-group', () => {
     el.value = 'b';
     el.label = 'Other';
     expect(el.getAttribute('value')).toBeNull();
-    expect(el.getAttribute('label')).toBe('Plan');
+    expect(el.getAttribute('label')).toBe('Other');
   });
 
   test('an invalid orientation falls back to vertical', () => {
@@ -571,4 +571,71 @@ describe('neu-radio-group', () => {
     await tick();
     expect(await axeViolations(el)).toEqual([]);
   });
+});
+
+test('a slotted label names the group', async () => {
+  const el = mount<NeuRadioGroup>(
+    `<neu-radio-group><span slot="label">Plan</span>${THREE}</neu-radio-group>`,
+  );
+  await tick();
+  expect(internalsOf(el).ariaLabel).toBe('Plan');
+  el.querySelector('[slot=label]')!.replaceWith(
+    Object.assign(document.createElement('b'), { slot: 'label', textContent: '  Billing   plan ' }),
+  );
+  await tick();
+  expect(internalsOf(el).ariaLabel).toBe('Billing plan');
+  const plain = mount<NeuRadioGroup>(`<neu-radio-group label="Size">${THREE}</neu-radio-group>`);
+  await tick();
+  expect(internalsOf(plain).ariaLabel).toBe('Size');
+});
+
+test('the group name follows in-place text changes of the slotted label', async () => {
+  const el = mount<NeuRadioGroup>(
+    `<neu-radio-group><span slot="label">Plan</span>${THREE}</neu-radio-group>`,
+  );
+  await tick();
+  const span = el.querySelector('[slot=label]')!;
+  span.textContent = 'Other';
+  await tick();
+  expect(internalsOf(el).ariaLabel).toBe('Other');
+  (span.firstChild as Text).data = 'Third';
+  await tick();
+  expect(internalsOf(el).ariaLabel).toBe('Third');
+});
+
+test('the group name follows a label rewritten while the group was detached', async () => {
+  const el = mount<NeuRadioGroup>(
+    `<neu-radio-group><span slot="label">Plan</span>${THREE}</neu-radio-group>`,
+  );
+  await tick();
+  const parent = el.parentElement!;
+  el.remove();
+  el.querySelector('[slot=label]')!.textContent = 'Billing';
+  parent.append(el);
+  await tick();
+  expect(internalsOf(el).ariaLabel).toBe('Billing');
+});
+
+test('rewriting the slotted label renames the group without resyncing the radios', async () => {
+  const el = mount<NeuRadioGroup>(
+    `<neu-radio-group><span slot="label">Plan</span>${THREE}</neu-radio-group>`,
+  );
+  await tick();
+  const sync = vi.spyOn(el as unknown as { sync: () => void }, 'sync');
+  el.querySelector('[slot=label]')!.textContent = 'Other';
+  await tick();
+  expect(internalsOf(el).ariaLabel).toBe('Other');
+  expect(sync).not.toHaveBeenCalled();
+  el.append(Object.assign(document.createElement('neu-radio'), { value: 'd' }));
+  await tick();
+  expect(sync).toHaveBeenCalled();
+});
+
+test('the label typography sits on ::part(label), so a slotted label inherits it', () => {
+  const el = mount<NeuRadioGroup>(
+    `<neu-radio-group><span slot="label">Plan</span>${THREE}</neu-radio-group>`,
+  );
+  const part = getComputedStyle(el.shadowRoot!.querySelector('[part=label]')!);
+  expect(part.fontWeight).toBe('600');
+  expect(getComputedStyle(el.querySelector('[slot=label]')!).fontWeight).toBe('600');
 });

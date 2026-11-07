@@ -24,7 +24,7 @@ render on the server with declarative shadow DOM, and take part in native `<form
 - **Themeable.** Light and dark themes are CSS custom properties inside `@layer neu`, so your own
   CSS always wins.
 - **Small.** CI enforces min+gzip budgets: the shared core ≤ 4 KB, each component ≤ 3 KB
-  (`neu-number-field` 3.5 KB, `neu-select` 5 KB), and the whole CDN bundle ≤ 25 KB.
+  (`neu-select` 5 KB) without the core and the shared modules (≤ 3 KB), and the whole CDN bundle ≤ 25 KB.
 
 ## Packages
 

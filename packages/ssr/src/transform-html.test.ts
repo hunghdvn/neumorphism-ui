@@ -147,6 +147,85 @@ describe('transformHtml', () => {
     expect(out).toContain('data-ref="display">&amp;amp; &amp;eacute;</span>');
   });
 
+  test('an option inside a comment is not an option', () => {
+    const out = transformHtml(
+      '<neu-select value="b"><!-- <neu-option value="b">Wrong</neu-option> --><neu-option value="b">Right</neu-option></neu-select>',
+    );
+    expect(out).toContain('data-ref="display">Right</span>');
+    expect(out).not.toContain('data-ref="display">Wrong</span>');
+  });
+
+  test("a comment inside option text is dropped, '>' included", () => {
+    const out = transformHtml(
+      '<neu-select value="a"><neu-option value="a">A<!-- x > y -->B</neu-option></neu-select>',
+    );
+    expect(out).toContain('data-ref="display">AB</span>');
+  });
+
+  test('<!--> and <!---> are empty comments everywhere, as in the tokenizer', () => {
+    const out = transformHtml(
+      '<!--><neu-select value="a"><neu-option value="a">A<!---->B</neu-option></neu-select>-->',
+    );
+    expect(out).toContain('<neu-select value="a"><template shadowrootmode="open"');
+    expect(out).toContain('data-ref="display">AB</span>');
+    expect(transformHtml('<!---><neu-button></neu-button>')).toContain(
+      '<neu-button><template shadowrootmode="open">',
+    );
+  });
+
+  test('option text skips whole tags, so "<!--" or ">" in a quoted attribute is not markup', () => {
+    const out = transformHtml(
+      '<neu-select value="a"><neu-option value="a"><img alt="<!--">Apple<i title="a>b">s</i></neu-option></neu-select>',
+    );
+    expect(out).toContain('data-ref="display">Apples</span>');
+  });
+
+  test('option text: end tags, bogus comments and a lone "<" read as in the browser', () => {
+    const out = transformHtml(
+      '<neu-select value="a"><neu-option value="a">a < b</b><!x>c<?y>d</ z>e</></neu-option></neu-select>',
+    );
+    expect(out).toContain('data-ref="display">a &lt; bcde</span>');
+  });
+
+  test('a reference split by a comment is not decoded, as the browser tokenizes each text run', () => {
+    const out = transformHtml(
+      '<neu-select value="x"><neu-option value="x">&am<!-- -->p;</neu-option></neu-select>',
+    );
+    expect(out).toContain('data-ref="display">&amp;amp;</span>');
+  });
+
+  test.each([
+    ['80 000 unterminated tags', `<neu-option value="a">${'<b '.repeat(80_000)}`],
+    ['80 000 end tags without ">"', `<neu-option value="a">${'</b'.repeat(80_000)}`],
+    ['80 000 bogus comments without ">"', `<neu-option value="a">${'<!x'.repeat(80_000)}`],
+    ['40 000 options each with a tag', '<neu-option value="a">a<b>b</b>'.repeat(40_000)],
+  ])('option text stays linear on %s', (_label, options) => {
+    const started = performance.now();
+    transformHtml(`<neu-select value="a">${options}</neu-select>`);
+    expect(performance.now() - started).toBeLessThan(500);
+  });
+
+  test('many unterminated comments stay linear', () => {
+    const html = `<neu-select value="a"><neu-option value="a">${'<!--'.repeat(200_000)}</neu-option></neu-select>`;
+    const started = performance.now();
+    transformHtml(html);
+    expect(performance.now() - started).toBeLessThan(500);
+  });
+
+  test('stays linear on many selects each holding an unterminated comment', () => {
+    const html = '<neu-select><!--</neu-select>'.repeat(100_000);
+    const started = performance.now();
+    transformHtml(html);
+    expect(performance.now() - started).toBeLessThan(500);
+  });
+
+  test('stays linear on many closed comments between options', () => {
+    const html = `<neu-select value="a">${'<!--x--><neu-option value="a">a</neu-option>'.repeat(20_000)}</neu-select>`;
+    const started = performance.now();
+    transformHtml(html);
+    expect(performance.now() - started).toBeLessThan(500);
+  });
+
   test('an unclosed select still gets its selected label', () => {
     const out = transformHtml(
       '<neu-select value="b"><neu-option value="a">A</neu-option><neu-option value="b">B</neu-option>',

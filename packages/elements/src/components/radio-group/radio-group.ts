@@ -1,4 +1,4 @@
-import { dispatch, setText } from '../../core/dom.js';
+import { dispatch, inSlotted, setText } from '../../core/dom.js';
 import { FormControlElement } from '../../core/form-control.js';
 import { requiredMessage } from '../../core/validation.js';
 import { RESYNC, SET_CHECKED, SET_GROUP_DISABLED, type RadioLink } from '../radio/radio-link.js';
@@ -142,14 +142,31 @@ export class NeuRadioGroup extends FormControlElement {
     this.commit();
   }
 
+  /** The group's name: the slotted label's text when there is one, else the label attribute. */
+  private nameGroup(): void {
+    const slot = this.shadowRoot?.querySelector<HTMLSlotElement>('slot[name="label"]');
+    const text = (slot?.assignedNodes() ?? [])
+      .map((node) => node.textContent)
+      .join('')
+      .replace(/\s+/g, ' ')
+      .trim();
+    this.internals.ariaLabel = text || String(this.props.label) || null;
+  }
+
+  protected override rendered(): void {
+    this.shadowRoot!.querySelector('slot[name="label"]')!.addEventListener('slotchange', () =>
+      this.nameGroup(),
+    );
+  }
+
   protected override willUpdate(changed: ReadonlySet<string>): void {
     if (changed.has('value') && !this.dirty) this.current = this.getAttribute('value');
   }
 
   protected override update(changed: ReadonlySet<string>): void {
     if (changed.has('label')) {
-      setText(this.ref('label'), String(this.props.label));
-      this.internals.ariaLabel = String(this.props.label) || null;
+      setText(this.ref('label-text'), String(this.props.label));
+      this.nameGroup();
     }
     if (changed.has('required')) this.internals.ariaRequired = this.props.required ? 'true' : null;
     if (changed.has('disabled')) this.internals.ariaDisabled = this.isDisabled ? 'true' : null;
@@ -157,13 +174,22 @@ export class NeuRadioGroup extends FormControlElement {
   }
 
   protected override connected(): void {
-    this.observer ??= new MutationObserver(() => this.sync());
+    // Radios coming, going or changing value or disabled resync the group. Frameworks rewrite the
+    // slotted label's text in place, which fires no slotchange; that renames the group only.
+    this.observer ??= new MutationObserver((records) => {
+      const label = records.filter((record) => inSlotted(this, record.target));
+      if (label.length) this.nameGroup();
+      if (records.some((r) => r.type !== 'characterData' && !label.includes(r))) this.sync();
+    });
     this.observer.observe(this, {
       childList: true,
       subtree: true,
+      characterData: true,
       attributes: true,
       attributeFilter: ['disabled', 'value'],
     });
+    // The label may have changed while the group was detached and nothing was observing.
+    this.nameGroup();
     this.sync();
   }
 

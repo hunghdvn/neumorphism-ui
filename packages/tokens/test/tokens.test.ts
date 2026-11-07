@@ -176,6 +176,15 @@ describe('undefined elements (§5.6)', () => {
     expect(getComputedStyle(host.querySelector('neu-option')!).display).toBe('none');
   });
 
+  test('a labelled radio group reserves its label row before upgrade', () => {
+    const el = mount('<neu-radio-group label="Plan"></neu-radio-group>').querySelector(
+      'neu-radio-group',
+    )!;
+    const rem = Number.parseFloat(getComputedStyle(document.documentElement).fontSize);
+    // Measured on the defined element in all three engines: 16px label row + 8px gap + 20px radio.
+    expect(el.getBoundingClientRect().height).toBe(rem * 2.75);
+  });
+
   test('an element that already has a shadow root can undo the hiding with :host', () => {
     const el = mount('<neu-switch></neu-switch>').querySelector('neu-switch')!;
     el.attachShadow({ mode: 'open' }).innerHTML =

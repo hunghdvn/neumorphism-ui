@@ -19,7 +19,8 @@
               "type": {
                 "text": "string"
               },
-              "default": "''"
+              "default": "''",
+              "description": "URL of the picture; when it is missing, empty or fails to load, the initials or the icon show instead."
             },
             {
               "name": "label",
@@ -27,7 +28,8 @@
               "type": {
                 "text": "string"
               },
-              "default": "''"
+              "default": "''",
+              "description": "Accessible name that turns the avatar into an image; without it the avatar is decorative."
             },
             {
               "name": "initials",
@@ -35,7 +37,8 @@
               "type": {
                 "text": "string"
               },
-              "default": "''"
+              "default": "''",
+              "description": "Text shown when there is no picture, such as a person's initials."
             },
             {
               "name": "size",
@@ -43,7 +46,8 @@
               "type": {
                 "text": "'sm' | 'md' | 'lg'"
               },
-              "default": "'md'"
+              "default": "'md'",
+              "description": "The avatar size."
             },
             {
               "name": "shape",
@@ -51,7 +55,8 @@
               "type": {
                 "text": "'circle' | 'rounded'"
               },
-              "default": "'circle'"
+              "default": "'circle'",
+              "description": "The outline of the avatar."
             }
           ],
           "members": [
@@ -63,7 +68,8 @@
               },
               "default": "''",
               "attribute": "src",
-              "reflects": true
+              "reflects": true,
+              "description": "URL of the picture; when it is missing, empty or fails to load, the initials or the icon show instead."
             },
             {
               "kind": "field",
@@ -73,7 +79,8 @@
               },
               "default": "''",
               "attribute": "label",
-              "reflects": false
+              "reflects": true,
+              "description": "Accessible name that turns the avatar into an image; without it the avatar is decorative."
             },
             {
               "kind": "field",
@@ -83,7 +90,8 @@
               },
               "default": "''",
               "attribute": "initials",
-              "reflects": false
+              "reflects": true,
+              "description": "Text shown when there is no picture, such as a person's initials."
             },
             {
               "kind": "field",
@@ -93,7 +101,8 @@
               },
               "default": "'md'",
               "attribute": "size",
-              "reflects": true
+              "reflects": true,
+              "description": "The avatar size."
             },
             {
               "kind": "field",
@@ -103,7 +112,8 @@
               },
               "default": "'circle'",
               "attribute": "shape",
-              "reflects": true
+              "reflects": true,
+              "description": "The outline of the avatar."
             }
           ],
           "events": [],
@@ -190,7 +200,8 @@
               "type": {
                 "text": "'neutral' | 'accent' | 'success' | 'warning' | 'danger'"
               },
-              "default": "'neutral'"
+              "default": "'neutral'",
+              "description": "The colour that conveys the badge's meaning."
             },
             {
               "name": "pill",
@@ -198,7 +209,8 @@
               "type": {
                 "text": "boolean"
               },
-              "default": "false"
+              "default": "false",
+              "description": "Rounds the badge into a capsule shape."
             }
           ],
           "members": [
@@ -210,7 +222,8 @@
               },
               "default": "'neutral'",
               "attribute": "variant",
-              "reflects": true
+              "reflects": true,
+              "description": "The colour that conveys the badge's meaning."
             },
             {
               "kind": "field",
@@ -220,7 +233,8 @@
               },
               "default": "false",
               "attribute": "pill",
-              "reflects": true
+              "reflects": true,
+              "description": "Rounds the badge into a capsule shape."
             }
           ],
           "events": [],
@@ -304,7 +318,8 @@
               "type": {
                 "text": "'default' | 'primary' | 'flat'"
               },
-              "default": "'default'"
+              "default": "'default'",
+              "description": "The visual emphasis of the button."
             },
             {
               "name": "size",
@@ -312,7 +327,8 @@
               "type": {
                 "text": "'sm' | 'md' | 'lg'"
               },
-              "default": "'md'"
+              "default": "'md'",
+              "description": "The button size."
             },
             {
               "name": "disabled",
@@ -320,7 +336,8 @@
               "type": {
                 "text": "boolean"
               },
-              "default": "false"
+              "default": "false",
+              "description": "Prevents interaction and dims the button."
             },
             {
               "name": "loading",
@@ -328,7 +345,8 @@
               "type": {
                 "text": "boolean"
               },
-              "default": "false"
+              "default": "false",
+              "description": "Shows a spinner and blocks activation while work is in progress."
             },
             {
               "name": "type",
@@ -336,7 +354,8 @@
               "type": {
                 "text": "'button' | 'submit' | 'reset'"
               },
-              "default": "'button'"
+              "default": "'button'",
+              "description": "What the button does inside a form; defaults to \"button\", which does nothing."
             }
           ],
           "members": [
@@ -348,7 +367,8 @@
               },
               "default": "'default'",
               "attribute": "variant",
-              "reflects": true
+              "reflects": true,
+              "description": "The visual emphasis of the button."
             },
             {
               "kind": "field",
@@ -358,7 +378,8 @@
               },
               "default": "'md'",
               "attribute": "size",
-              "reflects": true
+              "reflects": true,
+              "description": "The button size."
             },
             {
               "kind": "field",
@@ -368,7 +389,8 @@
               },
               "default": "false",
               "attribute": "disabled",
-              "reflects": true
+              "reflects": true,
+              "description": "Prevents interaction and dims the button."
             },
             {
               "kind": "field",
@@ -378,7 +400,8 @@
               },
               "default": "false",
               "attribute": "loading",
-              "reflects": true
+              "reflects": true,
+              "description": "Shows a spinner and blocks activation while work is in progress."
             },
             {
               "kind": "field",
@@ -388,7 +411,8 @@
               },
               "default": "'button'",
               "attribute": "type",
-              "reflects": true
+              "reflects": true,
+              "description": "What the button does inside a form; defaults to \"button\", which does nothing."
             }
           ],
           "events": [
@@ -496,7 +520,8 @@
               "type": {
                 "text": "string"
               },
-              "default": "''"
+              "default": "''",
+              "description": "Accessible name of the group, announced by assistive technology."
             },
             {
               "name": "orientation",
@@ -504,7 +529,8 @@
               "type": {
                 "text": "'horizontal' | 'vertical'"
               },
-              "default": "'horizontal'"
+              "default": "'horizontal'",
+              "description": "The direction the buttons are laid out in."
             }
           ],
           "members": [
@@ -516,7 +542,8 @@
               },
               "default": "''",
               "attribute": "label",
-              "reflects": true
+              "reflects": true,
+              "description": "Accessible name of the group, announced by assistive technology."
             },
             {
               "kind": "field",
@@ -526,7 +553,8 @@
               },
               "default": "'horizontal'",
               "attribute": "orientation",
-              "reflects": true
+              "reflects": true,
+              "description": "The direction the buttons are laid out in."
             }
           ],
           "events": [],
@@ -594,7 +622,7 @@
           "name": "NeuCheckbox",
           "tagName": "neu-checkbox",
           "customElement": true,
-          "description": "A checkbox. The checked attribute is the default state; indeterminate is a property whose attribute only sets the initial state.",
+          "description": "A checkbox. The checked attribute is the default state; indeterminate is a property that the attribute also sets.",
           "attributes": [
             {
               "name": "checked",
@@ -602,7 +630,8 @@
               "type": {
                 "text": "boolean"
               },
-              "default": "false"
+              "default": "false",
+              "description": "Whether the checkbox starts checked, which a form reset restores; set by the checked attribute."
             },
             {
               "name": "indeterminate",
@@ -610,7 +639,8 @@
               "type": {
                 "text": "boolean"
               },
-              "default": "false"
+              "default": "false",
+              "description": "Shows the mixed state; the attribute is observed, so changing it later also sets the property."
             },
             {
               "name": "name",
@@ -618,7 +648,8 @@
               "type": {
                 "text": "string"
               },
-              "default": "''"
+              "default": "''",
+              "description": "The name under which the value is submitted with a form."
             },
             {
               "name": "value",
@@ -626,7 +657,8 @@
               "type": {
                 "text": "string"
               },
-              "default": "'on'"
+              "default": "'on'",
+              "description": "The value submitted with the form while the checkbox is checked; defaults to \"on\"."
             },
             {
               "name": "disabled",
@@ -634,7 +666,8 @@
               "type": {
                 "text": "boolean"
               },
-              "default": "false"
+              "default": "false",
+              "description": "Prevents interaction and leaves the checkbox out of form submission."
             },
             {
               "name": "required",
@@ -642,7 +675,8 @@
               "type": {
                 "text": "boolean"
               },
-              "default": "false"
+              "default": "false",
+              "description": "Makes the form invalid until the checkbox is checked."
             },
             {
               "name": "size",
@@ -650,7 +684,8 @@
               "type": {
                 "text": "'sm' | 'md' | 'lg'"
               },
-              "default": "'md'"
+              "default": "'md'",
+              "description": "The checkbox size."
             }
           ],
           "members": [
@@ -660,7 +695,7 @@
               "type": {
                 "text": "boolean"
               },
-              "description": "Current checked. The checked attribute holds the default."
+              "description": "Whether the checkbox is currently checked."
             },
             {
               "kind": "field",
@@ -670,7 +705,8 @@
               },
               "default": "false",
               "attribute": "indeterminate",
-              "reflects": false
+              "reflects": false,
+              "description": "Shows the mixed state; the attribute is observed, so changing it later also sets the property."
             },
             {
               "kind": "field",
@@ -680,7 +716,8 @@
               },
               "default": "''",
               "attribute": "name",
-              "reflects": true
+              "reflects": true,
+              "description": "The name under which the value is submitted with a form."
             },
             {
               "kind": "field",
@@ -690,7 +727,8 @@
               },
               "default": "'on'",
               "attribute": "value",
-              "reflects": true
+              "reflects": true,
+              "description": "The value submitted with the form while the checkbox is checked; defaults to \"on\"."
             },
             {
               "kind": "field",
@@ -700,7 +738,8 @@
               },
               "default": "false",
               "attribute": "disabled",
-              "reflects": true
+              "reflects": true,
+              "description": "Prevents interaction and leaves the checkbox out of form submission."
             },
             {
               "kind": "field",
@@ -710,7 +749,8 @@
               },
               "default": "false",
               "attribute": "required",
-              "reflects": true
+              "reflects": true,
+              "description": "Makes the form invalid until the checkbox is checked."
             },
             {
               "kind": "field",
@@ -720,7 +760,8 @@
               },
               "default": "'md'",
               "attribute": "size",
-              "reflects": true
+              "reflects": true,
+              "description": "The checkbox size."
             },
             {
               "kind": "field",
@@ -729,7 +770,8 @@
                 "text": "boolean"
               },
               "attribute": "checked",
-              "reflects": true
+              "reflects": true,
+              "description": "Whether the checkbox starts checked, which a form reset restores; set by the checked attribute."
             }
           ],
           "events": [
@@ -832,7 +874,8 @@
               "type": {
                 "text": "'horizontal' | 'vertical'"
               },
-              "default": "'horizontal'"
+              "default": "'horizontal'",
+              "description": "The direction the line runs in."
             }
           ],
           "members": [
@@ -844,7 +887,8 @@
               },
               "default": "'horizontal'",
               "attribute": "orientation",
-              "reflects": true
+              "reflects": true,
+              "description": "The direction the line runs in."
             }
           ],
           "events": [],
@@ -915,7 +959,8 @@
               "type": {
                 "text": "string"
               },
-              "default": "''"
+              "default": "''",
+              "description": "The name of the icon to show."
             },
             {
               "name": "library",
@@ -923,7 +968,8 @@
               "type": {
                 "text": "string"
               },
-              "default": "'system'"
+              "default": "'system'",
+              "description": "The icon library to take the icon from; defaults to the built-in system set."
             },
             {
               "name": "label",
@@ -931,7 +977,8 @@
               "type": {
                 "text": "string"
               },
-              "default": "''"
+              "default": "''",
+              "description": "Accessible name that turns the icon into an image; without it the icon is decorative."
             }
           ],
           "members": [
@@ -943,7 +990,8 @@
               },
               "default": "''",
               "attribute": "name",
-              "reflects": true
+              "reflects": true,
+              "description": "The name of the icon to show."
             },
             {
               "kind": "field",
@@ -953,7 +1001,8 @@
               },
               "default": "'system'",
               "attribute": "library",
-              "reflects": true
+              "reflects": true,
+              "description": "The icon library to take the icon from; defaults to the built-in system set."
             },
             {
               "kind": "field",
@@ -963,7 +1012,8 @@
               },
               "default": "''",
               "attribute": "label",
-              "reflects": true
+              "reflects": true,
+              "description": "Accessible name that turns the icon into an image; without it the icon is decorative."
             }
           ],
           "events": [],
@@ -1013,7 +1063,8 @@
               "type": {
                 "text": "string"
               },
-              "default": "''"
+              "default": "''",
+              "description": "The name of the icon to show."
             },
             {
               "name": "library",
@@ -1021,7 +1072,8 @@
               "type": {
                 "text": "string"
               },
-              "default": "'system'"
+              "default": "'system'",
+              "description": "The icon library to take the icon from; defaults to the built-in system set."
             },
             {
               "name": "label",
@@ -1029,7 +1081,8 @@
               "type": {
                 "text": "string"
               },
-              "default": "''"
+              "default": "''",
+              "description": "Accessible name of the button, since it has no visible text."
             },
             {
               "name": "shape",
@@ -1037,7 +1090,8 @@
               "type": {
                 "text": "'circle' | 'square'"
               },
-              "default": "'circle'"
+              "default": "'circle'",
+              "description": "The outline of the button."
             },
             {
               "name": "variant",
@@ -1045,7 +1099,8 @@
               "type": {
                 "text": "'default' | 'primary' | 'flat'"
               },
-              "default": "'default'"
+              "default": "'default'",
+              "description": "The visual emphasis of the button."
             },
             {
               "name": "size",
@@ -1053,7 +1108,8 @@
               "type": {
                 "text": "'sm' | 'md' | 'lg'"
               },
-              "default": "'md'"
+              "default": "'md'",
+              "description": "The button size."
             },
             {
               "name": "disabled",
@@ -1061,7 +1117,8 @@
               "type": {
                 "text": "boolean"
               },
-              "default": "false"
+              "default": "false",
+              "description": "Prevents interaction and dims the button."
             },
             {
               "name": "type",
@@ -1069,7 +1126,8 @@
               "type": {
                 "text": "'button' | 'submit' | 'reset'"
               },
-              "default": "'button'"
+              "default": "'button'",
+              "description": "What the button does inside a form; defaults to \"button\", which does nothing."
             }
           ],
           "members": [
@@ -1081,7 +1139,8 @@
               },
               "default": "''",
               "attribute": "icon",
-              "reflects": false
+              "reflects": true,
+              "description": "The name of the icon to show."
             },
             {
               "kind": "field",
@@ -1091,7 +1150,8 @@
               },
               "default": "'system'",
               "attribute": "library",
-              "reflects": false
+              "reflects": true,
+              "description": "The icon library to take the icon from; defaults to the built-in system set."
             },
             {
               "kind": "field",
@@ -1101,7 +1161,8 @@
               },
               "default": "''",
               "attribute": "label",
-              "reflects": false
+              "reflects": true,
+              "description": "Accessible name of the button, since it has no visible text."
             },
             {
               "kind": "field",
@@ -1111,7 +1172,8 @@
               },
               "default": "'circle'",
               "attribute": "shape",
-              "reflects": true
+              "reflects": true,
+              "description": "The outline of the button."
             },
             {
               "kind": "field",
@@ -1121,7 +1183,8 @@
               },
               "default": "'default'",
               "attribute": "variant",
-              "reflects": true
+              "reflects": true,
+              "description": "The visual emphasis of the button."
             },
             {
               "kind": "field",
@@ -1131,7 +1194,8 @@
               },
               "default": "'md'",
               "attribute": "size",
-              "reflects": true
+              "reflects": true,
+              "description": "The button size."
             },
             {
               "kind": "field",
@@ -1141,7 +1205,8 @@
               },
               "default": "false",
               "attribute": "disabled",
-              "reflects": true
+              "reflects": true,
+              "description": "Prevents interaction and dims the button."
             },
             {
               "kind": "field",
@@ -1151,7 +1216,8 @@
               },
               "default": "'button'",
               "attribute": "type",
-              "reflects": true
+              "reflects": true,
+              "description": "What the button does inside a form; defaults to \"button\", which does nothing."
             }
           ],
           "events": [
@@ -1238,7 +1304,8 @@
               "type": {
                 "text": "string"
               },
-              "default": "''"
+              "default": "''",
+              "description": "The value the field starts with, which a form reset restores; set by the value attribute."
             },
             {
               "name": "min",
@@ -1246,7 +1313,8 @@
               "type": {
                 "text": "number"
               },
-              "default": "NaN"
+              "default": "NaN",
+              "description": "The lowest accepted value, also the target of the Home key."
             },
             {
               "name": "max",
@@ -1254,7 +1322,8 @@
               "type": {
                 "text": "number"
               },
-              "default": "NaN"
+              "default": "NaN",
+              "description": "The highest accepted value, also the target of the End key."
             },
             {
               "name": "step",
@@ -1262,7 +1331,8 @@
               "type": {
                 "text": "number"
               },
-              "default": "1"
+              "default": "1",
+              "description": "The amount one step changes the value by, and the granularity values must match."
             },
             {
               "name": "name",
@@ -1270,7 +1340,8 @@
               "type": {
                 "text": "string"
               },
-              "default": "''"
+              "default": "''",
+              "description": "The name under which the value is submitted with a form."
             },
             {
               "name": "label",
@@ -1278,7 +1349,8 @@
               "type": {
                 "text": "string"
               },
-              "default": "''"
+              "default": "''",
+              "description": "Visible label text; the label slot replaces it."
             },
             {
               "name": "placeholder",
@@ -1286,7 +1358,8 @@
               "type": {
                 "text": "string"
               },
-              "default": "''"
+              "default": "''",
+              "description": "Hint shown while the field is empty."
             },
             {
               "name": "help-text",
@@ -1294,7 +1367,8 @@
               "type": {
                 "text": "string"
               },
-              "default": "''"
+              "default": "''",
+              "description": "Guidance shown below the field; the help-text slot replaces it."
             },
             {
               "name": "error-text",
@@ -1302,7 +1376,8 @@
               "type": {
                 "text": "string"
               },
-              "default": "''"
+              "default": "''",
+              "description": "Shown in place of the browser's validation message once the field is invalid after user interaction; does not itself make the field invalid."
             },
             {
               "name": "required",
@@ -1310,7 +1385,8 @@
               "type": {
                 "text": "boolean"
               },
-              "default": "false"
+              "default": "false",
+              "description": "Makes the form invalid while the field is empty."
             },
             {
               "name": "disabled",
@@ -1318,7 +1394,8 @@
               "type": {
                 "text": "boolean"
               },
-              "default": "false"
+              "default": "false",
+              "description": "Prevents interaction and leaves the field out of form submission."
             },
             {
               "name": "readonly",
@@ -1326,7 +1403,8 @@
               "type": {
                 "text": "boolean"
               },
-              "default": "false"
+              "default": "false",
+              "description": "Keeps the value visible and submitted but not editable."
             },
             {
               "name": "size",
@@ -1334,7 +1412,8 @@
               "type": {
                 "text": "'sm' | 'md' | 'lg'"
               },
-              "default": "'md'"
+              "default": "'md'",
+              "description": "The field size."
             },
             {
               "name": "increment-label",
@@ -1342,7 +1421,8 @@
               "type": {
                 "text": "string"
               },
-              "default": "'Increase'"
+              "default": "'Increase'",
+              "description": "Accessible name of the button that raises the value; defaults to \"Increase\"."
             },
             {
               "name": "decrement-label",
@@ -1350,7 +1430,8 @@
               "type": {
                 "text": "string"
               },
-              "default": "'Decrease'"
+              "default": "'Decrease'",
+              "description": "Accessible name of the button that lowers the value; defaults to \"Decrease\"."
             }
           ],
           "members": [
@@ -1360,7 +1441,7 @@
               "type": {
                 "text": "string"
               },
-              "description": "Current value. The value attribute holds the default."
+              "description": "The current number as typed or set by script, as a string."
             },
             {
               "kind": "field",
@@ -1370,7 +1451,8 @@
               },
               "default": "NaN",
               "attribute": "min",
-              "reflects": false
+              "reflects": true,
+              "description": "The lowest accepted value, also the target of the Home key."
             },
             {
               "kind": "field",
@@ -1380,7 +1462,8 @@
               },
               "default": "NaN",
               "attribute": "max",
-              "reflects": false
+              "reflects": true,
+              "description": "The highest accepted value, also the target of the End key."
             },
             {
               "kind": "field",
@@ -1390,7 +1473,8 @@
               },
               "default": "1",
               "attribute": "step",
-              "reflects": false
+              "reflects": true,
+              "description": "The amount one step changes the value by, and the granularity values must match."
             },
             {
               "kind": "field",
@@ -1400,7 +1484,8 @@
               },
               "default": "''",
               "attribute": "name",
-              "reflects": true
+              "reflects": true,
+              "description": "The name under which the value is submitted with a form."
             },
             {
               "kind": "field",
@@ -1410,7 +1495,8 @@
               },
               "default": "''",
               "attribute": "label",
-              "reflects": false
+              "reflects": true,
+              "description": "Visible label text; the label slot replaces it."
             },
             {
               "kind": "field",
@@ -1420,7 +1506,8 @@
               },
               "default": "''",
               "attribute": "placeholder",
-              "reflects": false
+              "reflects": true,
+              "description": "Hint shown while the field is empty."
             },
             {
               "kind": "field",
@@ -1430,7 +1517,8 @@
               },
               "default": "''",
               "attribute": "help-text",
-              "reflects": false
+              "reflects": true,
+              "description": "Guidance shown below the field; the help-text slot replaces it."
             },
             {
               "kind": "field",
@@ -1440,7 +1528,8 @@
               },
               "default": "''",
               "attribute": "error-text",
-              "reflects": false
+              "reflects": true,
+              "description": "Shown in place of the browser's validation message once the field is invalid after user interaction; does not itself make the field invalid."
             },
             {
               "kind": "field",
@@ -1450,7 +1539,8 @@
               },
               "default": "false",
               "attribute": "required",
-              "reflects": true
+              "reflects": true,
+              "description": "Makes the form invalid while the field is empty."
             },
             {
               "kind": "field",
@@ -1460,7 +1550,8 @@
               },
               "default": "false",
               "attribute": "disabled",
-              "reflects": true
+              "reflects": true,
+              "description": "Prevents interaction and leaves the field out of form submission."
             },
             {
               "kind": "field",
@@ -1470,7 +1561,8 @@
               },
               "default": "false",
               "attribute": "readonly",
-              "reflects": true
+              "reflects": true,
+              "description": "Keeps the value visible and submitted but not editable."
             },
             {
               "kind": "field",
@@ -1480,7 +1572,8 @@
               },
               "default": "'md'",
               "attribute": "size",
-              "reflects": true
+              "reflects": true,
+              "description": "The field size."
             },
             {
               "kind": "field",
@@ -1490,7 +1583,8 @@
               },
               "default": "'Increase'",
               "attribute": "increment-label",
-              "reflects": false
+              "reflects": true,
+              "description": "Accessible name of the button that raises the value; defaults to \"Increase\"."
             },
             {
               "kind": "field",
@@ -1500,7 +1594,8 @@
               },
               "default": "'Decrease'",
               "attribute": "decrement-label",
-              "reflects": false
+              "reflects": true,
+              "description": "Accessible name of the button that lowers the value; defaults to \"Decrease\"."
             },
             {
               "kind": "field",
@@ -1509,7 +1604,8 @@
                 "text": "string"
               },
               "attribute": "value",
-              "reflects": true
+              "reflects": true,
+              "description": "The value the field starts with, which a form reset restores; set by the value attribute."
             }
           ],
           "events": [
@@ -1628,7 +1724,8 @@
               "type": {
                 "text": "string"
               },
-              "default": "''"
+              "default": "''",
+              "description": "The value the select takes when this option is chosen; the label is used when it is missing."
             },
             {
               "name": "disabled",
@@ -1636,7 +1733,8 @@
               "type": {
                 "text": "boolean"
               },
-              "default": "false"
+              "default": "false",
+              "description": "Keeps the option visible but not selectable."
             }
           ],
           "members": [
@@ -1648,7 +1746,8 @@
               },
               "default": "''",
               "attribute": "value",
-              "reflects": true
+              "reflects": true,
+              "description": "The value the select takes when this option is chosen; the label is used when it is missing."
             },
             {
               "kind": "field",
@@ -1658,7 +1757,8 @@
               },
               "default": "false",
               "attribute": "disabled",
-              "reflects": true
+              "reflects": true,
+              "description": "Keeps the option visible but not selectable."
             }
           ],
           "events": [],
@@ -1708,7 +1808,8 @@
               "type": {
                 "text": "string"
               },
-              "default": "'on'"
+              "default": "'on'",
+              "description": "The value the group takes when this radio is selected; defaults to \"on\"."
             },
             {
               "name": "disabled",
@@ -1716,7 +1817,8 @@
               "type": {
                 "text": "boolean"
               },
-              "default": "false"
+              "default": "false",
+              "description": "Prevents this radio from being selected or focused by arrow keys."
             }
           ],
           "members": [
@@ -1728,7 +1830,8 @@
               },
               "default": "'on'",
               "attribute": "value",
-              "reflects": true
+              "reflects": true,
+              "description": "The value the group takes when this radio is selected; defaults to \"on\"."
             },
             {
               "kind": "field",
@@ -1738,7 +1841,8 @@
               },
               "default": "false",
               "attribute": "disabled",
-              "reflects": true
+              "reflects": true,
+              "description": "Prevents this radio from being selected or focused by arrow keys."
             }
           ],
           "events": [],
@@ -1826,7 +1930,8 @@
               "type": {
                 "text": "string"
               },
-              "default": "''"
+              "default": "''",
+              "description": "Visible label that names the group."
             },
             {
               "name": "name",
@@ -1834,7 +1939,8 @@
               "type": {
                 "text": "string"
               },
-              "default": "''"
+              "default": "''",
+              "description": "The name under which the selected value is submitted with a form."
             },
             {
               "name": "value",
@@ -1842,7 +1948,8 @@
               "type": {
                 "text": "string"
               },
-              "default": "''"
+              "default": "''",
+              "description": "The value selected at the start, which a form reset restores; set by the value attribute."
             },
             {
               "name": "required",
@@ -1850,7 +1957,8 @@
               "type": {
                 "text": "boolean"
               },
-              "default": "false"
+              "default": "false",
+              "description": "Makes the form invalid until a radio is selected."
             },
             {
               "name": "disabled",
@@ -1858,7 +1966,8 @@
               "type": {
                 "text": "boolean"
               },
-              "default": "false"
+              "default": "false",
+              "description": "Prevents interaction with every radio in the group."
             },
             {
               "name": "orientation",
@@ -1866,7 +1975,8 @@
               "type": {
                 "text": "'vertical' | 'horizontal'"
               },
-              "default": "'vertical'"
+              "default": "'vertical'",
+              "description": "The direction the radios are laid out in."
             }
           ],
           "members": [
@@ -1878,7 +1988,8 @@
               },
               "default": "''",
               "attribute": "label",
-              "reflects": false
+              "reflects": true,
+              "description": "Visible label that names the group."
             },
             {
               "kind": "field",
@@ -1888,7 +1999,8 @@
               },
               "default": "''",
               "attribute": "name",
-              "reflects": true
+              "reflects": true,
+              "description": "The name under which the selected value is submitted with a form."
             },
             {
               "kind": "field",
@@ -1896,7 +2008,7 @@
               "type": {
                 "text": "string"
               },
-              "description": "Current value. The value attribute holds the default."
+              "description": "The value of the currently selected radio."
             },
             {
               "kind": "field",
@@ -1906,7 +2018,8 @@
               },
               "default": "false",
               "attribute": "required",
-              "reflects": true
+              "reflects": true,
+              "description": "Makes the form invalid until a radio is selected."
             },
             {
               "kind": "field",
@@ -1916,7 +2029,8 @@
               },
               "default": "false",
               "attribute": "disabled",
-              "reflects": true
+              "reflects": true,
+              "description": "Prevents interaction with every radio in the group."
             },
             {
               "kind": "field",
@@ -1926,7 +2040,8 @@
               },
               "default": "'vertical'",
               "attribute": "orientation",
-              "reflects": true
+              "reflects": true,
+              "description": "The direction the radios are laid out in."
             },
             {
               "kind": "field",
@@ -1935,7 +2050,8 @@
                 "text": "string"
               },
               "attribute": "value",
-              "reflects": true
+              "reflects": true,
+              "description": "The value selected at the start, which a form reset restores; set by the value attribute."
             }
           ],
           "events": [
@@ -1958,6 +2074,10 @@
             {
               "name": "",
               "description": "neu-radio elements."
+            },
+            {
+              "name": "label",
+              "description": "Rich label; replaces the label attribute."
             }
           ],
           "cssParts": [
@@ -2030,7 +2150,8 @@
               "type": {
                 "text": "string"
               },
-              "default": "''"
+              "default": "''",
+              "description": "The value chosen at the start, which a form reset restores; set by the value attribute."
             },
             {
               "name": "name",
@@ -2038,7 +2159,8 @@
               "type": {
                 "text": "string"
               },
-              "default": "''"
+              "default": "''",
+              "description": "The name under which the value is submitted with a form."
             },
             {
               "name": "label",
@@ -2046,7 +2168,8 @@
               "type": {
                 "text": "string"
               },
-              "default": "''"
+              "default": "''",
+              "description": "Visible label text that names the select."
             },
             {
               "name": "placeholder",
@@ -2054,7 +2177,8 @@
               "type": {
                 "text": "string"
               },
-              "default": "''"
+              "default": "''",
+              "description": "Text shown while no option is chosen."
             },
             {
               "name": "help-text",
@@ -2062,7 +2186,8 @@
               "type": {
                 "text": "string"
               },
-              "default": "''"
+              "default": "''",
+              "description": "Guidance shown below the select; the help-text slot replaces it."
             },
             {
               "name": "error-text",
@@ -2070,7 +2195,8 @@
               "type": {
                 "text": "string"
               },
-              "default": "''"
+              "default": "''",
+              "description": "Shown in place of the browser's validation message once the select is invalid after user interaction; does not itself make the select invalid."
             },
             {
               "name": "required",
@@ -2078,7 +2204,8 @@
               "type": {
                 "text": "boolean"
               },
-              "default": "false"
+              "default": "false",
+              "description": "Makes the form invalid until an option is chosen."
             },
             {
               "name": "disabled",
@@ -2086,7 +2213,8 @@
               "type": {
                 "text": "boolean"
               },
-              "default": "false"
+              "default": "false",
+              "description": "Prevents interaction and leaves the select out of form submission."
             },
             {
               "name": "size",
@@ -2094,7 +2222,8 @@
               "type": {
                 "text": "'sm' | 'md' | 'lg'"
               },
-              "default": "'md'"
+              "default": "'md'",
+              "description": "The select size."
             }
           ],
           "members": [
@@ -2104,7 +2233,7 @@
               "type": {
                 "text": "string"
               },
-              "description": "Current value. The value attribute holds the default."
+              "description": "The value of the currently chosen option."
             },
             {
               "kind": "field",
@@ -2114,7 +2243,8 @@
               },
               "default": "''",
               "attribute": "name",
-              "reflects": true
+              "reflects": true,
+              "description": "The name under which the value is submitted with a form."
             },
             {
               "kind": "field",
@@ -2124,7 +2254,8 @@
               },
               "default": "''",
               "attribute": "label",
-              "reflects": false
+              "reflects": true,
+              "description": "Visible label text that names the select."
             },
             {
               "kind": "field",
@@ -2134,7 +2265,8 @@
               },
               "default": "''",
               "attribute": "placeholder",
-              "reflects": false
+              "reflects": true,
+              "description": "Text shown while no option is chosen."
             },
             {
               "kind": "field",
@@ -2144,7 +2276,8 @@
               },
               "default": "''",
               "attribute": "help-text",
-              "reflects": false
+              "reflects": true,
+              "description": "Guidance shown below the select; the help-text slot replaces it."
             },
             {
               "kind": "field",
@@ -2154,7 +2287,8 @@
               },
               "default": "''",
               "attribute": "error-text",
-              "reflects": false
+              "reflects": true,
+              "description": "Shown in place of the browser's validation message once the select is invalid after user interaction; does not itself make the select invalid."
             },
             {
               "kind": "field",
@@ -2164,7 +2298,8 @@
               },
               "default": "false",
               "attribute": "required",
-              "reflects": true
+              "reflects": true,
+              "description": "Makes the form invalid until an option is chosen."
             },
             {
               "kind": "field",
@@ -2174,7 +2309,8 @@
               },
               "default": "false",
               "attribute": "disabled",
-              "reflects": true
+              "reflects": true,
+              "description": "Prevents interaction and leaves the select out of form submission."
             },
             {
               "kind": "field",
@@ -2184,7 +2320,8 @@
               },
               "default": "'md'",
               "attribute": "size",
-              "reflects": true
+              "reflects": true,
+              "description": "The select size."
             },
             {
               "kind": "field",
@@ -2193,7 +2330,8 @@
                 "text": "string"
               },
               "attribute": "value",
-              "reflects": true
+              "reflects": true,
+              "description": "The value chosen at the start, which a form reset restores; set by the value attribute."
             }
           ],
           "events": [
@@ -2227,6 +2365,10 @@
             }
           ],
           "slots": [
+            {
+              "name": "label",
+              "description": "Rich label; replaces the label attribute."
+            },
             {
               "name": "help-text",
               "description": "Rich help text; replaces the help-text attribute."
@@ -2326,7 +2468,8 @@
               "type": {
                 "text": "number"
               },
-              "default": "NaN"
+              "default": "NaN",
+              "description": "The value the slider starts with, which a form reset restores; set by the value attribute."
             },
             {
               "name": "min",
@@ -2334,7 +2477,8 @@
               "type": {
                 "text": "number"
               },
-              "default": "0"
+              "default": "0",
+              "description": "The lowest value of the range."
             },
             {
               "name": "max",
@@ -2342,7 +2486,8 @@
               "type": {
                 "text": "number"
               },
-              "default": "100"
+              "default": "100",
+              "description": "The highest value of the range."
             },
             {
               "name": "step",
@@ -2350,7 +2495,8 @@
               "type": {
                 "text": "number"
               },
-              "default": "1"
+              "default": "1",
+              "description": "The distance between allowed values."
             },
             {
               "name": "name",
@@ -2358,7 +2504,8 @@
               "type": {
                 "text": "string"
               },
-              "default": "''"
+              "default": "''",
+              "description": "The name under which the value is submitted with a form."
             },
             {
               "name": "label",
@@ -2366,7 +2513,8 @@
               "type": {
                 "text": "string"
               },
-              "default": "''"
+              "default": "''",
+              "description": "Accessible name of the slider."
             },
             {
               "name": "disabled",
@@ -2374,7 +2522,8 @@
               "type": {
                 "text": "boolean"
               },
-              "default": "false"
+              "default": "false",
+              "description": "Prevents interaction and leaves the slider out of form submission."
             }
           ],
           "members": [
@@ -2384,7 +2533,7 @@
               "type": {
                 "text": "number"
               },
-              "description": "Current value. The value attribute holds the default."
+              "description": "The current number, snapped to the nearest step within the range."
             },
             {
               "kind": "field",
@@ -2394,7 +2543,8 @@
               },
               "default": "0",
               "attribute": "min",
-              "reflects": false
+              "reflects": true,
+              "description": "The lowest value of the range."
             },
             {
               "kind": "field",
@@ -2404,7 +2554,8 @@
               },
               "default": "100",
               "attribute": "max",
-              "reflects": false
+              "reflects": true,
+              "description": "The highest value of the range."
             },
             {
               "kind": "field",
@@ -2414,7 +2565,8 @@
               },
               "default": "1",
               "attribute": "step",
-              "reflects": false
+              "reflects": true,
+              "description": "The distance between allowed values."
             },
             {
               "kind": "field",
@@ -2424,7 +2576,8 @@
               },
               "default": "''",
               "attribute": "name",
-              "reflects": true
+              "reflects": true,
+              "description": "The name under which the value is submitted with a form."
             },
             {
               "kind": "field",
@@ -2434,7 +2587,8 @@
               },
               "default": "''",
               "attribute": "label",
-              "reflects": false
+              "reflects": true,
+              "description": "Accessible name of the slider."
             },
             {
               "kind": "field",
@@ -2444,7 +2598,8 @@
               },
               "default": "false",
               "attribute": "disabled",
-              "reflects": true
+              "reflects": true,
+              "description": "Prevents interaction and leaves the slider out of form submission."
             },
             {
               "kind": "field",
@@ -2453,14 +2608,16 @@
                 "text": "number"
               },
               "attribute": "value",
-              "reflects": true
+              "reflects": true,
+              "description": "The value the slider starts with, which a form reset restores; set by the value attribute."
             },
             {
               "kind": "field",
               "name": "valueFormatter",
               "type": {
                 "text": "(value: number) => string"
-              }
+              },
+              "description": "Function that turns the value into the text a screen reader announces."
             }
           ],
           "events": [
@@ -2558,7 +2715,8 @@
               "type": {
                 "text": "string"
               },
-              "default": "'Loading'"
+              "default": "'Loading'",
+              "description": "Accessible name announced for the spinner; defaults to \"Loading\"."
             },
             {
               "name": "size",
@@ -2566,7 +2724,8 @@
               "type": {
                 "text": "'sm' | 'md' | 'lg'"
               },
-              "default": "'md'"
+              "default": "'md'",
+              "description": "The spinner size."
             }
           ],
           "members": [
@@ -2578,7 +2737,8 @@
               },
               "default": "'Loading'",
               "attribute": "label",
-              "reflects": false
+              "reflects": true,
+              "description": "Accessible name announced for the spinner; defaults to \"Loading\"."
             },
             {
               "kind": "field",
@@ -2588,7 +2748,8 @@
               },
               "default": "'md'",
               "attribute": "size",
-              "reflects": true
+              "reflects": true,
+              "description": "The spinner size."
             }
           ],
           "events": [],
@@ -2667,7 +2828,8 @@
               "type": {
                 "text": "'raised' | 'inset' | 'flat' | 'convex' | 'concave'"
               },
-              "default": "'raised'"
+              "default": "'raised'",
+              "description": "How the surface is lit and curved."
             },
             {
               "name": "elevation",
@@ -2675,7 +2837,8 @@
               "type": {
                 "text": "'sm' | 'md' | 'lg'"
               },
-              "default": "'md'"
+              "default": "'md'",
+              "description": "How far the surface appears to lift off its background."
             },
             {
               "name": "radius",
@@ -2683,7 +2846,8 @@
               "type": {
                 "text": "'sm' | 'md' | 'lg' | 'full'"
               },
-              "default": "'md'"
+              "default": "'md'",
+              "description": "How rounded the corners are."
             },
             {
               "name": "padding",
@@ -2691,7 +2855,8 @@
               "type": {
                 "text": "'none' | 'sm' | 'md' | 'lg'"
               },
-              "default": "'md'"
+              "default": "'md'",
+              "description": "The space between the edge and the content."
             }
           ],
           "members": [
@@ -2703,7 +2868,8 @@
               },
               "default": "'raised'",
               "attribute": "shape",
-              "reflects": true
+              "reflects": true,
+              "description": "How the surface is lit and curved."
             },
             {
               "kind": "field",
@@ -2713,7 +2879,8 @@
               },
               "default": "'md'",
               "attribute": "elevation",
-              "reflects": true
+              "reflects": true,
+              "description": "How far the surface appears to lift off its background."
             },
             {
               "kind": "field",
@@ -2723,7 +2890,8 @@
               },
               "default": "'md'",
               "attribute": "radius",
-              "reflects": true
+              "reflects": true,
+              "description": "How rounded the corners are."
             },
             {
               "kind": "field",
@@ -2733,7 +2901,8 @@
               },
               "default": "'md'",
               "attribute": "padding",
-              "reflects": true
+              "reflects": true,
+              "description": "The space between the edge and the content."
             }
           ],
           "events": [],
@@ -2809,7 +2978,8 @@
               "type": {
                 "text": "boolean"
               },
-              "default": "false"
+              "default": "false",
+              "description": "Whether the switch starts on, which a form reset restores; set by the checked attribute."
             },
             {
               "name": "name",
@@ -2817,7 +2987,8 @@
               "type": {
                 "text": "string"
               },
-              "default": "''"
+              "default": "''",
+              "description": "The name under which the value is submitted with a form."
             },
             {
               "name": "value",
@@ -2825,7 +2996,8 @@
               "type": {
                 "text": "string"
               },
-              "default": "'on'"
+              "default": "'on'",
+              "description": "The value submitted with the form while the switch is on; defaults to \"on\"."
             },
             {
               "name": "disabled",
@@ -2833,7 +3005,8 @@
               "type": {
                 "text": "boolean"
               },
-              "default": "false"
+              "default": "false",
+              "description": "Prevents interaction and leaves the switch out of form submission."
             },
             {
               "name": "required",
@@ -2841,7 +3014,8 @@
               "type": {
                 "text": "boolean"
               },
-              "default": "false"
+              "default": "false",
+              "description": "Makes the form invalid until the switch is on."
             },
             {
               "name": "size",
@@ -2849,7 +3023,8 @@
               "type": {
                 "text": "'sm' | 'md' | 'lg'"
               },
-              "default": "'md'"
+              "default": "'md'",
+              "description": "The switch size."
             }
           ],
           "members": [
@@ -2859,7 +3034,7 @@
               "type": {
                 "text": "boolean"
               },
-              "description": "Current checked. The checked attribute holds the default."
+              "description": "Whether the switch is currently on."
             },
             {
               "kind": "field",
@@ -2869,7 +3044,8 @@
               },
               "default": "''",
               "attribute": "name",
-              "reflects": true
+              "reflects": true,
+              "description": "The name under which the value is submitted with a form."
             },
             {
               "kind": "field",
@@ -2879,7 +3055,8 @@
               },
               "default": "'on'",
               "attribute": "value",
-              "reflects": true
+              "reflects": true,
+              "description": "The value submitted with the form while the switch is on; defaults to \"on\"."
             },
             {
               "kind": "field",
@@ -2889,7 +3066,8 @@
               },
               "default": "false",
               "attribute": "disabled",
-              "reflects": true
+              "reflects": true,
+              "description": "Prevents interaction and leaves the switch out of form submission."
             },
             {
               "kind": "field",
@@ -2899,7 +3077,8 @@
               },
               "default": "false",
               "attribute": "required",
-              "reflects": true
+              "reflects": true,
+              "description": "Makes the form invalid until the switch is on."
             },
             {
               "kind": "field",
@@ -2909,7 +3088,8 @@
               },
               "default": "'md'",
               "attribute": "size",
-              "reflects": true
+              "reflects": true,
+              "description": "The switch size."
             },
             {
               "kind": "field",
@@ -2918,7 +3098,8 @@
                 "text": "boolean"
               },
               "attribute": "checked",
-              "reflects": true
+              "reflects": true,
+              "description": "Whether the switch starts on, which a form reset restores; set by the checked attribute."
             }
           ],
           "events": [
@@ -3021,7 +3202,8 @@
               "type": {
                 "text": "'text' | 'email' | 'password' | 'search' | 'tel' | 'url'"
               },
-              "default": "'text'"
+              "default": "'text'",
+              "description": "The kind of text the field accepts, which sets its keyboard and masking and drives email, url and tel validation."
             },
             {
               "name": "value",
@@ -3029,7 +3211,8 @@
               "type": {
                 "text": "string"
               },
-              "default": "''"
+              "default": "''",
+              "description": "The text the field starts with, which a form reset restores; set by the value attribute."
             },
             {
               "name": "name",
@@ -3037,7 +3220,8 @@
               "type": {
                 "text": "string"
               },
-              "default": "''"
+              "default": "''",
+              "description": "The name under which the text is submitted with a form."
             },
             {
               "name": "label",
@@ -3045,7 +3229,8 @@
               "type": {
                 "text": "string"
               },
-              "default": "''"
+              "default": "''",
+              "description": "Visible label text; the label slot replaces it."
             },
             {
               "name": "placeholder",
@@ -3053,7 +3238,8 @@
               "type": {
                 "text": "string"
               },
-              "default": "''"
+              "default": "''",
+              "description": "Hint shown while the field is empty."
             },
             {
               "name": "help-text",
@@ -3061,7 +3247,8 @@
               "type": {
                 "text": "string"
               },
-              "default": "''"
+              "default": "''",
+              "description": "Guidance shown below the field; the help-text slot replaces it."
             },
             {
               "name": "error-text",
@@ -3069,7 +3256,8 @@
               "type": {
                 "text": "string"
               },
-              "default": "''"
+              "default": "''",
+              "description": "Shown in place of the browser's validation message once the field is invalid after user interaction; does not itself make the field invalid."
             },
             {
               "name": "required",
@@ -3077,7 +3265,8 @@
               "type": {
                 "text": "boolean"
               },
-              "default": "false"
+              "default": "false",
+              "description": "Makes the form invalid while the field is empty."
             },
             {
               "name": "disabled",
@@ -3085,7 +3274,8 @@
               "type": {
                 "text": "boolean"
               },
-              "default": "false"
+              "default": "false",
+              "description": "Prevents interaction and leaves the field out of form submission."
             },
             {
               "name": "readonly",
@@ -3093,7 +3283,8 @@
               "type": {
                 "text": "boolean"
               },
-              "default": "false"
+              "default": "false",
+              "description": "Keeps the text visible and submitted but not editable."
             },
             {
               "name": "minlength",
@@ -3101,7 +3292,8 @@
               "type": {
                 "text": "number"
               },
-              "default": "-1"
+              "default": "-1",
+              "description": "The fewest characters the text must have; checked after user edits, like native, not on script-set values."
             },
             {
               "name": "maxlength",
@@ -3109,7 +3301,8 @@
               "type": {
                 "text": "number"
               },
-              "default": "-1"
+              "default": "-1",
+              "description": "The most characters the text may have; checked after user edits, like native, not a hard limit on script-set values."
             },
             {
               "name": "pattern",
@@ -3117,7 +3310,8 @@
               "type": {
                 "text": "string"
               },
-              "default": "''"
+              "default": "''",
+              "description": "A regular expression the whole text must match."
             },
             {
               "name": "autocomplete",
@@ -3125,7 +3319,8 @@
               "type": {
                 "text": "string"
               },
-              "default": "''"
+              "default": "''",
+              "description": "Hint for the browser's autofill, as for the native attribute."
             },
             {
               "name": "inputmode",
@@ -3133,7 +3328,8 @@
               "type": {
                 "text": "string"
               },
-              "default": "''"
+              "default": "''",
+              "description": "Hint for which virtual keyboard to show."
             },
             {
               "name": "enterkeyhint",
@@ -3141,7 +3337,8 @@
               "type": {
                 "text": "string"
               },
-              "default": "''"
+              "default": "''",
+              "description": "Hint for the label of the virtual keyboard's Enter key."
             },
             {
               "name": "size",
@@ -3149,7 +3346,8 @@
               "type": {
                 "text": "'sm' | 'md' | 'lg'"
               },
-              "default": "'md'"
+              "default": "'md'",
+              "description": "The field size."
             }
           ],
           "members": [
@@ -3161,7 +3359,8 @@
               },
               "default": "'text'",
               "attribute": "type",
-              "reflects": true
+              "reflects": true,
+              "description": "The kind of text the field accepts, which sets its keyboard and masking and drives email, url and tel validation."
             },
             {
               "kind": "field",
@@ -3169,7 +3368,7 @@
               "type": {
                 "text": "string"
               },
-              "description": "Current value. The value attribute holds the default."
+              "description": "The current text as typed or set by script."
             },
             {
               "kind": "field",
@@ -3179,7 +3378,8 @@
               },
               "default": "''",
               "attribute": "name",
-              "reflects": true
+              "reflects": true,
+              "description": "The name under which the text is submitted with a form."
             },
             {
               "kind": "field",
@@ -3189,7 +3389,8 @@
               },
               "default": "''",
               "attribute": "label",
-              "reflects": false
+              "reflects": true,
+              "description": "Visible label text; the label slot replaces it."
             },
             {
               "kind": "field",
@@ -3199,7 +3400,8 @@
               },
               "default": "''",
               "attribute": "placeholder",
-              "reflects": false
+              "reflects": true,
+              "description": "Hint shown while the field is empty."
             },
             {
               "kind": "field",
@@ -3209,7 +3411,8 @@
               },
               "default": "''",
               "attribute": "help-text",
-              "reflects": false
+              "reflects": true,
+              "description": "Guidance shown below the field; the help-text slot replaces it."
             },
             {
               "kind": "field",
@@ -3219,7 +3422,8 @@
               },
               "default": "''",
               "attribute": "error-text",
-              "reflects": false
+              "reflects": true,
+              "description": "Shown in place of the browser's validation message once the field is invalid after user interaction; does not itself make the field invalid."
             },
             {
               "kind": "field",
@@ -3229,7 +3433,8 @@
               },
               "default": "false",
               "attribute": "required",
-              "reflects": true
+              "reflects": true,
+              "description": "Makes the form invalid while the field is empty."
             },
             {
               "kind": "field",
@@ -3239,7 +3444,8 @@
               },
               "default": "false",
               "attribute": "disabled",
-              "reflects": true
+              "reflects": true,
+              "description": "Prevents interaction and leaves the field out of form submission."
             },
             {
               "kind": "field",
@@ -3249,7 +3455,8 @@
               },
               "default": "false",
               "attribute": "readonly",
-              "reflects": true
+              "reflects": true,
+              "description": "Keeps the text visible and submitted but not editable."
             },
             {
               "kind": "field",
@@ -3259,7 +3466,8 @@
               },
               "default": "-1",
               "attribute": "minlength",
-              "reflects": false
+              "reflects": true,
+              "description": "The fewest characters the text must have; checked after user edits, like native, not on script-set values."
             },
             {
               "kind": "field",
@@ -3269,7 +3477,8 @@
               },
               "default": "-1",
               "attribute": "maxlength",
-              "reflects": false
+              "reflects": true,
+              "description": "The most characters the text may have; checked after user edits, like native, not a hard limit on script-set values."
             },
             {
               "kind": "field",
@@ -3279,7 +3488,8 @@
               },
               "default": "''",
               "attribute": "pattern",
-              "reflects": false
+              "reflects": true,
+              "description": "A regular expression the whole text must match."
             },
             {
               "kind": "field",
@@ -3289,7 +3499,8 @@
               },
               "default": "''",
               "attribute": "autocomplete",
-              "reflects": false
+              "reflects": true,
+              "description": "Hint for the browser's autofill, as for the native attribute."
             },
             {
               "kind": "field",
@@ -3299,7 +3510,8 @@
               },
               "default": "''",
               "attribute": "inputmode",
-              "reflects": false
+              "reflects": true,
+              "description": "Hint for which virtual keyboard to show."
             },
             {
               "kind": "field",
@@ -3309,7 +3521,8 @@
               },
               "default": "''",
               "attribute": "enterkeyhint",
-              "reflects": false
+              "reflects": true,
+              "description": "Hint for the label of the virtual keyboard's Enter key."
             },
             {
               "kind": "field",
@@ -3319,7 +3532,8 @@
               },
               "default": "'md'",
               "attribute": "size",
-              "reflects": true
+              "reflects": true,
+              "description": "The field size."
             },
             {
               "kind": "field",
@@ -3328,7 +3542,8 @@
                 "text": "string"
               },
               "attribute": "value",
-              "reflects": true
+              "reflects": true,
+              "description": "The text the field starts with, which a form reset restores; set by the value attribute."
             }
           ],
           "events": [
@@ -3455,7 +3670,8 @@
               "type": {
                 "text": "string"
               },
-              "default": "''"
+              "default": "''",
+              "description": "The text the field starts with, which a form reset restores; set by the value attribute."
             },
             {
               "name": "name",
@@ -3463,7 +3679,8 @@
               "type": {
                 "text": "string"
               },
-              "default": "''"
+              "default": "''",
+              "description": "The name under which the text is submitted with a form."
             },
             {
               "name": "label",
@@ -3471,7 +3688,8 @@
               "type": {
                 "text": "string"
               },
-              "default": "''"
+              "default": "''",
+              "description": "Visible label text; the label slot replaces it."
             },
             {
               "name": "placeholder",
@@ -3479,7 +3697,8 @@
               "type": {
                 "text": "string"
               },
-              "default": "''"
+              "default": "''",
+              "description": "Hint shown while the field is empty."
             },
             {
               "name": "help-text",
@@ -3487,7 +3706,8 @@
               "type": {
                 "text": "string"
               },
-              "default": "''"
+              "default": "''",
+              "description": "Guidance shown below the field; the help-text slot replaces it."
             },
             {
               "name": "error-text",
@@ -3495,7 +3715,8 @@
               "type": {
                 "text": "string"
               },
-              "default": "''"
+              "default": "''",
+              "description": "Shown in place of the browser's validation message once the field is invalid after user interaction; does not itself make the field invalid."
             },
             {
               "name": "required",
@@ -3503,7 +3724,8 @@
               "type": {
                 "text": "boolean"
               },
-              "default": "false"
+              "default": "false",
+              "description": "Makes the form invalid while the field is empty."
             },
             {
               "name": "disabled",
@@ -3511,7 +3733,8 @@
               "type": {
                 "text": "boolean"
               },
-              "default": "false"
+              "default": "false",
+              "description": "Prevents interaction and leaves the field out of form submission."
             },
             {
               "name": "readonly",
@@ -3519,7 +3742,8 @@
               "type": {
                 "text": "boolean"
               },
-              "default": "false"
+              "default": "false",
+              "description": "Keeps the text visible and submitted but not editable."
             },
             {
               "name": "minlength",
@@ -3527,7 +3751,8 @@
               "type": {
                 "text": "number"
               },
-              "default": "-1"
+              "default": "-1",
+              "description": "The fewest characters the text must have; checked after user edits, like native, not on script-set values."
             },
             {
               "name": "maxlength",
@@ -3535,7 +3760,8 @@
               "type": {
                 "text": "number"
               },
-              "default": "-1"
+              "default": "-1",
+              "description": "The most characters the text may have; checked after user edits, like native, not a hard limit on script-set values."
             },
             {
               "name": "autocomplete",
@@ -3543,7 +3769,8 @@
               "type": {
                 "text": "string"
               },
-              "default": "''"
+              "default": "''",
+              "description": "Hint for the browser's autofill, as for the native attribute."
             },
             {
               "name": "enterkeyhint",
@@ -3551,7 +3778,8 @@
               "type": {
                 "text": "string"
               },
-              "default": "''"
+              "default": "''",
+              "description": "Hint for the label of the virtual keyboard's Enter key."
             },
             {
               "name": "rows",
@@ -3559,7 +3787,8 @@
               "type": {
                 "text": "number"
               },
-              "default": "3"
+              "default": "3",
+              "description": "The number of visible text lines; falls back to 3 for anything but a positive integer."
             },
             {
               "name": "resize",
@@ -3567,7 +3796,8 @@
               "type": {
                 "text": "'none' | 'vertical' | 'auto'"
               },
-              "default": "'vertical'"
+              "default": "'vertical'",
+              "description": "How the user or the content can change the field's height."
             },
             {
               "name": "size",
@@ -3575,7 +3805,8 @@
               "type": {
                 "text": "'sm' | 'md' | 'lg'"
               },
-              "default": "'md'"
+              "default": "'md'",
+              "description": "The field size."
             }
           ],
           "members": [
@@ -3585,7 +3816,7 @@
               "type": {
                 "text": "string"
               },
-              "description": "Current value. The value attribute holds the default."
+              "description": "The current text as typed or set by script."
             },
             {
               "kind": "field",
@@ -3595,7 +3826,8 @@
               },
               "default": "''",
               "attribute": "name",
-              "reflects": true
+              "reflects": true,
+              "description": "The name under which the text is submitted with a form."
             },
             {
               "kind": "field",
@@ -3605,7 +3837,8 @@
               },
               "default": "''",
               "attribute": "label",
-              "reflects": false
+              "reflects": true,
+              "description": "Visible label text; the label slot replaces it."
             },
             {
               "kind": "field",
@@ -3615,7 +3848,8 @@
               },
               "default": "''",
               "attribute": "placeholder",
-              "reflects": false
+              "reflects": true,
+              "description": "Hint shown while the field is empty."
             },
             {
               "kind": "field",
@@ -3625,7 +3859,8 @@
               },
               "default": "''",
               "attribute": "help-text",
-              "reflects": false
+              "reflects": true,
+              "description": "Guidance shown below the field; the help-text slot replaces it."
             },
             {
               "kind": "field",
@@ -3635,7 +3870,8 @@
               },
               "default": "''",
               "attribute": "error-text",
-              "reflects": false
+              "reflects": true,
+              "description": "Shown in place of the browser's validation message once the field is invalid after user interaction; does not itself make the field invalid."
             },
             {
               "kind": "field",
@@ -3645,7 +3881,8 @@
               },
               "default": "false",
               "attribute": "required",
-              "reflects": true
+              "reflects": true,
+              "description": "Makes the form invalid while the field is empty."
             },
             {
               "kind": "field",
@@ -3655,7 +3892,8 @@
               },
               "default": "false",
               "attribute": "disabled",
-              "reflects": true
+              "reflects": true,
+              "description": "Prevents interaction and leaves the field out of form submission."
             },
             {
               "kind": "field",
@@ -3665,7 +3903,8 @@
               },
               "default": "false",
               "attribute": "readonly",
-              "reflects": true
+              "reflects": true,
+              "description": "Keeps the text visible and submitted but not editable."
             },
             {
               "kind": "field",
@@ -3675,7 +3914,8 @@
               },
               "default": "-1",
               "attribute": "minlength",
-              "reflects": false
+              "reflects": true,
+              "description": "The fewest characters the text must have; checked after user edits, like native, not on script-set values."
             },
             {
               "kind": "field",
@@ -3685,7 +3925,8 @@
               },
               "default": "-1",
               "attribute": "maxlength",
-              "reflects": false
+              "reflects": true,
+              "description": "The most characters the text may have; checked after user edits, like native, not a hard limit on script-set values."
             },
             {
               "kind": "field",
@@ -3695,7 +3936,8 @@
               },
               "default": "''",
               "attribute": "autocomplete",
-              "reflects": false
+              "reflects": true,
+              "description": "Hint for the browser's autofill, as for the native attribute."
             },
             {
               "kind": "field",
@@ -3705,7 +3947,8 @@
               },
               "default": "''",
               "attribute": "enterkeyhint",
-              "reflects": false
+              "reflects": true,
+              "description": "Hint for the label of the virtual keyboard's Enter key."
             },
             {
               "kind": "field",
@@ -3715,7 +3958,8 @@
               },
               "default": "3",
               "attribute": "rows",
-              "reflects": false
+              "reflects": true,
+              "description": "The number of visible text lines; falls back to 3 for anything but a positive integer."
             },
             {
               "kind": "field",
@@ -3725,7 +3969,8 @@
               },
               "default": "'vertical'",
               "attribute": "resize",
-              "reflects": true
+              "reflects": true,
+              "description": "How the user or the content can change the field's height."
             },
             {
               "kind": "field",
@@ -3735,7 +3980,8 @@
               },
               "default": "'md'",
               "attribute": "size",
-              "reflects": true
+              "reflects": true,
+              "description": "The field size."
             },
             {
               "kind": "field",
@@ -3744,7 +3990,8 @@
                 "text": "string"
               },
               "attribute": "value",
-              "reflects": true
+              "reflects": true,
+              "description": "The text the field starts with, which a form reset restores; set by the value attribute."
             }
           ],
           "events": [

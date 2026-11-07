@@ -1,4 +1,4 @@
-import { afterDispatch, setOptionalAttribute } from '../../core/dom.js';
+import { afterDispatch, composing, setOptionalAttribute } from '../../core/dom.js';
 import { baseCommitProps, TextControlElement } from '../shared/text-control.js';
 import { BLOCKS_IMPLICIT_SUBMIT, implicitSubmit } from '../text-field/implicit-submit.js';
 import { stepUnit } from '../shared/step.js';
@@ -82,7 +82,7 @@ export class NeuNumberField extends TextControlElement {
   }
 
   protected override controlKeyDown(event: KeyboardEvent): void {
-    if (event.isComposing) return;
+    if (composing(event)) return;
     if (event.key === 'Enter') {
       // Like a native input: submit once the keydown has finished dispatching, unless cancelled.
       afterDispatch(event, () => {

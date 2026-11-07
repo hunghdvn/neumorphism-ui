@@ -527,3 +527,19 @@ describe('neu-text-field', () => {
     expect(await axeViolations(el.parentElement!)).toEqual([]);
   });
 });
+
+test('an IME-commit Enter (keyCode 229, isComposing false) does not submit', async () => {
+  const form = mountForm(
+    '<neu-text-field name="q" label="L"></neu-text-field><neu-button type="submit">Go</neu-button>',
+  );
+  let submitted = 0;
+  form.addEventListener('submit', (event) => {
+    event.preventDefault();
+    submitted++;
+  });
+  const ev = new KeyboardEvent('keydown', { key: 'Enter', bubbles: true, composed: true });
+  Object.defineProperty(ev, 'keyCode', { value: 229 });
+  form.querySelector('neu-text-field')!.shadowRoot!.querySelector('input')!.dispatchEvent(ev);
+  await tick();
+  expect(submitted).toBe(0);
+});

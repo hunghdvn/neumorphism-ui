@@ -1,19 +1,18 @@
 import { defineComponent } from '../../core/define.js';
 import { html, type RawHtml } from '../../core/html.js';
 import type { InferProps } from '../../core/props.js';
-import { themeCssProperties } from '../../core/styles.js';
 import { textareaStyles } from './textarea.styles.js';
 
 const props = {
   value: { type: 'string' },
-  name: { type: 'string', reflect: true },
+  name: { type: 'string' },
   label: { type: 'string' },
   placeholder: { type: 'string' },
   helpText: { type: 'string' },
   errorText: { type: 'string' },
-  required: { type: 'boolean', reflect: true },
-  disabled: { type: 'boolean', reflect: true },
-  readOnly: { type: 'boolean', reflect: true, attribute: 'readonly' },
+  required: { type: 'boolean' },
+  disabled: { type: 'boolean' },
+  readOnly: { type: 'boolean', attribute: 'readonly' },
   minLength: { type: 'number', default: -1, attribute: 'minlength' },
   maxLength: { type: 'number', default: -1, attribute: 'maxlength' },
   autocomplete: { type: 'string' },
@@ -23,9 +22,8 @@ const props = {
     type: 'string',
     default: 'vertical',
     values: ['none', 'vertical', 'auto'],
-    reflect: true,
   },
-  size: { type: 'string', default: 'md', values: ['sm', 'md', 'lg'], reflect: true },
+  size: { type: 'string', default: 'md', values: ['sm', 'md', 'lg'] },
 } as const;
 
 export type TextareaProps = InferProps<typeof props>;
@@ -51,24 +49,4 @@ export const textareaDef = defineComponent({
   template: (p) =>
     html`<div part="base" class="base"><label part="label" class="label" for="input"><slot name="label"><span class="label-text" data-ref="label-text">${p.label}</span></slot></label><div part="control" class="control"><textarea part="textarea" class="input" id="input" data-ref="input" rows="${rowsOf(p.rows)}" aria-describedby="help"${areaAttributes(p)}>
 ${p.value}</textarea></div><div part="help-text" class="help" id="help"><slot name="help-text"><span class="help-text" data-ref="help-text">${p.helpText}</span></slot><span class="error-text" data-ref="error-text">${p.errorText}</span></div></div>`,
-  docs: {
-    summary:
-      'A multi-line text input with an inset field. The value attribute is the default value; resize="auto" grows the field with its content.',
-    events: [
-      { name: 'input', description: 'Fired on every edit (the native input event, composed).' },
-      { name: 'change', description: 'Fired when an edit is committed, usually on blur.' },
-    ],
-    slots: [
-      { name: 'label', description: 'Rich label; replaces the label attribute.' },
-      { name: 'help-text', description: 'Rich help text; replaces the help-text attribute.' },
-    ],
-    parts: [
-      { name: 'base', description: 'Outer wrapper.' },
-      { name: 'label', description: 'The <label> element.' },
-      { name: 'control', description: 'The inset field around the textarea.' },
-      { name: 'textarea', description: 'The native <textarea>.' },
-      { name: 'help-text', description: 'Help or error text area.' },
-    ],
-    cssProperties: themeCssProperties,
-  },
 });

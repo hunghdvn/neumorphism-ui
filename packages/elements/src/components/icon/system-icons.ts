@@ -20,12 +20,12 @@ const BODIES: Readonly<Record<string, string>> = {
 };
 
 /** The SVG element around an icon body. DOM-free. */
-export function svgWrap(body: string): string {
-  return `<svg part="svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">${body}</svg>`;
+export function svgWrap(body: string, part?: string): string {
+  return `<svg${part ? ` part="${part}"` : ''} viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">${body}</svg>`;
 }
 
 /** The built-in icon as an SVG string, or undefined for an unknown name. DOM-free. */
 export function systemIconSvg(name: string): string | undefined {
   const body = Object.hasOwn(BODIES, name) ? BODIES[name] : undefined;
-  return body === undefined ? undefined : svgWrap(body);
+  return body === undefined ? undefined : svgWrap(body, 'svg');
 }

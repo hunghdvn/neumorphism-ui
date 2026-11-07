@@ -1,4 +1,4 @@
-import { attributeName, formDefaultProp } from '@neumorphism-ui/elements/ssr.js';
+import { attributeName, formDefaultProp, reflects } from '@neumorphism-ui/elements/ssr.js';
 
 const pascal = (text) =>
   text
@@ -28,12 +28,13 @@ function defaultTsType(def) {
 }
 
 /** Custom Elements Manifest 2.1.0 for IDEs, docs and Storybook-like tools. */
-export function buildManifest(defs) {
+export function buildManifest(defs, docs) {
   return {
     schemaVersion: '2.1.0',
     readme: '',
     modules: defs.map((def) => {
       const name = tagToClassName(def.tag);
+      const { descriptions, ...tagDocs } = docs.get(def.tag);
       const path = `dist/${tagToFileBase(def.tag)}.js`;
       const valueProp = def.form?.valueProp;
       const defaultProp = formDefaultProp(def);
@@ -42,6 +43,7 @@ export function buildManifest(defs) {
         fieldName: key === valueProp ? defaultProp : key,
         type: { text: propTsType(decl) },
         default: defaultText(decl),
+        description: descriptions[key === valueProp ? defaultProp : key],
       }));
       const members = Object.entries(def.props).map(([key, decl]) =>
         key === valueProp
@@ -49,7 +51,7 @@ export function buildManifest(defs) {
               kind: 'field',
               name: key,
               type: { text: propTsType(decl) },
-              description: `Current ${key}. The ${attributeName(key, decl)} attribute holds the default.`,
+              description: descriptions[key],
             }
           : {
               kind: 'field',
@@ -57,7 +59,8 @@ export function buildManifest(defs) {
               type: { text: propTsType(decl) },
               default: defaultText(decl),
               attribute: attributeName(key, decl),
-              reflects: decl.reflect === true,
+              reflects: reflects(key, decl, def),
+              description: descriptions[key],
             },
       );
       if (defaultProp) {
@@ -67,10 +70,16 @@ export function buildManifest(defs) {
           type: { text: defaultTsType(def) },
           attribute: valueProp,
           reflects: true,
+          description: descriptions[defaultProp],
         });
       }
       for (const [name, type] of Object.entries(def.properties ?? {})) {
-        members.push({ kind: 'field', name, type: { text: type } });
+        members.push({
+          kind: 'field',
+          name,
+          type: { text: type },
+          description: descriptions[name],
+        });
       }
       return {
         kind: 'javascript-module',
@@ -81,23 +90,23 @@ export function buildManifest(defs) {
             name,
             tagName: def.tag,
             customElement: true,
-            description: def.docs.summary,
+            description: tagDocs.summary,
             attributes,
             members,
-            events: def.docs.events.map((e) => ({
+            events: tagDocs.events.map((e) => ({
               name: e.name,
               type: { text: 'Event' },
               description: e.description,
             })),
-            slots: def.docs.slots.map(({ name: slot, description }) => ({
+            slots: tagDocs.slots.map(({ name: slot, description }) => ({
               name: slot,
               description,
             })),
-            cssParts: def.docs.parts.map(({ name: part, description }) => ({
+            cssParts: tagDocs.parts.map(({ name: part, description }) => ({
               name: part,
               description,
             })),
-            cssProperties: def.docs.cssProperties.map(({ name: prop, description }) => ({
+            cssProperties: tagDocs.cssProperties.map(({ name: prop, description }) => ({
               name: prop,
               description,
             })),
@@ -116,9 +125,9 @@ export function buildManifest(defs) {
  * [React prop, DOM event] pairs. click stays a native React prop. A value control follows React's
  * <input>: onChange fires on every edit (the DOM input event); the committed DOM change has no prop.
  */
-function reactEvents(def) {
+function reactEvents(def, docs) {
   const valueControl = def.form?.valueProp === 'value';
-  return def.docs.events
+  return docs.events
     .filter((event) => event.name !== 'click')
     .map((event) =>
       valueControl && event.name === 'change'
@@ -127,7 +136,7 @@ function reactEvents(def) {
     );
 }
 
-export function buildReactWrapper(def) {
+export function buildReactWrapper(def, docs) {
   const name = tagToClassName(def.tag);
   const file = tagToFileBase(def.tag);
   const defaultProp = formDefaultProp(def);
@@ -136,7 +145,7 @@ export function buildReactWrapper(def) {
   for (const [name, type] of Object.entries(def.properties ?? {})) {
     lines.push(`  ${name}?: ${type};`);
   }
-  const events = reactEvents(def);
+  const events = reactEvents(def, docs);
   for (const [prop] of events) lines.push(`  ${prop}?: (event: Event) => void;`);
   const eventMap = events.map(([prop, event]) => `${prop}: '${event}'`).join(', ');
   return [

@@ -118,7 +118,7 @@ describe('neu-slider', () => {
     expect(el.value).toBe(60);
   });
 
-  test('reflection: name and disabled reflect; value, min, max, step and label do not', () => {
+  test('reflection: name, disabled, min, max, step and label reflect; value does not', () => {
     const el = slider();
     el.name = 'n';
     el.disabled = true;
@@ -128,8 +128,13 @@ describe('neu-slider', () => {
     el.max = 90;
     el.step = 5;
     el.label = 'Volume';
-    for (const a of ['value', 'min', 'max', 'step', 'label'])
-      expect(el.hasAttribute(a)).toBe(false);
+    expect(el.hasAttribute('value')).toBe(false);
+    expect(['min', 'max', 'step', 'label'].map((a) => el.getAttribute(a))).toEqual([
+      '5',
+      '90',
+      '5',
+      'Volume',
+    ]);
   });
 
   test('invalid attributes fall back: value to the midpoint, min/max/step to their defaults', () => {

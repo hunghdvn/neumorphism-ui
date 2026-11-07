@@ -147,20 +147,43 @@ export function readStartTag(html: string, pos: number): StartTag | null {
 type SearchCache = Map<string, { from: number; index: number }>;
 
 /**
- * First match of `prefix` followed by whitespace, '/' or '>' at or after `from`, or -1. Searches
- * for one key only move forward, so a miss stays a miss and a hit stays valid until it is
- * passed; the memo keeps a repeated tag from rescanning the rest of the input each time.
+ * `search(from)`: the first match at or after `from`, or -1, remembered under `key`. A later
+ * search from at or after the remembered start and not past its match has the same answer: a
+ * miss stays a miss and a hit stays valid until it is passed. The memo keeps a repeated search
+ * from rescanning the rest of the input each time.
  */
-function findTag(html: string, prefix: string, from: number, cache?: SearchCache): number {
-  const known = cache?.get(prefix);
+function memoized(
+  cache: SearchCache | undefined,
+  key: string,
+  from: number,
+  search: (from: number) => number,
+): number {
+  const known = cache?.get(key);
   if (known && from >= known.from && (known.index === -1 || from <= known.index)) {
     return known.index;
   }
-  const pattern = new RegExp(`${prefix}[\\s/>]`, 'ig');
-  pattern.lastIndex = from;
-  const index = pattern.exec(html)?.index ?? -1;
-  cache?.set(prefix, { from, index });
+  const index = search(from);
+  cache?.set(key, { from, index });
   return index;
+}
+
+/** First match of `prefix` followed by whitespace, '/' or '>' at or after `from`, or -1. */
+function findTag(html: string, prefix: string, from: number, cache?: SearchCache): number {
+  return memoized(cache, prefix, from, (start) => {
+    const pattern = new RegExp(`${prefix}[\\s/>]`, 'ig');
+    pattern.lastIndex = start;
+    return pattern.exec(html)?.index ?? -1;
+  });
+}
+
+/**
+ * Index just past the comment whose `<!--` is at `lt`; an unterminated comment runs to the end,
+ * as in the browser. Searching from lt + 2 lets `<!-->` and `<!--->` close at once, like the
+ * tokenizer. Every scanner here skips comments through this one function.
+ */
+function skipComment(html: string, lt: number, cache?: SearchCache): number {
+  const close = memoized(cache, '-->', lt + 2, (start) => html.indexOf('-->', start));
+  return close === -1 ? html.length : close + 3;
 }
 
 const closeTagIndex = (html: string, name: string, from: number) =>
@@ -169,6 +192,43 @@ const closeTagIndex = (html: string, name: string, from: number) =>
 /** Smallest of the given tag positions, or `limit` when none is found. */
 const firstOf = (limit: number, ...indexes: number[]) =>
   Math.min(limit, ...indexes.filter((index) => index !== -1));
+
+/**
+ * The text of html[from, to) as the browser reads it: start tags (quoted attributes included),
+ * end tags, comments and bogus comments are skipped, and each run of text between them is
+ * decoded on its own, as the tokenizer does. A tag or comment that does not end before `to`
+ * ends the text.
+ */
+function textBetween(html: string, from: number, to: number, cache: SearchCache): string {
+  let text = '';
+  let run = '';
+  let i = from;
+  while (i < to) {
+    const lt = html.indexOf('<', i);
+    if (lt === -1 || lt >= to) {
+      run += html.slice(i, to);
+      break;
+    }
+    run += html.slice(i, lt);
+    const next = html[lt + 1];
+    let end: number;
+    if (html.startsWith('<!--', lt)) end = skipComment(html, lt, cache);
+    else if (isAsciiAlpha(next)) end = readStartTag(html, lt)?.end ?? to;
+    else if (next === '/' || next === '!' || next === '?') {
+      const gt = html.indexOf('>', lt + 2);
+      end = gt === -1 ? to : gt + 1;
+    } else {
+      // A '<' that starts no markup is text.
+      run += '<';
+      i = lt + 1;
+      continue;
+    }
+    text += decodeEntities(run);
+    run = '';
+    i = end;
+  }
+  return text + decodeEntities(run);
+}
 
 /**
  * Reads the option elements of a host the way the client does: label is the whitespace-collapsed
@@ -194,6 +254,10 @@ function scanOptions(
   while (i < stop) {
     const lt = html.indexOf('<', i);
     if (lt === -1 || lt >= stop) break;
+    if (html.startsWith('<!--', lt)) {
+      i = skipComment(html, lt, cache);
+      continue;
+    }
     const tag = readStartTag(html, lt);
     if (!tag) {
       // An unterminated start tag runs to the end of input; retrying at each later '<' is quadratic.
@@ -210,13 +274,7 @@ function scanOptions(
       findTag(html, `</${optionTag}`, tag.end, cache),
       findTag(html, `<${optionTag}`, tag.end, cache),
     );
-    // Each run of text between tags is decoded on its own, as the browser tokenizes it.
-    const text = html
-      .slice(tag.end, end)
-      .split(/<[^<>]*>/)
-      .map((run) => decodeEntities(run))
-      .join('');
-    const label = optionLabel(text);
+    const label = optionLabel(textBetween(html, tag.end, end, cache));
     options.push({
       value: Object.hasOwn(tag.attrs, 'value') ? tag.attrs.value! : label,
       label,
@@ -247,8 +305,7 @@ export function transformHtml(html: string): string {
     }
     out += html.slice(i, lt);
     if (html.startsWith('<!--', lt)) {
-      const end = html.indexOf('-->', lt + 4);
-      const stop = end === -1 ? html.length : end + 3;
+      const stop = skipComment(html, lt, closeCache);
       out += html.slice(lt, stop);
       i = stop;
       continue;

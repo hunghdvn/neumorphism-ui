@@ -240,3 +240,9 @@ describe('neu-checkbox', () => {
     expect(await axeViolations(el.parentElement!)).toEqual([]);
   });
 });
+
+test('internal icons expose no svg part', () => {
+  const el = mount<NeuCheckbox>('<neu-checkbox>Agree</neu-checkbox>');
+  expect(el.shadowRoot!.querySelector('svg')).not.toBeNull();
+  expect(el.shadowRoot!.querySelector('[part~=svg]')).toBeNull();
+});

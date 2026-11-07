@@ -1,6 +1,5 @@
 import { defineComponent } from '../../core/define.js';
 import { html, type RawHtml } from '../../core/html.js';
-import { themeCssProperties } from '../../core/styles.js';
 import { radioGroupStyles } from './radio-group.styles.js';
 
 /**
@@ -28,33 +27,18 @@ export const radioGroupDef = defineComponent({
   tag: 'neu-radio-group',
   props: {
     label: { type: 'string' },
-    name: { type: 'string', reflect: true },
+    name: { type: 'string' },
     value: { type: 'string' },
-    required: { type: 'boolean', reflect: true },
-    disabled: { type: 'boolean', reflect: true },
+    required: { type: 'boolean' },
+    disabled: { type: 'boolean' },
     orientation: {
       type: 'string',
       default: 'vertical',
       values: ['vertical', 'horizontal'],
-      reflect: true,
     },
   },
   form: { valueProp: 'value' },
   styles: radioGroupStyles,
   template: (p) =>
-    html`<div part="base" class="base"><span part="label" class="label" data-ref="label">${p.label}</span><span class="items"><slot></slot></span><style data-ref="mark">${markRule(p.value)}</style></div>`,
-  docs: {
-    summary:
-      'A group of neu-radio elements with one selected value, arrow-key navigation and form support. The value attribute is the default value.',
-    events: [
-      { name: 'input', description: 'Fired when the user selects a radio.' },
-      { name: 'change', description: 'Fired after input when the user selects a radio.' },
-    ],
-    slots: [{ name: '', description: 'neu-radio elements.' }],
-    parts: [
-      { name: 'base', description: 'Outer wrapper.' },
-      { name: 'label', description: 'The group label.' },
-    ],
-    cssProperties: themeCssProperties,
-  },
+    html`<div part="base" class="base"><span part="label" class="label"><slot name="label"><span class="label-text" data-ref="label-text">${p.label}</span></slot></span><span class="items"><slot></slot></span><style data-ref="mark">${markRule(p.value)}</style></div>`,
 });

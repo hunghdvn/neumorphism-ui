@@ -229,13 +229,14 @@ Tokens có rule `neu-*:not(:defined)` cho từng tag. Rule này giữ đúng kí
 
 ```ts
 props: {
-  size:     { type: String,  default: 'md', reflect: true, values: ['sm', 'md', 'lg'] },
-  disabled: { type: Boolean, reflect: true },
+  size:     { type: String,  default: 'md', values: ['sm', 'md', 'lg'] },
+  disabled: { type: Boolean },
   max:      { type: Number,  default: 100 },
 }
 ```
 
 - Attribute dạng kebab-case ↔ property dạng camelCase.
+- Mọi prop reflect ra attribute; ngoại lệ là prop giá trị của form control (`value`/`checked`) và `indeterminate`, khai báo `reflect: false`.
 - `Boolean`: có attribute là `true`.
 - `Number`: không parse được thì dùng `default`.
 - `values`: giá trị ngoài danh sách thì dùng `default`.
@@ -251,7 +252,9 @@ không dùng `[checked]`.
 1. **constructor:** `attachInternals()`. Nếu `internals.shadowRoot` đã có (trang được SSR) thì
    **hydrate**: gắn tham chiếu tới các phần tử `data-ref` trong shadow root, không render lại.
    Nếu chưa có thì `attachShadow({ mode: 'open', delegatesFocus })` rồi gán
-   `innerHTML = template(props)`.
+   `innerHTML = template(props)`. Root SSR thiếu một tên `data-ref` mà template hiện tại có thì
+   bị render lại: hoặc response bị cắt, hoặc root do phiên bản khác của component render (trang
+   cache từ trước khi nâng cấp).
 2. Gắn stylesheet dùng chung qua `adoptedStyleSheets`. Xóa `<style data-neu-ssr>` nếu có.
 3. **Nâng cấp property:** property được đặt trước khi element được đăng ký thì được đọc lại và
    áp dụng (pattern "upgrade property").
@@ -328,11 +331,13 @@ Quy ước: "size" trong danh sách attribute là `size="sm|md|lg"` (mặc đị
 - Slot: mặc định (nhãn), `prefix`, `suffix`. Part: `base`, `label`, `prefix`, `suffix`, `spinner`.
 - Đang nhấn → bóng `inset`.
 - Giới hạn có ghi trong docs: không đưa `name`/`value` của nút vào `FormData` khi submit.
+- Submit bằng `neu-button` cho `event.submitter === null`; `neu-button` không có `name`/`value`. Cần biết
+  nút nào submit thì dùng `<button>` native.
 
 **`neu-icon-button`** — như Button, chỉ có icon
 - Attribute: `icon`, `library`, `label` (**bắt buộc**, thành `aria-label`), `shape="circle|square"`
   (mặc định `circle`), `variant`, size, `disabled`, `type`.
-- Part: `base`, `icon`.
+- Part: `base`, `icon`, `svg` (svg của icon, như `neu-icon`).
 
 **`neu-button-group`** — role `group`
 - Attribute: `label` (thành `aria-label`), `orientation="horizontal|vertical"`.
@@ -368,10 +373,11 @@ Quy ước: "size" trong danh sách attribute là `size="sm|md|lg"` (mặc đị
 - Attribute: `variant="neutral|accent|success|warning|danger"` (mặc định `neutral`), `pill`.
 - Slot: mặc định. Part: `base`.
 
-**`neu-avatar`** — role `img`
+**`neu-avatar`** — role `img` khi có `label`
 - Attribute: `src`, `label` (thành `aria-label`), `initials`, size, `shape="circle|rounded"`.
+- Không có `label` thì là ảnh trang trí (`aria-hidden="true"`), giống `neu-icon`.
 - Thứ tự dự phòng: ảnh → chữ viết tắt → icon `user`. Ảnh lỗi thì tự chuyển xuống mức tiếp theo.
-- Part: `base`, `image`, `initials`, `icon`.
+- Part: `base`, `image`, `initials`, `icon`, `svg` (svg của icon dự phòng).
 
 **`neu-spinner`** — role `status`
 - Attribute: `label` (mặc định `"Loading"`, thành `aria-label`), size.
@@ -420,6 +426,7 @@ Quy ước: "size" trong danh sách attribute là `size="sm|md|lg"` (mặc đị
 - Roving tabindex: chỉ radio đang chọn (hoặc radio bật đầu tiên) nằm trong thứ tự Tab.
 - Phím: mũi tên di chuyển **và** chọn, vòng lại ở hai đầu, bỏ qua radio `disabled`. Space chọn radio đang focus.
 - Event: `input` rồi `change` trên group.
+- Slot: `label` (thay cho attribute `label`). Tên truy cập của group theo chữ trong slot `label`, kể cả khi chữ đó đổi tại chỗ; không có thì dùng attribute `label`.
 - Part: `base`, `label`.
 
 **`neu-radio`** — role `radio`, không form-associated
@@ -461,6 +468,7 @@ Quy ước: "size" trong danh sách attribute là `size="sm|md|lg"` (mặc đị
   và đóng; Escape đóng, không đổi giá trị; Tab chọn, đóng và chuyển focus đi; Alt+Up chọn và đóng;
   gõ ký tự để nhảy (gom các ký tự gõ trong vòng 500ms).
 - Event: `input` rồi `change` khi giá trị đổi; `neu-open`, `neu-close`.
+- Slot: `label` (thay cho attribute `label`).
 - Part: `base`, `label`, `combobox`, `display`, `chevron`, `listbox`, `option`, `help-text`.
 
 ## 8. SSR (`@neumorphism-ui/ssr`)
@@ -566,7 +574,8 @@ Ngân sách (min+gzip), kiểm bằng `size-limit` trong CI, vượt thì CI fai
 |---|---|
 | `cdn/neu.min.js` (cả 17 component) | ≤ 25KB |
 | `neu.css` (tokens) | ≤ 4KB |
-| Mỗi component riêng, không tính base class | ≤ 3KB (riêng Select ≤ 5KB) |
+| Module dùng chung `components/shared/` | ≤ 3KB |
+| Mỗi component riêng, không tính core, module dùng chung và component cha | ≤ 3KB (riêng Select ≤ 5KB) |
 | Base class + mixin form + `html` | ≤ 4KB |
 
 ## 11. Testing

@@ -93,7 +93,7 @@ describe('neu-select', () => {
     expect(isOpen(el)).toBe(false);
   });
 
-  test('reflection: name, required, disabled and size reflect; value and the texts do not', () => {
+  test('reflection: name, required, disabled and size and the texts reflect; value does not', () => {
     const el = select();
     el.name = 'n';
     el.required = true;
@@ -110,13 +110,30 @@ describe('neu-select', () => {
     el.placeholder = 'Pick';
     el.helpText = 'Help';
     el.errorText = 'Oops';
+    expect(el.getAttribute('value')).toBeNull();
     expect(
-      ['value', 'placeholder', 'help-text', 'error-text'].map((a) => el.getAttribute(a)),
-    ).toEqual([null, null, null, null]);
-    expect(el.getAttribute('label')).toBe('Plan');
+      ['label', 'placeholder', 'help-text', 'error-text'].map((a) => el.getAttribute(a)),
+    ).toEqual(['Tier', 'Pick', 'Help', 'Oops']);
     el.setAttribute('help-text', 'More');
     expect(el.helpText).toBe('More');
     expect(el.shadowRoot!.querySelector('.help-text')!.textContent).toBe('More');
+  });
+
+  test('setting label or placeholder keeps the options and the value', async () => {
+    const el = select('value="b"');
+    await tick();
+    press(el, 'ArrowDown');
+    const events: string[] = [];
+    el.addEventListener('input', () => events.push('input'));
+    el.addEventListener('change', () => events.push('change'));
+    const count = optionsOf(el).length;
+    expect(count).toBe(3);
+    el.label = 'Tier';
+    el.placeholder = 'Pick';
+    await tick();
+    expect(el.value).toBe('b');
+    expect(optionsOf(el)).toHaveLength(count);
+    expect(events).toEqual([]);
   });
 
   test('an invalid size falls back to md', () => {
@@ -233,8 +250,6 @@ describe('neu-select', () => {
       'combobox',
       'display',
       'chevron',
-      // The system icon wrapper names its svg, as in neu-number-field's step buttons.
-      'svg',
       'listbox',
       'option',
       'option',
@@ -1059,5 +1074,110 @@ describe('neu-select', () => {
     expect(await axeViolations(wrap)).toEqual([]);
     press(wrap.querySelectorAll('neu-select')[1]!, 'ArrowDown');
     expect(await axeViolations(wrap)).toEqual([]);
+  });
+});
+
+describe('neu-select typeahead and hover', () => {
+  test('AltGr characters take part in typeahead', () => {
+    const el = select(
+      '',
+      '<neu-option value="b">b</neu-option><neu-option value="ä">ä</neu-option>',
+    );
+    press(el, 'ä', { ctrlKey: true, altKey: true });
+    expect(isOpen(el)).toBe(true);
+    expect(active(el)).toBe('option-1');
+    expect(el.value).toBe('');
+  });
+
+  test('Ctrl+letter without Alt is not typeahead', () => {
+    const el = select();
+    press(el, 'b', { ctrlKey: true });
+    expect(isOpen(el)).toBe(false);
+  });
+
+  test('Ctrl+Alt chords that type nothing are left alone, closed or open', () => {
+    const el = select();
+    const chord = { ctrlKey: true, altKey: true };
+    for (const key of ['ArrowDown', 'Enter', ' ', 'Home']) {
+      expect(press(el, key, chord).defaultPrevented).toBe(false);
+      expect(isOpen(el)).toBe(false);
+    }
+    press(el, 'ArrowDown');
+    expect(isOpen(el)).toBe(true);
+    for (const key of ['ArrowDown', 'Enter', 'Escape', 'Tab']) {
+      expect(press(el, key, chord).defaultPrevented).toBe(false);
+      expect(isOpen(el)).toBe(true);
+    }
+    expect(el.value).toBe('');
+  });
+
+  test('hovering an option does not scroll the listbox', async () => {
+    const many = Array.from(
+      { length: 30 },
+      (_, i) => `<neu-option value="v${i}">Option ${i}</neu-option>`,
+    ).join('');
+    const el = select('', many);
+    press(el, 'ArrowDown');
+    await tick();
+    const box = listbox(el);
+    expect(box.scrollTop).toBe(0);
+    const options = optionsOf(el);
+    const boxRect = box.getBoundingClientRect();
+    // The last option that is only partly visible.
+    const target = options.findLast((o) => o.getBoundingClientRect().top < boxRect.bottom)!;
+    expect(target.getBoundingClientRect().bottom).toBeGreaterThan(boxRect.bottom);
+    target.dispatchEvent(new PointerEvent('pointermove', { bubbles: true, composed: true }));
+    expect(box.scrollTop).toBe(0);
+    expect(active(el)).toBe(target.id);
+  });
+});
+
+describe('neu-select label slot and icons', () => {
+  test('a slotted label names the combobox', async () => {
+    const el = mount<NeuSelect>(
+      `<neu-select><span slot="label">Fruit <b>*</b></span>${THREE}</neu-select>`,
+    );
+    const slot = el.shadowRoot!.querySelector<HTMLSlotElement>('#label slot[name="label"]')!;
+    expect(slot).not.toBeNull();
+    const text = slot
+      .assignedNodes()
+      .map((n) => n.textContent)
+      .join('')
+      .replace(/\s+/g, ' ')
+      .trim();
+    expect(text).toBe('Fruit *');
+    expect(combobox(el).getAttribute('aria-labelledby')).toBe('label');
+    expect(await axeViolations(el)).toEqual([]);
+  });
+
+  test('rewriting the slotted label or help text leaves an open listbox alone', async () => {
+    const el = mount<NeuSelect>(
+      `<neu-select><span slot="label">Plan</span><span slot="help-text">Hint</span>${THREE}</neu-select>`,
+    );
+    combobox(el).focus();
+    press(el, 'ArrowDown');
+    expect(isOpen(el)).toBe(true);
+    const first = optionsOf(el)[0];
+    el.querySelector('[slot=label]')!.textContent = 'Plan (2)';
+    el.querySelector('[slot=help-text]')!.textContent = 'Other hint';
+    await tick();
+    expect(optionsOf(el)[0]).toBe(first);
+    // An option's text is still read again.
+    el.querySelector('neu-option')!.textContent = 'Apricot';
+    await tick();
+    expect(optionsOf(el)[0]).not.toBe(first);
+    expect(optionsOf(el)[0]!.textContent).toContain('Apricot');
+  });
+
+  test('internal icons expose no svg part', () => {
+    const el = select();
+    expect(el.shadowRoot!.querySelector('[part~=svg]')).toBeNull();
+  });
+
+  test('the label typography sits on ::part(label), so a slotted label inherits it', () => {
+    const el = mount<NeuSelect>('<neu-select><span slot="label">Plan</span></neu-select>');
+    const part = getComputedStyle(el.shadowRoot!.querySelector('[part=label]')!);
+    expect(part.fontWeight).toBe('600');
+    expect(getComputedStyle(el.querySelector('[slot=label]')!).fontWeight).toBe('600');
   });
 });
