@@ -1,0 +1,45 @@
+---
+title: Spinner
+description: A rotating indicator for work in progress.
+---
+
+import { Code } from '@astrojs/starlight/components';
+import Demo from '../../../components/Demo.astro';
+import ApiTables from '../../../components/ApiTables.astro';
+import { componentDocs } from '@neumorphism-ui/elements/docs.js';
+
+{componentDocs.get('neu-spinner')?.summary}
+
+## Sizes
+
+<Demo
+  code={`<neu-spinner size="sm"></neu-spinner>
+<neu-spinner size="md"></neu-spinner>
+<neu-spinner size="lg"></neu-spinner>`}
+/>
+
+## Label
+
+`label` names the spinner for assistive technology and defaults to "Loading". It is also rendered
+as visually hidden text, because a live region announces content, not a name. Set a more specific
+label when the page has several spinners.
+
+<Demo
+  code={`<neu-spinner label="Processing your request"></neu-spinner>
+<neu-spinner size="lg" label="Please wait"></neu-spinner>`}
+/>
+
+## React
+
+<Code
+  lang="tsx"
+  code={`import { NeuSpinner } from '@neumorphism-ui/react';
+
+export function Saving() {
+  return <NeuSpinner size="sm" label="Saving" />;
+}`}
+/>
+
+## API
+
+<ApiTables tag="neu-spinner" />

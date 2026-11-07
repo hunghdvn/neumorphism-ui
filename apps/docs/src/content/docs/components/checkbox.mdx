@@ -1,0 +1,83 @@
+---
+title: Checkbox
+description: A checkbox with an inset box and indicator.
+---
+
+import { Code } from '@astrojs/starlight/components';
+import Demo from '../../../components/Demo.astro';
+import ApiTables from '../../../components/ApiTables.astro';
+import KeyboardTable from '../../../components/KeyboardTable.astro';
+import { componentDocs } from '@neumorphism-ui/elements/docs.js';
+
+{componentDocs.get('neu-checkbox')?.summary}
+
+## States
+
+<Demo
+  code={`<neu-checkbox>Unchecked</neu-checkbox>
+<neu-checkbox checked>Checked</neu-checkbox>
+<neu-checkbox indeterminate>Indeterminate</neu-checkbox>`}
+/>
+
+## Sizes
+
+<Demo
+  code={`<neu-checkbox size="sm">Small</neu-checkbox>
+<neu-checkbox size="md">Medium</neu-checkbox>
+<neu-checkbox size="lg">Large</neu-checkbox>`}
+/>
+
+## Disabled
+
+<Demo
+  code={`<neu-checkbox disabled>Disabled unchecked</neu-checkbox>
+<neu-checkbox disabled checked>Disabled checked</neu-checkbox>`}
+/>
+
+## Required and value
+
+<Demo
+  code={`<neu-checkbox required>Required</neu-checkbox>
+<neu-checkbox name="option" value="yes">Yes</neu-checkbox>`}
+/>
+
+## In a form
+
+A submit shows the form data and Reset restores the defaults.
+
+<Demo
+  code={`<form name="demo-form">
+  <neu-checkbox name="terms" required>Accept terms</neu-checkbox>
+  <neu-button type="submit" variant="primary">Submit</neu-button>
+  <neu-button type="reset">Reset</neu-button>
+  <output></output>
+</form>`}
+/>
+
+## React
+
+<Code
+  lang="tsx"
+  code={`import { NeuCheckbox } from '@neumorphism-ui/react';
+
+export function TermsCheckbox({ onChange }: { onChange: (checked: boolean) => void }) {
+  return (
+    <NeuCheckbox
+      onInput={(e) => {
+        const target = e.target as HTMLElement & { checked: boolean };
+        onChange(target.checked);
+      }}
+    >
+      Accept terms and conditions
+    </NeuCheckbox>
+  );
+}`}
+/>
+
+## Keyboard
+
+<KeyboardTable tag="neu-checkbox" />
+
+## API
+
+<ApiTables tag="neu-checkbox" />

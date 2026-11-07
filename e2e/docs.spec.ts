@@ -77,11 +77,56 @@ test('pages load without errors', async ({ page }) => {
   expect(errors).toEqual([]);
 });
 
+const componentSlugs = [
+  'button',
+  'icon-button',
+  'button-group',
+  'switch',
+  'text-field',
+  'icon',
+  'surface',
+  'divider',
+  'badge',
+  'avatar',
+  'spinner',
+  'textarea',
+  'number-field',
+  'checkbox',
+  'radio-group',
+  'slider',
+  'select',
+];
+
+// The home page plus every docs page; later tasks extend this list.
+const pagePaths = ['', ...componentSlugs.map((slug) => `components/${slug}/`)];
+
+test('every component page loads without errors and lists its API', async ({ page }) => {
+  const errors: string[] = [];
+  page.on('pageerror', (error) => errors.push(`${page.url()}: ${error.message}`));
+  page.on('console', (message) => {
+    if (message.type() === 'error') errors.push(`${page.url()}: ${message.text()}`);
+  });
+  for (const slug of componentSlugs) {
+    await page.goto(`components/${slug}/`);
+    await page.waitForLoadState('networkidle');
+    expect(
+      await page.locator('table[data-table="attributes"]').count(),
+      slug,
+    ).toBeGreaterThanOrEqual(1);
+  }
+  expect(errors).toEqual([]);
+});
+
 test('every internal link resolves', async ({ page, request }) => {
-  await page.goto('./');
-  const hrefs = await page
-    .locator('a[href^="/neumorphism-ui/"]')
-    .evaluateAll((links) => [...new Set(links.map((a) => a.getAttribute('href') as string))]);
+  const found = new Set<string>();
+  for (const path of pagePaths) {
+    await page.goto(path || './');
+    const links = await page
+      .locator('a[href^="/neumorphism-ui/"]')
+      .evaluateAll((anchors) => anchors.map((a) => a.getAttribute('href') as string));
+    for (const link of links) found.add(link);
+  }
+  const hrefs = [...found];
   expect(hrefs.length).toBeGreaterThan(0);
   for (const href of hrefs) {
     const response = await request.get(href);

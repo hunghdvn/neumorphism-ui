@@ -1,0 +1,56 @@
+---
+title: Divider
+description: A thin engraved line that separates content.
+---
+
+import { Code } from '@astrojs/starlight/components';
+import Demo from '../../../components/Demo.astro';
+import ApiTables from '../../../components/ApiTables.astro';
+import { componentDocs } from '@neumorphism-ui/elements/docs.js';
+
+{componentDocs.get('neu-divider')?.summary}
+
+## Horizontal divider
+
+The default orientation is a horizontal line between blocks of content.
+
+<Demo
+  code={`<div style="width: 100%">
+  <p>Before</p>
+  <neu-divider></neu-divider>
+  <p>After</p>
+</div>`}
+/>
+
+## Vertical divider
+
+Use `orientation="vertical"` for a line between items in a row. Give its parent a height.
+
+<Demo
+  code={`<div style="display: flex; align-items: center; gap: 1rem; height: 3rem">
+  <span>Before</span>
+  <neu-divider orientation="vertical"></neu-divider>
+  <span>After</span>
+</div>`}
+/>
+
+## React
+
+<Code
+  lang="tsx"
+  code={`import { NeuDivider } from '@neumorphism-ui/react';
+
+export function DividerExample() {
+  return (
+    <div>
+      <p>Before</p>
+      <NeuDivider />
+      <p>After</p>
+    </div>
+  );
+}`}
+/>
+
+## API
+
+<ApiTables tag="neu-divider" />

@@ -1,0 +1,59 @@
+---
+title: Badge
+description: A small raised label for status or counts.
+---
+
+import { Code } from '@astrojs/starlight/components';
+import Demo from '../../../components/Demo.astro';
+import ApiTables from '../../../components/ApiTables.astro';
+import { componentDocs } from '@neumorphism-ui/elements/docs.js';
+
+{componentDocs.get('neu-badge')?.summary}
+
+## Variants
+
+<Demo
+  code={`<neu-badge variant="neutral">Neutral</neu-badge>
+<neu-badge variant="accent">Accent</neu-badge>
+<neu-badge variant="success">Success</neu-badge>
+<neu-badge variant="warning">Warning</neu-badge>
+<neu-badge variant="danger">Danger</neu-badge>`}
+/>
+
+## Pill shape
+
+Set the `pill` attribute to round the badge into a capsule shape.
+
+<Demo
+  code={`<neu-badge variant="neutral">Neutral</neu-badge>
+<neu-badge variant="neutral" pill>Pill</neu-badge>`}
+/>
+
+## Content
+
+The badge wraps its content in the default slot.
+
+<Demo
+  code={`<neu-badge variant="success">12</neu-badge>
+<neu-badge variant="warning" pill>99+</neu-badge>`}
+/>
+
+## React
+
+<Code
+  lang="tsx"
+  code={`import { NeuBadge } from '@neumorphism-ui/react';
+
+export function StatusBadge({ status }: { status: 'success' | 'warning' | 'danger' }) {
+  const variant = status === 'success' ? 'success' : status === 'warning' ? 'warning' : 'danger';
+  return (
+    <NeuBadge variant={variant} pill={status === 'danger'}>
+      {status.toUpperCase()}
+    </NeuBadge>
+  );
+}`}
+/>
+
+## API
+
+<ApiTables tag="neu-badge" />

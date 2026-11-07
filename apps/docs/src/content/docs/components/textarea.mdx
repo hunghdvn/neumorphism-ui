@@ -1,0 +1,78 @@
+---
+title: Textarea
+description: A multi-line text input field with an inset field.
+---
+
+import { Code } from '@astrojs/starlight/components';
+import Demo from '../../../components/Demo.astro';
+import ApiTables from '../../../components/ApiTables.astro';
+import KeyboardTable from '../../../components/KeyboardTable.astro';
+import { componentDocs } from '@neumorphism-ui/elements/docs.js';
+
+{componentDocs.get('neu-textarea')?.summary}
+
+## Label, help text and error text
+
+`error-text` replaces the browser's validation message once the field is invalid after user
+interaction; it does not make the field invalid by itself.
+
+<Demo
+  code={`<neu-textarea label="Bio" placeholder="Tell us about yourself" help-text="A few sentences"></neu-textarea>
+<neu-textarea label="Notes" required error-text="Notes are required"></neu-textarea>`}
+/>
+
+## Rows and resize
+
+<Demo
+  code={`<neu-textarea rows="2" label="Two rows"></neu-textarea>
+<neu-textarea rows="4" label="Four rows"></neu-textarea>
+<neu-textarea resize="none" label="No resize"></neu-textarea>`}
+/>
+
+## Sizes
+
+<Demo
+  code={`<neu-textarea size="sm" label="Small"></neu-textarea>
+<neu-textarea size="md" label="Medium"></neu-textarea>
+<neu-textarea size="lg" label="Large"></neu-textarea>`}
+/>
+
+## Required and disabled
+
+<Demo
+  code={`<neu-textarea required label="Required"></neu-textarea>
+<neu-textarea disabled label="Disabled"></neu-textarea>`}
+/>
+
+## In a form
+
+A submit shows the form data and Reset restores the defaults.
+
+<Demo
+  code={`<form name="demo-form">
+  <neu-textarea name="comments" label="Comments" help-text="Enter your comments"></neu-textarea>
+  <neu-button type="submit" variant="primary">Submit</neu-button>
+  <neu-button type="reset">Reset</neu-button>
+  <output></output>
+</form>`}
+/>
+
+## React
+
+<Code
+  lang="tsx"
+  code={`import { NeuTextarea } from '@neumorphism-ui/react';
+
+export function CommentsInput({ onChange }: { onChange: (value: string) => void }) {
+  return (
+    <NeuTextarea
+      placeholder="Enter comments"
+      onInput={(e) => onChange((e.target as HTMLElement & { value: string }).value)}
+    />
+  );
+}`}
+/>
+
+## API
+
+<ApiTables tag="neu-textarea" />

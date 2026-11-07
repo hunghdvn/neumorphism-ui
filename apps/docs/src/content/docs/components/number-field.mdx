@@ -1,0 +1,86 @@
+---
+title: Number field
+description: A numeric input with an inset field and stepper buttons.
+---
+
+import { Code } from '@astrojs/starlight/components';
+import Demo from '../../../components/Demo.astro';
+import ApiTables from '../../../components/ApiTables.astro';
+import KeyboardTable from '../../../components/KeyboardTable.astro';
+import { componentDocs } from '@neumorphism-ui/elements/docs.js';
+
+{componentDocs.get('neu-number-field')?.summary}
+
+## Label, help text and error text
+
+`error-text` replaces the browser's validation message once the field is invalid after user
+interaction; it does not make the field invalid by itself. The stepper buttons are named by
+`increment-label` and `decrement-label`.
+
+<Demo
+  code={`<neu-number-field label="Age" placeholder="18" help-text="In years"></neu-number-field>
+<neu-number-field label="Quantity" required error-text="Enter a quantity"></neu-number-field>`}
+/>
+
+## Min, max, and step
+
+<Demo
+  code={`<neu-number-field label="0 to 10" min="0" max="10"></neu-number-field>
+<neu-number-field label="Tens" min="0" max="100" step="10"></neu-number-field>
+<neu-number-field label="Halves" step="0.5"></neu-number-field>`}
+/>
+
+## Sizes
+
+<Demo
+  code={`<neu-number-field size="sm" label="Small"></neu-number-field>
+<neu-number-field size="md" label="Medium"></neu-number-field>
+<neu-number-field size="lg" label="Large"></neu-number-field>`}
+/>
+
+## Required and disabled
+
+<Demo
+  code={`<neu-number-field required label="Required"></neu-number-field>
+<neu-number-field disabled label="Disabled"></neu-number-field>`}
+/>
+
+## In a form
+
+A submit shows the form data and Reset restores the defaults.
+
+<Demo
+  code={`<form name="demo-form">
+  <neu-number-field name="quantity" label="Quantity" min="1" max="10" required></neu-number-field>
+  <neu-button type="submit" variant="primary">Submit</neu-button>
+  <neu-button type="reset">Reset</neu-button>
+  <output></output>
+</form>`}
+/>
+
+## React
+
+<Code
+  lang="tsx"
+  code={`import { NeuNumberField } from '@neumorphism-ui/react';
+
+export function QuantityInput({ onChange }: { onChange: (value: number | null) => void }) {
+  return (
+    <NeuNumberField
+      placeholder="Enter quantity"
+      onChange={(e) => {
+        const { value } = e.target as HTMLElement & { value: string };
+        onChange(value === '' ? null : Number(value));
+      }}
+    />
+  );
+}`}
+/>
+
+## Keyboard
+
+<KeyboardTable tag="neu-number-field" />
+
+## API
+
+<ApiTables tag="neu-number-field" />

@@ -1,0 +1,142 @@
+---
+title: Select
+description: A single-value select.
+---
+
+import { Code } from '@astrojs/starlight/components';
+import Demo from '../../../components/Demo.astro';
+import ApiTables from '../../../components/ApiTables.astro';
+import KeyboardTable from '../../../components/KeyboardTable.astro';
+import { componentDocs } from '@neumorphism-ui/elements/docs.js';
+
+{componentDocs.get('neu-select')?.summary}
+
+## Options are data
+
+`neu-option` elements are data, not UI. The select builds its listbox from them and they render
+nothing themselves. An option's value is its `value` attribute, or its text when there is none,
+and its text is the label shown in the list.
+
+## Placeholder
+
+`placeholder` is shown while no option is chosen.
+
+<Demo
+  code={`<neu-select label="Fruit" placeholder="Pick a fruit">
+  <neu-option value="apple">Apple</neu-option>
+  <neu-option value="banana">Banana</neu-option>
+  <neu-option value="cherry">Cherry</neu-option>
+</neu-select>`}
+/>
+
+## Initial value
+
+The `value` attribute is the default value, which a form reset restores.
+
+<Demo
+  code={`<neu-select label="Fruit" value="banana">
+  <neu-option value="apple">Apple</neu-option>
+  <neu-option value="banana">Banana</neu-option>
+  <neu-option value="cherry">Cherry</neu-option>
+</neu-select>`}
+/>
+
+## Disabled option
+
+A disabled option is visible but cannot be chosen. Disable the whole select with `disabled`.
+
+<Demo
+  code={`<neu-select label="Fruit" placeholder="Pick a fruit">
+  <neu-option value="apple">Apple</neu-option>
+  <neu-option value="banana" disabled>Banana (sold out)</neu-option>
+  <neu-option value="cherry">Cherry</neu-option>
+</neu-select>
+<neu-select label="Fruit" placeholder="Pick a fruit" disabled>
+  <neu-option value="apple">Apple</neu-option>
+</neu-select>`}
+/>
+
+## Label slot
+
+Use the `label` slot for a label with markup. It replaces the `label` attribute.
+
+<Demo
+  code={`<neu-select placeholder="Pick a user">
+  <span slot="label"><strong>Assign to</strong> (required)</span>
+  <neu-option value="1">User 1</neu-option>
+  <neu-option value="2">User 2</neu-option>
+</neu-select>`}
+/>
+
+## Help text
+
+`help-text` is guidance shown below the select; the `help-text` slot replaces it. `error-text`
+replaces the browser's validation message once the select is invalid after user interaction.
+
+<Demo
+  code={`<neu-select label="Fruit" placeholder="Pick a fruit" help-text="You can change this later">
+  <neu-option value="apple">Apple</neu-option>
+  <neu-option value="banana">Banana</neu-option>
+</neu-select>`}
+/>
+
+## Sizes
+
+<Demo
+  code={`<neu-select label="Small" size="sm" value="a">
+  <neu-option value="a">Option A</neu-option>
+</neu-select>
+<neu-select label="Medium" size="md" value="a">
+  <neu-option value="a">Option A</neu-option>
+</neu-select>
+<neu-select label="Large" size="lg" value="a">
+  <neu-option value="a">Option A</neu-option>
+</neu-select>`}
+/>
+
+## In a form
+
+A required select makes the form invalid until an option is chosen. Submitting shows the form
+data and Reset restores the default value.
+
+<Demo
+  code={`<form>
+  <neu-select label="Fruit" name="fruit" placeholder="Pick a fruit" required>
+    <neu-option value="apple">Apple</neu-option>
+    <neu-option value="banana">Banana</neu-option>
+    <neu-option value="cherry">Cherry</neu-option>
+  </neu-select>
+  <neu-button type="submit" variant="primary">Submit</neu-button>
+  <neu-button type="reset">Reset</neu-button>
+  <output></output>
+</form>`}
+/>
+
+## React
+
+<Code
+  lang="tsx"
+  code={`import { NeuOption, NeuSelect } from '@neumorphism-ui/react';
+
+export function FruitSelect({ onChange }: { onChange: (event: Event) => void }) {
+  return (
+    <NeuSelect label="Fruit" name="fruit" placeholder="Pick a fruit" required onChange={onChange}>
+      <NeuOption value="apple">Apple</NeuOption>
+      <NeuOption value="banana">Banana</NeuOption>
+      <NeuOption value="cherry">Cherry</NeuOption>
+    </NeuSelect>
+  );
+}`}
+/>
+
+## Keyboard
+
+<KeyboardTable tag="neu-select" />
+
+## API: neu-select
+
+<ApiTables tag="neu-select" />
+
+## API: neu-option
+
+<ApiTables tag="neu-option" />
