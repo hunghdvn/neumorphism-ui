@@ -181,7 +181,7 @@ Nội dung các trang hướng dẫn:
 Task này có hai cổng, đều do người dùng quyết định:
 
 **Cổng trước khi bắt đầu:**
-1. Người dùng đã chạy xong checklist screen reader (`docs/superpowers/reports/2026-11-06-screen-reader-checklist.md`), và mọi lỗi phát hiện đã được sửa hoặc ghi lại.
+1. Người dùng đã chạy xong checklist screen reader (`docs/superpowers/reports/2026-11-06-screen-reader-checklist.md`), và mọi lỗi phát hiện đã được sửa hoặc ghi lại. *Đã đổi ngày 2026-11-07:* người dùng quyết định chưa kiểm tay trước 1.0; thay bằng lượt kiểm cây accessibility trên Chromium (`docs/superpowers/reports/2026-11-07-accessibility-tree-pass.md`, 67/67 dòng đạt), kiểm tay để sau 1.0 (spec §16).
 2. CI trên `main` xanh, `pnpm size` mọi dòng `ok`.
 3. Trang docs trên Pages chạy được.
 

@@ -5,10 +5,10 @@ Framework-agnostic neumorphism web components for
 `<neu-text-field>`, `<neu-icon>`, `<neu-icon-button>`, `<neu-button-group>`, `<neu-surface>`,
 `<neu-divider>`, `<neu-badge>`, `<neu-avatar>`, `<neu-spinner>`, `<neu-textarea>`, `<neu-number-field>`, `<neu-checkbox>`, `<neu-radio-group>` with `<neu-radio>`, `<neu-slider>` and `<neu-select>` with `<neu-option>`. They are accessible, the form
 controls are form-associated, and they adopt server-rendered declarative shadow roots. Import one
-tag per module (`button.js`, `icon.js`, `badge.js`, ...) or all of them with `all.js`; `cdn/neu.min.js` is a single minified bundle. Pre-release.
+tag per module (`button.js`, `icon.js`, `badge.js`, ...) or all of them with `all.js`; `cdn/neu.min.js` is a single minified bundle.
 
 ```sh
-npm install @neumorphism-ui/elements@next @neumorphism-ui/tokens@next
+npm install @neumorphism-ui/elements @neumorphism-ui/tokens
 ```
 
 ```js

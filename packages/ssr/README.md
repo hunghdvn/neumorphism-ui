@@ -4,10 +4,10 @@ Server-side rendering helpers for [neumorphism-ui](https://github.com/hunghdvn/n
 `transformHtml` inserts a declarative shadow root into every `<neu-*>` element of rendered HTML, so
 the components look right before (or without) JavaScript; `renderDSD` renders one element's shadow
 root; `@neumorphism-ui/ssr/nuxt` is a Nuxt module that does this for Nuxt pages and loads the element
-definitions on the client. Pre-release.
+definitions on the client.
 
 ```sh
-npm install @neumorphism-ui/ssr@next @neumorphism-ui/elements@next @neumorphism-ui/tokens@next
+npm install @neumorphism-ui/ssr @neumorphism-ui/elements @neumorphism-ui/tokens
 ```
 
 ```ts

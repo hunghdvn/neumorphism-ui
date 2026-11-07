@@ -6,10 +6,10 @@ React 18.3 and 19 wrappers for [neumorphism-ui](https://github.com/hunghdvn/neum
 `NeuCheckbox`, `NeuRadioGroup`, `NeuRadio`, `NeuSlider`, `NeuSelect` and `NeuOption`, generated from the element definitions. They set props
 as element properties, forward refs to the real element, work controlled or uncontrolled like
 React's `<input>`, and server-render declarative shadow roots, so they work with Next.js App Router
-streaming. Pre-release.
+streaming.
 
 ```sh
-npm install @neumorphism-ui/react@next @neumorphism-ui/tokens@next
+npm install @neumorphism-ui/react @neumorphism-ui/tokens
 ```
 
 ```tsx
