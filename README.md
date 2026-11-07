@@ -1,6 +1,6 @@
 # neumorphism-ui
 
-[![npm](https://img.shields.io/npm/v/@neumorphism-ui/elements/next?label=%40neumorphism-ui%2Felements)](https://www.npmjs.com/package/@neumorphism-ui/elements)
+[![npm](https://img.shields.io/npm/v/@neumorphism-ui/elements?label=%40neumorphism-ui%2Felements)](https://www.npmjs.com/package/@neumorphism-ui/elements)
 [![CI](https://github.com/hunghdvn/neumorphism-ui/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/hunghdvn/neumorphism-ui/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
@@ -8,9 +8,6 @@ Docs: https://hunghdvn.github.io/neumorphism-ui/
 
 Neumorphic UI components built as standard Custom Elements. They work with any framework or none,
 render on the server with declarative shadow DOM, and take part in native `<form>`s.
-
-> **Pre-release.** While v1 is being built, `1.0.0-next.x` versions are published under the `next`
-> tag, and APIs may still change before `1.0.0`.
 
 ## Highlights
 
@@ -61,14 +58,15 @@ render on the server with declarative shadow DOM, and take part in native `<form
 | `<neu-select>`       | `NeuSelect`      | Form-associated select with a popover listbox; the selected label is server-rendered               |
 | `<neu-option>`       | `NeuOption`      | One choice of a select, written as a child element                                                 |
 
-The v1 component set is complete. Phase 4 is the documentation site.
+Every component has a page with live demos, a React example and its API on the
+[docs site](https://hunghdvn.github.io/neumorphism-ui/).
 
 ## Quick start
 
 ### With a bundler
 
 ```sh
-npm install @neumorphism-ui/elements@next @neumorphism-ui/tokens@next
+npm install @neumorphism-ui/elements @neumorphism-ui/tokens
 ```
 
 ```js
@@ -108,7 +106,7 @@ cannot be protected this way.
 ### React and Next.js
 
 ```sh
-npm install @neumorphism-ui/react@next @neumorphism-ui/tokens@next
+npm install @neumorphism-ui/react @neumorphism-ui/tokens
 ```
 
 ```tsx

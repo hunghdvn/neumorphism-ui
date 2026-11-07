@@ -14,15 +14,10 @@ neumorphism-ui is published as four packages. Pick the ones that match your setu
 | `@neumorphism-ui/react`    | You use React 18.3 or 19, including Next.js. It brings generated wrappers.        |
 | `@neumorphism-ui/ssr`      | You render on a server: `transformHtml`, `renderDSD` and a Nuxt module.           |
 
-:::note
-While v1 is being built, `1.0.0-next.x` versions are published under the `next` tag. Install them
-with `@next`, and expect APIs to change before `1.0.0`.
-:::
-
 ## With a bundler
 
 ```sh
-npm install @neumorphism-ui/elements@next @neumorphism-ui/tokens@next
+npm install @neumorphism-ui/elements @neumorphism-ui/tokens
 ```
 
 ```js
@@ -63,7 +58,8 @@ definitions load. See [Theming](/neumorphism-ui/guides/theming/) for the variabl
 
 No build step needed. Pin an exact version as shown: the `integrity` hash only matches that
 version's files, and an unpinned URL cannot be protected this way. The snippet below is the one the
-repository README pins.
+repository README pins. Its hashes are checked against the files published on npm for that version
+by `scripts/check-cdn-sri.mjs`, which runs whenever the README moves to a new release.
 
 <CdnSnippet />
 

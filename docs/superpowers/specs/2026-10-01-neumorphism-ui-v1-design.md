@@ -614,8 +614,8 @@ Ngân sách (min+gzip), kiểm bằng `size-limit` trong CI, vượt thì CI fai
 
 - GitHub, repo public, license MIT.
 - Changesets, 4 package version cùng nhau.
-- Trong lúc xây: mỗi giai đoạn publish `1.0.0-next.x` với dist-tag `next`. Bản `1.0.0` ra khi
-  giai đoạn 4 xong.
+- Trong lúc xây, mỗi giai đoạn đã publish `1.0.0-next.x` với dist-tag `next` (tới `next.4`). Bản
+  `1.0.0` ra khi giai đoạn 4 xong, với dist-tag `latest`.
 - CI (GitHub Actions) trên mỗi PR: lint → typecheck → unit test 3 trình duyệt → visual →
   SSR e2e → size. Release từ `main` bằng Changesets action, publish kèm **npm provenance**,
   xác thực bằng npm trusted publishing (OIDC) nên không lưu npm token nào.
