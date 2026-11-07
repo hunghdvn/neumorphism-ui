@@ -249,9 +249,10 @@ export class NeuSelect extends FormControlElement {
 
   private onKey(event: KeyboardEvent): void {
     const { key, altKey, ctrlKey } = event;
-    // Ctrl+Alt is AltGr on many layouts: it types a character, so it is not a shortcut.
-    if (this.isDisabled || event.metaKey || (ctrlKey && !altKey)) return;
     const printable = key.length === 1 && key !== ' ' && (!altKey || ctrlKey);
+    // Ctrl+Alt is AltGr on many layouts: a character it types is not a shortcut. Other Ctrl+Alt
+    // chords (assistive tech, the OS) are.
+    if (this.isDisabled || event.metaKey || (ctrlKey && !(altKey && printable))) return;
     const active = this.activeIndex();
     const last = this.opts.length - 1;
     const moves: Record<string, [number, number]> = {

@@ -1095,6 +1095,22 @@ describe('neu-select typeahead and hover', () => {
     expect(isOpen(el)).toBe(false);
   });
 
+  test('Ctrl+Alt chords that type nothing are left alone, closed or open', () => {
+    const el = select();
+    const chord = { ctrlKey: true, altKey: true };
+    for (const key of ['ArrowDown', 'Enter', ' ', 'Home']) {
+      expect(press(el, key, chord).defaultPrevented).toBe(false);
+      expect(isOpen(el)).toBe(false);
+    }
+    press(el, 'ArrowDown');
+    expect(isOpen(el)).toBe(true);
+    for (const key of ['ArrowDown', 'Enter', 'Escape', 'Tab']) {
+      expect(press(el, key, chord).defaultPrevented).toBe(false);
+      expect(isOpen(el)).toBe(true);
+    }
+    expect(el.value).toBe('');
+  });
+
   test('hovering an option does not scroll the listbox', async () => {
     const many = Array.from(
       { length: 30 },
