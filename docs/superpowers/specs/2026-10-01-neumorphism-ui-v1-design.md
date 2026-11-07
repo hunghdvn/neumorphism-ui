@@ -252,7 +252,9 @@ không dùng `[checked]`.
 1. **constructor:** `attachInternals()`. Nếu `internals.shadowRoot` đã có (trang được SSR) thì
    **hydrate**: gắn tham chiếu tới các phần tử `data-ref` trong shadow root, không render lại.
    Nếu chưa có thì `attachShadow({ mode: 'open', delegatesFocus })` rồi gán
-   `innerHTML = template(props)`.
+   `innerHTML = template(props)`. Root SSR thiếu một tên `data-ref` mà template hiện tại có thì
+   bị render lại: hoặc response bị cắt, hoặc root do phiên bản khác của component render (trang
+   cache từ trước khi nâng cấp).
 2. Gắn stylesheet dùng chung qua `adoptedStyleSheets`. Xóa `<style data-neu-ssr>` nếu có.
 3. **Nâng cấp property:** property được đặt trước khi element được đăng ký thì được đọc lại và
    áp dụng (pattern "upgrade property").
