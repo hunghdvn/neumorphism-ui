@@ -1,0 +1,227 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Screen reader checklist page</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/@neumorphism-ui/tokens@1.0.0-next.4/neu.css"
+      integrity="sha384-ZO0aY5pvfYCq8aInHo5CqaKrG0o0+pd91Ex/YBRLnjKWe3pOiVO6rNPKQLwGPfwS"
+      crossorigin="anonymous"
+    />
+    <script
+      type="module"
+      src="https://cdn.jsdelivr.net/npm/@neumorphism-ui/elements@1.0.0-next.4/cdn/neu.min.js"
+      integrity="sha384-DiDBee0Ugd7uameYNtrmn80+MJNitRUQ9CHZIpUTsFww58fsijVckD0eemz5fQtC"
+      crossorigin="anonymous"
+    ></script>
+    <style>
+      body {
+        max-width: 48rem;
+        margin: 0 auto;
+        padding: 1rem 1rem 4rem;
+        font-family: system-ui, sans-serif;
+      }
+      section {
+        display: grid;
+        gap: 1rem;
+        justify-items: start;
+        margin-block: 2.5rem;
+      }
+      h2 {
+        margin: 0;
+      }
+      .row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+        align-items: center;
+      }
+      #log {
+        font-family: ui-monospace, monospace;
+        font-size: 0.875rem;
+      }
+    </style>
+  </head>
+  <body class="neu-surface">
+    <h1>Screen reader checklist: neu-select and neu-radio-group</h1>
+    <p>
+      Section numbers match
+      <code>docs/superpowers/reports/2026-11-06-screen-reader-checklist.md</code>. Every
+      <code>change</code> event is written to the log at the bottom (not announced).
+    </p>
+
+    <section aria-labelledby="s1">
+      <h2 id="s1">1.1 to 1.6: select</h2>
+      <div class="row">
+        <button type="button">Before select</button>
+        <neu-select id="fruit" label="Fruit" name="fruit" value="apple">
+          <neu-option value="apple">Apple</neu-option>
+          <neu-option value="banana">Banana</neu-option>
+          <neu-option value="cherry" disabled>Cherry</neu-option>
+          <neu-option value="date">Date</neu-option>
+        </neu-select>
+        <button type="button">After select</button>
+      </div>
+      <button type="button" data-toggle-disabled="fruit">1.6: toggle disabled on the select</button>
+    </section>
+
+    <section aria-labelledby="s15">
+      <h2 id="s15">1.5: AltGr typeahead (Polish keyboard, AltGr+A types ą)</h2>
+      <neu-select label="Name" name="name">
+        <neu-option value="abel">Ąbel</neu-option>
+        <neu-option value="bruno">Bruno</neu-option>
+        <neu-option value="celina">Celina</neu-option>
+      </neu-select>
+    </section>
+
+    <section aria-labelledby="s17">
+      <h2 id="s17">1.7: required select in a form</h2>
+      <form class="row">
+        <neu-select label="Fruit" name="fruit-required" required>
+          <neu-option value="apple">Apple</neu-option>
+          <neu-option value="banana">Banana</neu-option>
+          <neu-option value="cherry" disabled>Cherry</neu-option>
+          <neu-option value="date">Date</neu-option>
+        </neu-select>
+        <button type="submit">Submit the select form</button>
+      </form>
+    </section>
+
+    <section aria-labelledby="s18">
+      <h2 id="s18">1.8: label from the slot</h2>
+      <neu-select name="fruit-slot">
+        <span slot="label" id="select-slot-label">Favorite fruit</span>
+        <neu-option value="apple">Apple</neu-option>
+        <neu-option value="banana">Banana</neu-option>
+      </neu-select>
+      <button type="button" data-rename="select-slot-label">Change the slotted select label</button>
+      <neu-select label="Label attribute" name="fruit-both">
+        <span slot="label">Slotted label</span>
+        <neu-option value="apple">Apple</neu-option>
+        <neu-option value="banana">Banana</neu-option>
+      </neu-select>
+    </section>
+
+    <section aria-labelledby="s2">
+      <h2 id="s2">2.1 to 2.3: radio group</h2>
+      <button type="button">Before group</button>
+      <neu-radio-group id="size" label="Size" name="size" value="md">
+        <neu-radio value="sm">Small</neu-radio>
+        <neu-radio value="md">Medium</neu-radio>
+        <neu-radio value="lg" disabled>Large</neu-radio>
+        <neu-radio value="xl">Extra large</neu-radio>
+      </neu-radio-group>
+      <button type="button">After group</button>
+      <div class="row">
+        <button type="button" id="clear-size">2.1: remove the value</button>
+        <button type="button" data-toggle-disabled="size">2.3: toggle disabled on the group</button>
+      </div>
+      <neu-radio-group label="Size, no value" name="size-empty">
+        <neu-radio value="sm">Small</neu-radio>
+        <neu-radio value="md">Medium</neu-radio>
+        <neu-radio value="lg" disabled>Large</neu-radio>
+        <neu-radio value="xl">Extra large</neu-radio>
+      </neu-radio-group>
+    </section>
+
+    <section aria-labelledby="s24">
+      <h2 id="s24">2.4: group name</h2>
+      <neu-radio-group name="shirt">
+        <span slot="label" id="group-slot-label">Shirt size</span>
+        <neu-radio value="s">S</neu-radio>
+        <neu-radio value="m">M</neu-radio>
+      </neu-radio-group>
+      <button type="button" data-rename="group-slot-label">Change the slotted group label</button>
+      <neu-radio-group name="no-name">
+        <neu-radio value="yes">Yes</neu-radio>
+        <neu-radio value="no">No</neu-radio>
+      </neu-radio-group>
+    </section>
+
+    <section aria-labelledby="s25">
+      <h2 id="s25">2.5: required group in a form</h2>
+      <form>
+        <neu-radio-group label="Size" name="size-required" required>
+          <neu-radio value="sm">Small</neu-radio>
+          <neu-radio value="md">Medium</neu-radio>
+          <neu-radio value="lg" disabled>Large</neu-radio>
+          <neu-radio value="xl">Extra large</neu-radio>
+        </neu-radio-group>
+        <button type="submit">Submit the group form</button>
+      </form>
+    </section>
+
+    <section aria-labelledby="native">
+      <h2 id="native">Native controls, for comparing a failed row</h2>
+      <form class="row">
+        <label
+          >Fruit
+          <select name="native-fruit" required>
+            <option value="">Choose</option>
+            <option value="apple">Apple</option>
+            <option value="banana">Banana</option>
+            <option value="cherry" disabled>Cherry</option>
+            <option value="date">Date</option>
+          </select>
+        </label>
+        <fieldset>
+          <legend>Size</legend>
+          <label><input type="radio" name="native-size" value="sm" required /> Small</label>
+          <label><input type="radio" name="native-size" value="md" /> Medium</label>
+          <label><input type="radio" name="native-size" value="lg" disabled /> Large</label>
+          <label><input type="radio" name="native-size" value="xl" /> Extra large</label>
+        </fieldset>
+        <button type="submit">Submit the native form</button>
+      </form>
+    </section>
+
+    <section aria-labelledby="log-title">
+      <h2 id="log-title">Event log</h2>
+      <button type="button" id="clear-log">Clear the log</button>
+      <ol id="log"></ol>
+    </section>
+
+    <script>
+      const log = document.getElementById('log');
+      const write = (text) => {
+        const item = document.createElement('li');
+        item.textContent = `${new Date().toLocaleTimeString()} ${text}`;
+        log.append(item);
+      };
+      document.addEventListener(
+        'change',
+        (event) => {
+          const el = event.target;
+          write(`change on ${el.localName}[name=${el.getAttribute('name')}]: value=${JSON.stringify(el.value)}`);
+        },
+        true,
+      );
+      document.addEventListener('submit', (event) => {
+        event.preventDefault();
+        write(`submitted: ${JSON.stringify([...new FormData(event.target)])}`);
+      });
+      document.getElementById('clear-log').addEventListener('click', () => log.replaceChildren());
+      document.getElementById('clear-size').addEventListener('click', () => {
+        document.getElementById('size').value = '';
+        write('size value removed');
+      });
+      for (const button of document.querySelectorAll('[data-toggle-disabled]')) {
+        button.addEventListener('click', () => {
+          const el = document.getElementById(button.dataset.toggleDisabled);
+          el.toggleAttribute('disabled');
+          write(`${el.id} disabled: ${el.hasAttribute('disabled')}`);
+        });
+      }
+      let renames = 0;
+      for (const button of document.querySelectorAll('[data-rename]')) {
+        button.addEventListener('click', () => {
+          const span = document.getElementById(button.dataset.rename);
+          span.textContent = `${span.textContent.replace(/ \d+$/, '')} ${++renames}`;
+          write(`label is now "${span.textContent}"`);
+        });
+      }
+    </script>
+  </body>
+</html>

@@ -649,6 +649,6 @@ làm thay đổi các giai đoạn sau.
 |---|---|
 | Giả thuyết "template chỉ ở server" không qua được hydration của React hoặc Vue | Cổng SSR ở giai đoạn 1, trước khi viết hàng loạt; dự phòng SSR-lite (8.6) |
 | Bóng tính bằng `color-mix()` xấu trên nền bão hòa mạnh | Visual regression có trường hợp nền tùy chỉnh; người dùng ghi đè được `--neu-shadow-dark/light` |
-| Cây accessibility khác nhau giữa các engine với role đặt trên `ElementInternals` | Test a11y chạy trên cả 3 engine; kiểm tay bằng screen reader cho Select và RadioGroup ở giai đoạn 3 |
+| Cây accessibility khác nhau giữa các engine với role đặt trên `ElementInternals` | Test a11y chạy trên cả 3 engine; kiểm tay bằng screen reader cho Select và RadioGroup ở giai đoạn 3. Ngày 2026-11-07 người dùng quyết định phát hành 1.0 khi chưa kiểm tay: thay bằng lượt kiểm cây accessibility trên Chromium (`docs/superpowers/reports/2026-11-07-accessibility-tree-pass.md`, 67/67 dòng đạt). Kiểm tay (NVDA + Firefox/Chrome, VoiceOver + Safari) và cây accessibility của Firefox, WebKit để sau 1.0; lỗi tìm được sửa bằng bản patch 1.0.x |
 | Tự tính vị trí popover lỗi trong container cuộn hoặc có transform | Test e2e Select trong container cuộn và trong phần tử có `transform` |
 | Tự viết bộ quét HTML sai ở ca hiếm | Bộ fixture ở mục 11; gặp HTML lạ thì giữ nguyên, không ném lỗi |
