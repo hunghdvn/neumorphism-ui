@@ -1,5 +1,11 @@
 # @neumorphism-ui/elements
 
+## 1.0.0-next.4
+
+### Patch Changes
+
+- 350a74e: `custom-elements.json`: the `neu-text-field` `type` description no longer says `tel` is validated.
+
 ## 1.0.0-next.3
 
 ### Minor Changes
