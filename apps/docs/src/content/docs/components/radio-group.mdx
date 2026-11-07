@@ -89,8 +89,9 @@ Submitting shows the form data and Reset restores the default selection.
 
 ## A radio with an empty value
 
-A radio whose value is `""` can be selected and then submits `name=` (an empty value). It is never
-selected by default, and it is not restored when the page comes back from history.
+A radio whose value is `""` can be selected and then submits `name=` (an empty value). It is selected
+only when asked for: by the user, by script, or by `value=""` on the group. A group without a
+`value` attribute starts with nothing selected and submits nothing until a choice is made.
 
 <Demo
   code={`<form>

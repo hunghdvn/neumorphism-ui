@@ -94,8 +94,9 @@ form.addEventListener('submit', (event) => {
 
 `neu-radio-group` holds one value for its `neu-radio` children and supports arrow-key navigation.
 A radio with `value=""` can be selected, and then the group submits `name=` with an empty value.
-It is never selected by default, though, and it is not restored from history: with no selection
-there is nothing to restore.
+It is selected only when asked for: by the user, by script, or by `value=""` on the group. A group
+without a `value` attribute starts with nothing selected and submits nothing until a choice is
+made.
 
 <Demo
   code={`<form>
