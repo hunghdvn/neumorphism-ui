@@ -1,0 +1,12 @@
+---
+import { Code } from '@astrojs/starlight/components';
+
+interface Props {
+  code: string;
+}
+
+const { code } = Astro.props;
+---
+
+<div class="demo neu-surface" set:html={code} />
+<Code lang="html" code={code} />
