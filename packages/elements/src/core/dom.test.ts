@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, test } from 'vitest';
-import { afterDispatch, isActiveInRoot } from './dom.js';
+import { afterDispatch, inSlotted, isActiveInRoot } from './dom.js';
 
 const tick = () => new Promise<void>((resolve) => setTimeout(resolve, 0));
 
@@ -84,5 +84,20 @@ describe('isActiveInRoot', () => {
     ]);
     outer.focus();
     expect([isActiveInRoot(inner), isActiveInRoot(outer)]).toEqual([false, true]);
+  });
+});
+
+describe('inSlotted', () => {
+  test('is true inside a slotted child of the host only, whatever slot the host itself has', () => {
+    document.body.innerHTML =
+      '<div slot="outer"><p id="host" slot="x"><span slot="label">a<b>b</b></span><i>c</i></p></div>';
+    const host = document.getElementById('host')!;
+    const label = host.querySelector('span')!;
+    expect(inSlotted(host, label)).toBe(true);
+    expect(inSlotted(host, label.querySelector('b')!.firstChild!)).toBe(true);
+    expect(inSlotted(host, label.firstChild!)).toBe(true);
+    expect(inSlotted(host, host.querySelector('i')!.firstChild!)).toBe(false);
+    expect(inSlotted(host, host)).toBe(false);
+    expect(inSlotted(host, host.parentElement!)).toBe(false);
   });
 });

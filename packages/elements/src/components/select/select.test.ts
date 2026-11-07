@@ -1150,6 +1150,25 @@ describe('neu-select label slot and icons', () => {
     expect(await axeViolations(el)).toEqual([]);
   });
 
+  test('rewriting the slotted label or help text leaves an open listbox alone', async () => {
+    const el = mount<NeuSelect>(
+      `<neu-select><span slot="label">Plan</span><span slot="help-text">Hint</span>${THREE}</neu-select>`,
+    );
+    combobox(el).focus();
+    press(el, 'ArrowDown');
+    expect(isOpen(el)).toBe(true);
+    const first = optionsOf(el)[0];
+    el.querySelector('[slot=label]')!.textContent = 'Plan (2)';
+    el.querySelector('[slot=help-text]')!.textContent = 'Other hint';
+    await tick();
+    expect(optionsOf(el)[0]).toBe(first);
+    // An option's text is still read again.
+    el.querySelector('neu-option')!.textContent = 'Apricot';
+    await tick();
+    expect(optionsOf(el)[0]).not.toBe(first);
+    expect(optionsOf(el)[0]!.textContent).toContain('Apricot');
+  });
+
   test('internal icons expose no svg part', () => {
     const el = select();
     expect(el.shadowRoot!.querySelector('[part~=svg]')).toBeNull();

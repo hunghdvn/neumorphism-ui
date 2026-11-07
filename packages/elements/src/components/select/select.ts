@@ -1,5 +1,5 @@
 import type { OptionData } from '../../core/define.js';
-import { dispatch, setOptionalAttribute, setText } from '../../core/dom.js';
+import { dispatch, inSlotted, setOptionalAttribute, setText } from '../../core/dom.js';
 import { FormControlElement } from '../../core/form-control.js';
 import { requiredMessage } from '../../core/validation.js';
 import { readOption } from '../option/option-data.js';
@@ -355,7 +355,10 @@ export class NeuSelect extends FormControlElement {
   }
 
   protected override connected(): void {
-    this.observer ??= new MutationObserver(() => this.sync());
+    // A rich label or help text holds no options: rewriting it needs no re-read.
+    this.observer ??= new MutationObserver((records) => {
+      if (records.some((record) => !inSlotted(this, record.target))) this.sync();
+    });
     this.observer.observe(this, {
       childList: true,
       subtree: true,

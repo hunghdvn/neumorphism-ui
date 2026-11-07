@@ -18,6 +18,12 @@ export function isActiveInRoot(el: Element): boolean {
   return (el.getRootNode() as Partial<DocumentOrShadowRoot>).activeElement === el;
 }
 
+/** True when `node` sits in a child of `host` assigned to a named slot (a rich label, help text). */
+export function inSlotted(host: Element, node: Node): boolean {
+  const slotted = (node instanceof Element ? node : node.parentElement)?.closest('[slot]');
+  return !!slotted && slotted !== host && host.contains(slotted);
+}
+
 /** An IME keystroke: WebKit ends the composition first, so the Enter that commits has keyCode 229. */
 export const composing = (event: KeyboardEvent): boolean =>
   event.isComposing || event.keyCode === 229;

@@ -1,4 +1,4 @@
-import { dispatch, setText } from '../../core/dom.js';
+import { dispatch, inSlotted, setText } from '../../core/dom.js';
 import { FormControlElement } from '../../core/form-control.js';
 import { requiredMessage } from '../../core/validation.js';
 import { RESYNC, SET_CHECKED, SET_GROUP_DISABLED, type RadioLink } from '../radio/radio-link.js';
@@ -29,7 +29,6 @@ export class NeuRadioGroup extends FormControlElement {
   /** The selected radio as of the last sync, which the form value and validity read. */
   private picked: RadioLink | undefined;
   private observer: MutationObserver | undefined;
-  private labelObserver: MutationObserver | undefined;
 
   constructor() {
     super();
@@ -175,26 +174,27 @@ export class NeuRadioGroup extends FormControlElement {
   }
 
   protected override connected(): void {
-    this.observer ??= new MutationObserver(() => this.sync());
+    // Radios coming, going or changing value or disabled resync the group. Frameworks rewrite the
+    // slotted label's text in place, which fires no slotchange; that renames the group only.
+    this.observer ??= new MutationObserver((records) => {
+      const label = records.filter((record) => inSlotted(this, record.target));
+      if (label.length) this.nameGroup();
+      if (records.some((r) => r.type !== 'characterData' && !label.includes(r))) this.sync();
+    });
     this.observer.observe(this, {
       childList: true,
       subtree: true,
+      characterData: true,
       attributes: true,
       attributeFilter: ['disabled', 'value'],
     });
-    // Frameworks rewrite the slotted label's text in place, which fires no slotchange.
-    this.labelObserver ??= new MutationObserver((records) => {
-      const inLabel = (n: Node) =>
-        (n instanceof Element ? n : n.parentElement)?.closest('[slot=label]');
-      if (records.some((r) => inLabel(r.target))) this.nameGroup();
-    });
-    this.labelObserver.observe(this, { subtree: true, childList: true, characterData: true });
+    // The label may have changed while the group was detached and nothing was observing.
+    this.nameGroup();
     this.sync();
   }
 
   protected override disconnected(): void {
     this.observer?.disconnect();
-    this.labelObserver?.disconnect();
   }
 
   protected formValue(): string | null {
