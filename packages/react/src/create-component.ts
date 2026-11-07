@@ -47,6 +47,7 @@ function textOf(node: React.ReactNode): string {
  * fragments, arrays and plain elements (spec §8.4). A component other than the option wrapper may
  * render options the server cannot see, so meeting one returns no options at all: the select then
  * leaves its display empty for the client to fill rather than guessing from part of the list.
+ * Children with a `slot` (a rich label or help text) hold no options and are skipped.
  */
 function collectOptions(children: React.ReactNode, optionTag: string): OptionData[] {
   const options: OptionData[] = [];
@@ -55,6 +56,7 @@ function collectOptions(children: React.ReactNode, optionTag: string): OptionDat
     React.Children.forEach(node, (child) => {
       if (!React.isValidElement(child)) return;
       const props = child.props as Record<string, unknown> & { children?: React.ReactNode };
+      if (props.slot !== undefined && props.slot !== null) return;
       const type = child.type as string | { displayName?: string };
       const isOption =
         type === optionTag || (typeof type !== 'string' && type?.displayName === optionTag);

@@ -77,6 +77,20 @@ test('NeuSelect reads options inside plain elements, and does not guess past a c
   expect(mixed).not.toContain('>Pick</span>');
 });
 
+test('NeuSelect reads its options past a component in a slotted label or help text', () => {
+  const Info = () => h('i', null, 'i');
+  const html = renderToString(
+    h(
+      NeuSelect,
+      { value: 'b', placeholder: 'Pick' },
+      h('span', { slot: 'label' }, h(Info, null), ' Plan'),
+      h(NeuOption, { value: 'b' }, 'Beta'),
+      h(Info, { slot: 'help-text' }),
+    ),
+  );
+  expect(html).toContain('data-ref="display">Beta</span>');
+});
+
 test('a text field escapes a hostile label', () => {
   const html = renderToString(h(NeuTextField, { label: '"><script>x</script>' }));
   expect(html).toContain('&lt;script&gt;');
