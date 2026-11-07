@@ -12,5 +12,8 @@
     "@neumorphism-ui/tokens": "workspace:*",
     "nuxt": "4.5.2",
     "vue": "3.5.43"
+  },
+  "devDependencies": {
+    "rolldown": "1.2.12"
   }
 }
