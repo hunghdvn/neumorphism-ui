@@ -40,16 +40,15 @@ hidden from assistive technology.
 
 Register a library with `registerIconLibrary`, then select it with the `library` attribute.
 
-<Code
-  lang="js"
-  code={`import { registerIconLibrary } from '@neumorphism-ui/elements/icons.js';
+```js
+import { registerIconLibrary } from '@neumorphism-ui/elements/icons.js';
 
 registerIconLibrary('myLib', {
-resolve(name) {
-return \`https://example.com/icons/\${name}.svg\`;
-},
-});`}
-/>
+  resolve(name) {
+    return `https://example.com/icons/${name}.svg`;
+  },
+});
+```
 
 <Code lang="html" code={`<neu-icon library="myLib" name="check" label="Done"></neu-icon>`} />
 
@@ -69,8 +68,8 @@ Things to know:
 
 ## Paint containment
 
-The host element has `contain: paint`, so anything painted outside its box is cut off. A
-`drop-shadow` filter on `::part(svg)` is therefore clipped at the host box; leave room inside the
+The inner box that fills the host has `contain: paint`, so anything painted outside it is cut off. A
+`drop-shadow` filter on `::part(svg)` is therefore clipped at that box; leave room inside the
 icon, or put the shadow on an element around it.
 
 ## React

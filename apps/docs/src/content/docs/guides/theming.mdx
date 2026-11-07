@@ -20,7 +20,7 @@ properties; every shadow, text colour and tint is derived from them. Try them in
 | `--neu-radius`    | `12px`          | `12px`         | Corner radius of the `md` size.                                |
 
 There are also `--neu-success`, `--neu-warning` and `--neu-danger` (status colours used by badges
-and error messages), `--neu-font` and `--neu-duration` (`150ms`, and `0ms` when the user prefers
+and error messages) and `--neu-duration` (`150ms`, and `0ms` when the user prefers
 reduced motion).
 
 Override any of them in your own CSS:
@@ -34,7 +34,7 @@ Override any of them in your own CSS:
 
 ## Optional overrides
 
-Four more variables are never set by the tokens, so you can set them when the computed value is
+Five more variables are never set by the tokens, so you can set them when the computed value is
 not what you want:
 
 | Variable             | Overrides                      |
@@ -43,6 +43,7 @@ not what you want:
 | `--neu-shadow-light` | The light half of every shadow |
 | `--neu-fg`           | Text colour                    |
 | `--neu-fg-muted`     | Secondary text colour          |
+| `--neu-font`         | Font family of every component |
 
 Without them the shadows and the text colour are mixed from `--neu-bg`, so changing the
 background alone gives a matching shadow and readable text.

@@ -32,14 +32,16 @@ export function Subscribe() {
 - Props are set as **properties** on the element, not as attributes, so React 18 and 19 behave the
   same. On the server they render as attributes, so the shadow root can be server-rendered.
 - `ref` points at the real custom element.
-- Handlers receive the original DOM event. Events map by name: `onChange` to `change`, `onInput`
-  to `input`, `onNeuOpen` to `neu-open`.
+- Handlers receive the original DOM event. Events map by name: `onInput` to `input`, `onNeuOpen` to
+  `neu-open`, and `onChange` to `change`, except on controls with a `value` prop (see below).
 
 ## onChange matches input
 
-Like React's `<input>`, controls that have a text value (such as `NeuTextField`) listen for the
-DOM `input` event in both `onInput` and `onChange`, so the handler runs on every edit. The DOM
-`change` event has no prop in v1.
+Like React's `<input>`, every control whose form value prop is `value` (text field, textarea,
+number field, slider, select and radio group) maps `onChange` to the DOM `input` event, so the
+handler runs on every edit; a slider fires on every step. `onInput` maps to the same event. For the
+controls whose value prop is `checked` (checkbox and switch), `onChange` is the DOM `change` event.
+The DOM `change` event of a `value` control has no prop in v1.
 
 ```tsx
 <NeuTextField
