@@ -152,6 +152,7 @@ test('formStateRestoreCallback restores a saved state', () => {
 test('form.checkValidity() and a programmatic requestSubmit() stay silent; reportValidity() reveals', () => {
   const form = mountForm('<neu-probe-field name="a" required></neu-probe-field>');
   const field = form.querySelector('neu-probe-field') as NeuProbeField;
+  suppressValidationPopup(form);
   form.checkValidity();
   expect(field.matches(':state(user-invalid)')).toBe(false);
   form.addEventListener('submit', (event) => {
@@ -168,6 +169,7 @@ test('Enter followed by a submit in the same task counts as a submit attempt', (
   const form = mountForm('<input name="q"><neu-probe-field name="a" required></neu-probe-field>');
   const field = form.querySelector('neu-probe-field') as NeuProbeField;
   const input = form.querySelector('input') as HTMLInputElement;
+  suppressValidationPopup(form);
   form.addEventListener('submit', (event) => {
     event.preventDefault();
   });
@@ -271,6 +273,7 @@ const imeEnter = () => {
 test('an IME-commit Enter (keyCode 229, isComposing false) is no submit attempt', () => {
   const form = mountForm('<input name="q"><neu-probe-field name="a" required></neu-probe-field>');
   const field = form.querySelector('neu-probe-field') as NeuProbeField;
+  suppressValidationPopup(form);
   form.addEventListener('submit', (event) => {
     event.preventDefault();
   });
