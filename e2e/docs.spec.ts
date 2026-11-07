@@ -108,6 +108,19 @@ const pagePaths = [
   ...componentSlugs.map((slug) => `components/${slug}/`),
 ];
 
+test('every guide page loads without errors', async ({ page }) => {
+  const errors: string[] = [];
+  page.on('pageerror', (error) => errors.push(`${page.url()}: ${error.message}`));
+  page.on('console', (message) => {
+    if (message.type() === 'error') errors.push(`${page.url()}: ${message.text()}`);
+  });
+  for (const path of pagePaths.filter((p) => p.startsWith('guides/'))) {
+    await page.goto(path);
+    await page.waitForLoadState('networkidle');
+  }
+  expect(errors).toEqual([]);
+});
+
 test('every component page loads without errors and lists its API', async ({ page }) => {
   const errors: string[] = [];
   page.on('pageerror', (error) => errors.push(`${page.url()}: ${error.message}`));
@@ -125,21 +138,48 @@ test('every component page loads without errors and lists its API', async ({ pag
   expect(errors).toEqual([]);
 });
 
-test('every internal link resolves', async ({ page, request }) => {
+test('every root-relative link and asset carries the base path and resolves', async ({
+  page,
+  request,
+}) => {
   const found = new Set<string>();
   for (const path of pagePaths) {
     await page.goto(path || './');
-    const links = await page
-      .locator('a[href^="/neumorphism-ui/"]')
-      .evaluateAll((anchors) => anchors.map((a) => a.getAttribute('href') as string));
-    for (const link of links) found.add(link);
+    const urls = await page
+      .locator('a[href^="/"], link[href^="/"], script[src^="/"], img[src^="/"]')
+      .evaluateAll((nodes) =>
+        nodes.map((node) => (node.getAttribute('href') ?? node.getAttribute('src')) as string),
+      );
+    for (const url of urls) found.add(url.split('#')[0]);
   }
-  const hrefs = [...found];
-  expect(hrefs.length).toBeGreaterThan(0);
-  for (const href of hrefs) {
-    const response = await request.get(href);
-    expect(response.status(), href).toBe(200);
+  const urls = [...found];
+  expect(urls.length).toBeGreaterThan(0);
+  for (const url of urls) {
+    expect(url.startsWith('/neumorphism-ui/'), url).toBe(true);
+    const response = await request.get(url);
+    expect(response.status(), url).toBe(200);
   }
+});
+
+test('the demo wrappers align their children', async ({ page }) => {
+  await page.goto('components/button/');
+  const tops = await page
+    .locator('.demo')
+    .first()
+    .locator('neu-button')
+    .evaluateAll((buttons) => buttons.slice(0, 3).map((b) => b.getBoundingClientRect().top));
+  expect(tops).toHaveLength(3);
+  expect(new Set(tops).size, tops.join(', ')).toBe(1);
+});
+
+test('the playground controls follow the site theme, not the OS theme', async ({ page }) => {
+  await page.emulateMedia({ colorScheme: 'dark' });
+  await page.goto('./');
+  await page.locator('starlight-theme-select select:visible').selectOption('light');
+  const control = page.locator('[data-playground] neu-slider').first();
+  await expect
+    .poll(() => control.evaluate((el) => getComputedStyle(el).getPropertyValue('--neu-bg').trim()))
+    .toBe('#e0e5ec');
 });
 
 test('the playground updates the preview and the CSS', async ({ page }) => {
@@ -164,12 +204,15 @@ test('the playground dark switch', async ({ page }) => {
   await expect(preview).toHaveAttribute('data-neu-theme', 'dark');
 });
 
-test('the CDN snippet pins the package version', async ({ page }) => {
-  const { version } = JSON.parse(readFileSync(resolve(elementsDir, 'package.json'), 'utf8')) as {
-    version: string;
-  };
+test('the CDN snippet matches the version and hashes pinned in the README', async ({ page }) => {
+  const readme = readFileSync(resolve(import.meta.dirname, '../README.md'), 'utf8');
+  const snippet = readme.split(/^### From a CDN\s*$/m)[1].match(/```html\n([\s\S]*?)```/)![1];
+  const version = snippet.match(/elements@([^/]+)\/cdn\/neu\.min\.js/)![1];
+  const hashes = snippet.match(/sha384-[A-Za-z0-9+/=]+/g)!;
+  expect(hashes).toHaveLength(2);
   await page.goto('getting-started/installation/');
   const text = await page.locator('main').innerText();
   expect(text).toContain(`elements@${version}/cdn/neu.min.js`);
-  expect(text).toMatch(/integrity="sha384-/);
+  expect(text).toContain(`tokens@${version}/neu.css`);
+  for (const hash of hashes) expect(text).toContain(hash);
 });
