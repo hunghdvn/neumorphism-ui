@@ -1,9 +1,20 @@
-import { readFileSync } from 'node:fs';
+import { readdirSync, readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
-import { expect, test } from '@playwright/test';
+import { expect, test, type Page } from '@playwright/test';
 
 const elementsDir = resolve(import.meta.dirname, '../packages/elements');
+const contentDir = resolve(import.meta.dirname, '../apps/docs/src/content/docs');
+
+// Every page of the site, read from the content folder so a new page is covered without a list
+// to keep in step. '' is the home page.
+const pagePaths = readdirSync(contentDir, { recursive: true })
+  .map((file) => String(file).replaceAll('\\', '/'))
+  .filter((file) => /\.mdx?$/.test(file))
+  .map((file) => file.replace(/\.mdx?$/, '').replace(/(^|\/)index$/, ''))
+  .map((slug) => (slug ? `${slug}/` : ''))
+  .sort();
+const componentPaths = pagePaths.filter((path) => path.startsWith('components/'));
 
 interface Declaration {
   tagName: string;
@@ -17,6 +28,23 @@ function buttonDeclaration(): Declaration {
   );
   return declarations.find((declaration) => declaration.tagName === 'neu-button') as Declaration;
 }
+
+function collectErrors(page: Page): string[] {
+  const errors: string[] = [];
+  page.on('pageerror', (error) => errors.push(`${page.url()}: ${error.message}`));
+  page.on('console', (message) => {
+    if (message.type() === 'error') errors.push(`${page.url()}: ${message.text()}`);
+  });
+  return errors;
+}
+
+test('the page list covers the home page, the guides and the components', () => {
+  expect(pagePaths).toContain('');
+  expect(pagePaths).toContain('getting-started/installation/');
+  expect(pagePaths).toContain('guides/theming/');
+  expect(componentPaths).toContain('components/button/');
+  expect(componentPaths).toHaveLength(17);
+});
 
 test('the button page lists every attribute of the manifest', async ({ page }) => {
   const expected = buttonDeclaration().attributes.map((attribute) => attribute.name);
@@ -36,12 +64,24 @@ test('code blocks are not server-rendered', async ({ page }) => {
 test('demos follow the site theme', async ({ page }) => {
   await page.goto('components/button/');
   await page.locator('starlight-theme-select select:visible').selectOption('dark');
+  await expect(page.locator('html')).toHaveAttribute('data-neu-theme', 'dark');
   const demos = page.locator('.demo');
   expect(await demos.count()).toBeGreaterThan(0);
   for (const demo of await demos.all()) {
-    await expect(demo).toHaveAttribute('data-neu-theme', 'dark');
     await expect(demo).toHaveCSS('background-color', 'rgb(43, 47, 54)');
   }
+});
+
+test('a stored site theme applies before the page scripts run, whatever the OS theme', async ({
+  page,
+}) => {
+  await page.emulateMedia({ colorScheme: 'dark' });
+  await page.addInitScript(() => localStorage.setItem('starlight-theme', 'light'));
+  // With every script file blocked, only inline scripts run: the theme must not wait for a bundle.
+  await page.route('**/*.js', (route) => route.abort());
+  await page.goto('components/button/');
+  await expect(page.locator('html')).toHaveAttribute('data-neu-theme', 'light');
+  await expect(page.locator('.demo').first()).toHaveCSS('background-color', 'rgb(224, 229, 236)');
 });
 
 test('the keyboard table follows the docs', async ({ page }) => {
@@ -66,76 +106,35 @@ test('the home page renders a server-side shadow root without JavaScript', async
   await context.close();
 });
 
-test('pages load without errors', async ({ page }) => {
-  const errors: string[] = [];
-  page.on('pageerror', (error) => errors.push(error.message));
-  page.on('console', (message) => {
-    if (message.type() === 'error') errors.push(message.text());
-  });
-  await page.goto('./');
-  await page.waitForLoadState('networkidle');
-  expect(errors).toEqual([]);
-});
-
-const componentSlugs = [
-  'button',
-  'icon-button',
-  'button-group',
-  'switch',
-  'text-field',
-  'icon',
-  'surface',
-  'divider',
-  'badge',
-  'avatar',
-  'spinner',
-  'textarea',
-  'number-field',
-  'checkbox',
-  'radio-group',
-  'slider',
-  'select',
-];
-
-// The home page plus every docs page; later tasks extend this list.
-const pagePaths = [
-  '',
-  'getting-started/installation/',
-  'guides/theming/',
-  'guides/ssr/',
-  'guides/react/',
-  'guides/forms/',
-  ...componentSlugs.map((slug) => `components/${slug}/`),
-];
-
-test('every guide page loads without errors', async ({ page }) => {
-  const errors: string[] = [];
-  page.on('pageerror', (error) => errors.push(`${page.url()}: ${error.message}`));
-  page.on('console', (message) => {
-    if (message.type() === 'error') errors.push(`${page.url()}: ${message.text()}`);
-  });
-  for (const path of pagePaths.filter((p) => p.startsWith('guides/'))) {
-    await page.goto(path);
+test('every page loads without errors and defines every neu-* element on it', async ({ page }) => {
+  const errors = collectErrors(page);
+  for (const path of pagePaths) {
+    await page.goto(path || './');
     await page.waitForLoadState('networkidle');
+    const undefinedTags = await page.evaluate(() =>
+      [...document.querySelectorAll('*')]
+        .map((el) => el.localName)
+        .filter((tag) => tag.startsWith('neu-') && !customElements.get(tag)),
+    );
+    expect(undefinedTags, path).toEqual([]);
   }
   expect(errors).toEqual([]);
 });
 
-test('every component page loads without errors and lists its API', async ({ page }) => {
-  const errors: string[] = [];
-  page.on('pageerror', (error) => errors.push(`${page.url()}: ${error.message}`));
-  page.on('console', (message) => {
-    if (message.type() === 'error') errors.push(`${page.url()}: ${message.text()}`);
-  });
-  for (const slug of componentSlugs) {
-    await page.goto(`components/${slug}/`);
-    await page.waitForLoadState('networkidle');
+test('a page without demos does not load the components', async ({ page }) => {
+  await page.goto('guides/react/');
+  await page.waitForLoadState('networkidle');
+  expect(await page.evaluate(() => customElements.get('neu-button'))).toBeUndefined();
+});
+
+test('every component page lists its API', async ({ page }) => {
+  for (const path of componentPaths) {
+    await page.goto(path);
     expect(
       await page.locator('table[data-table="attributes"]').count(),
-      slug,
+      path,
     ).toBeGreaterThanOrEqual(1);
   }
-  expect(errors).toEqual([]);
 });
 
 test('every root-relative link and asset carries the base path and resolves', async ({
@@ -182,6 +181,11 @@ test('the playground controls follow the site theme, not the OS theme', async ({
     .toBe('#e0e5ec');
 });
 
+test('the playground starts with every variable at its default', async ({ page }) => {
+  await page.goto('./');
+  await expect(page.locator('[data-playground-css]')).toContainText('Nothing changed');
+});
+
 test('the playground updates the preview and the CSS', async ({ page }) => {
   await page.goto('./');
   const preview = page.locator('[data-playground-preview]');
@@ -197,11 +201,66 @@ test('the playground updates the preview and the CSS', async ({ page }) => {
   await expect(page.locator('[data-playground-css]')).toContainText('--neu-distance: 10px;');
 });
 
+async function pickColor(page: Page, key: 'bg' | 'accent', value: string): Promise<void> {
+  await page.locator(`input[data-color="${key}"]`).evaluate((el, next) => {
+    (el as HTMLInputElement).value = next;
+    el.dispatchEvent(new Event('input', { bubbles: true }));
+  }, value);
+}
+
+test('a colour set back to its default leaves the playground CSS', async ({ page }) => {
+  await page.goto('./');
+  const output = page.locator('[data-playground-css]');
+  await pickColor(page, 'bg', '#ffeedd');
+  await expect(output).toContainText('--neu-bg: #ffeedd;');
+  await pickColor(page, 'bg', '#e0e5ec');
+  await expect(output).toContainText('Nothing changed');
+});
+
+test('the playground CSS keeps each theme to where it is active', async ({ page }) => {
+  await page.goto('./');
+  await pickColor(page, 'bg', '#ffeedd');
+  const css = (await page.locator('[data-playground-css]').textContent())!;
+  const tokens = readFileSync(
+    resolve(import.meta.dirname, '../packages/tokens/src/neu.css'),
+    'utf8',
+  );
+  const bg = (selector: string) =>
+    page.evaluate(
+      (s) => getComputedStyle(document.querySelector(s)!).getPropertyValue('--neu-bg').trim(),
+      selector,
+    );
+
+  await page.setContent(
+    `<style>${tokens}</style><style>${css}</style><div id="light" data-neu-theme="light"></div><div id="dark" data-neu-theme="dark"></div>`,
+  );
+  await page.emulateMedia({ colorScheme: 'light' });
+  expect(await bg('html')).toBe('#ffeedd');
+  expect(await bg('#light')).toBe('#ffeedd');
+  expect(await bg('#dark')).toBe('#2b2f36');
+  await page.emulateMedia({ colorScheme: 'dark' });
+  expect(await bg('html')).toBe('#2b2f36');
+  expect(await bg('#light')).toBe('#ffeedd');
+});
+
 test('the playground dark switch', async ({ page }) => {
   await page.goto('./');
   const preview = page.locator('[data-playground-preview]');
   await page.locator('neu-switch[data-playground-dark]').click();
   await expect(preview).toHaveAttribute('data-neu-theme', 'dark');
+});
+
+test('the playground follows a dark switch restored by the browser', async ({ page }) => {
+  await page.goto('./');
+  // What a reload or back navigation does: restore the state, with no change event.
+  await page.locator('neu-switch[data-playground-dark]').evaluate((el) => {
+    (el as unknown as { formStateRestoreCallback(state: string): void }).formStateRestoreCallback(
+      'checked',
+    );
+    window.dispatchEvent(new PageTransitionEvent('pageshow'));
+  });
+  await expect(page.locator('[data-playground-preview]')).toHaveAttribute('data-neu-theme', 'dark');
+  await expect(page.locator('input[data-color="bg"]')).toHaveValue('#2b2f36');
 });
 
 test('the CDN snippet matches the version and hashes pinned in the README', async ({ page }) => {
