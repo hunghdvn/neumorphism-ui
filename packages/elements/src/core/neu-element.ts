@@ -269,8 +269,9 @@ export abstract class NeuElement extends ServerSafeHTMLElement {
 
   /**
    * While the document loads, the parser may still be writing this element's declarative shadow
-   * root (spec §8.1). That is only possible while nothing has been parsed inside or after the
-   * element: the template comes first and is never inserted itself, so any such node follows
+   * root (spec §8.1). That is only possible while nothing has been parsed inside the element but
+   * whitespace, and nothing after it or after an ancestor (across shadow roots, through their
+   * hosts): the template comes first and is never inserted itself, so any other node follows
    * `</template>`. Until then a root that has every data-ref node may still be short of text, and
    * the parser would append the rest after update() wrote it. One created by script in the middle
    * of the page renders at once. A root still missing a `refs` node is unfinished as well
@@ -278,8 +279,9 @@ export abstract class NeuElement extends ServerSafeHTMLElement {
    */
   private parsing(root: ShadowRoot | null, refs: readonly string[]): boolean {
     if (root && missingRef(root, refs)) return true;
-    if (this.firstChild !== null || this.nextSibling !== null) return false;
-    for (let node = this.parentNode; node !== null; node = node.parentNode) {
+    const content = (node: Node) => node.nodeType !== 3 || node.textContent!.trim();
+    if (this.nextSibling !== null || [...this.childNodes].some(content)) return false;
+    for (let node = this.parentNode; node; node = node.parentNode ?? (node as ShadowRoot).host) {
       if (node.nextSibling !== null) return false;
     }
     return true;

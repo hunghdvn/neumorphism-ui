@@ -255,8 +255,9 @@ không dùng `[checked]`.
    `innerHTML = template(props)`. Root SSR thiếu một tên `data-ref` mà template hiện tại có thì
    bị render lại: hoặc response bị cắt, hoặc root do phiên bản khác của component render (trang
    cache từ trước khi nâng cấp). Khi tài liệu còn đang tải (`readyState === 'loading'`), component
-   chỉ nhận root sau khi parser đã đi qua host, tức là host đã có node con hoặc có node đứng sau
-   nó (hay sau một tổ tiên). Lý do: component có thể được định nghĩa (module `async`, `import()`
+   chỉ nhận root sau khi parser đã đi qua host, tức là host đã có node con không phải khoảng
+   trắng, hoặc có node đứng sau nó hay sau một tổ tiên (khi gặp shadow root thì đi tiếp lên host
+   của nó). Lý do: component có thể được định nghĩa (module `async`, `import()`
    động) đúng lúc parser đang dừng giữa template. Khi đó root đã đủ mọi `data-ref`, nhưng text
    của ref cuối có thể chưa tới hết, và phần còn lại sẽ bị nối vào sau text mà `update()` vừa ghi.
 2. Gắn stylesheet dùng chung qua `adoptedStyleSheets`. Xóa `<style data-neu-ssr>` nếu có.

@@ -365,23 +365,44 @@ describe('declarative shadow DOM', () => {
   });
 
   test('while loading, a declarative root that has every ref is not adopted until the parser moves past the host', async () => {
+    // Whitespace before the template (hand-written markup that transformHtml accepts) is parsed
+    // into the host first, so it does not show the parser has left the template.
+    for (const before of ['', '\n  ']) {
+      await whileLoading(async () => {
+        const el = document.createElement('neu-probe') as NeuProbe;
+        el.setAttribute('label', 'Hello world');
+        if (before) el.append(before);
+        // The parser stopped inside the template: every data-ref node exists, but the text of the
+        // last one is still arriving (a component defined by an async module, mid-stream).
+        const root = el.attachShadow({ mode: 'open' });
+        root.innerHTML = '<span data-ref="label" part="label">Hello wo</span>';
+        const span = root.querySelector('span')!;
+        document.body.append(el);
+        await Promise.resolve();
+        expect(el.renders).toBe(0);
+        (span.lastChild as Text).appendData('rld');
+        document.body.append(document.createElement('p'));
+        await Promise.resolve();
+        expect(el.renders).toBe(1);
+        expect(el.shadowRoot!.querySelector('span')).toBe(span);
+        expect(span.textContent).toBe('Hello world');
+      });
+    }
+  });
+
+  test('while loading, a host inside another shadow root resumes once the parser moves past that root', async () => {
     await whileLoading(async () => {
+      // A third-party component's declarative root, still streaming, holds the neu host last.
+      const outer = document.createElement('div');
+      document.body.append(outer);
       const el = document.createElement('neu-probe') as NeuProbe;
-      el.setAttribute('label', 'Hello world');
-      // The parser stopped inside the template: every data-ref node exists, but the text of the
-      // last one is still arriving (a component defined by an async module, mid-stream).
-      const root = el.attachShadow({ mode: 'open' });
-      root.innerHTML = '<span data-ref="label" part="label">Hello wo</span>';
-      const span = root.querySelector('span')!;
-      document.body.append(el);
+      el.attachShadow({ mode: 'open' }).innerHTML = '<span data-ref="label" part="label">hi</span>';
+      outer.attachShadow({ mode: 'open' }).append(el);
       await Promise.resolve();
       expect(el.renders).toBe(0);
-      (span.lastChild as Text).appendData('rld');
       document.body.append(document.createElement('p'));
       await Promise.resolve();
       expect(el.renders).toBe(1);
-      expect(el.shadowRoot!.querySelector('span')).toBe(span);
-      expect(span.textContent).toBe('Hello world');
     });
   });
 
