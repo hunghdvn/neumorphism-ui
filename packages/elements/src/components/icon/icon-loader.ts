@@ -48,7 +48,7 @@ function clean(parent: Element): void {
  */
 function sanitize(text: string): Element | null {
   parser ??= new DOMParser();
-  const source = text.replace(/<svg\b(?![^>]*\sxmlns\s*=)/, `<svg xmlns="${SVG_NS}"`);
+  const source = text.replace(/<svg(?=[\s/>])(?![^>]*\sxmlns\s*=)/, `<svg xmlns="${SVG_NS}"`);
   const svg = parser.parseFromString(source, 'image/svg+xml').documentElement;
   if (svg.namespaceURI !== SVG_NS || svg.localName !== 'svg' || svg.querySelector('parsererror')) {
     return null;
