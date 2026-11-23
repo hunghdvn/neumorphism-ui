@@ -571,6 +571,31 @@ describe('neu-radio-group', () => {
     await tick();
     expect(await axeViolations(el)).toEqual([]);
   });
+
+  test('inserting many radios resyncs the group a bounded number of times', async () => {
+    const el = group('value="r50"', '');
+    await tick();
+    const sync = vi.spyOn(NeuRadioGroup.prototype as unknown as { sync: () => void }, 'sync');
+    try {
+      el.innerHTML = Array.from(
+        { length: 100 },
+        (_, i) => `<neu-radio value="r${i}">R${i}</neu-radio>`,
+      ).join('');
+      await tick();
+      expect(sync.mock.calls.length).toBeLessThanOrEqual(3);
+      expect(el.value).toBe('r50');
+      expect(checkedOf(el)[50]).toBe(true);
+      expect(checkedOf(el).filter(Boolean).length).toBe(1);
+
+      const radio = document.createElement('neu-radio') as NeuRadio;
+      radio.setAttribute('value', 'late');
+      el.value = 'late';
+      el.append(radio);
+      expect(radio.checked).toBe(true);
+    } finally {
+      sync.mockRestore();
+    }
+  });
 });
 
 test('a slotted label names the group', async () => {
