@@ -202,6 +202,45 @@ describe('neu-text-field', () => {
       return submitted;
     }
 
+    test('an input type=image is a default button too, in tree order', async () => {
+      const a = mountForm(
+        '<neu-text-field name="a" label="A"></neu-text-field>' +
+          '<neu-text-field name="b" label="B"></neu-text-field>' +
+          '<input type="image" name="go" alt="Go">',
+      );
+      const imageA = a.querySelector('input[type="image"]')!;
+      let imageAClicks = 0;
+      imageA.addEventListener('click', () => imageAClicks++);
+      let submitter: Element | null = null;
+      a.addEventListener('submit', (event) => {
+        event.preventDefault();
+        submitter = event.submitter;
+      });
+      expect(await enterIn(a)).toBe(1);
+      expect(submitter).toBe(imageA);
+      expect(imageAClicks).toBe(1);
+
+      const b = mountForm(
+        '<neu-text-field name="q" label="Q"></neu-text-field>' +
+          '<input type="image" name="go" alt="Go">' +
+          '<neu-button type="submit">Later</neu-button>',
+      );
+      const imageB = b.querySelector('input[type="image"]')!;
+      let imageBClicks = 0;
+      imageB.addEventListener('click', () => imageBClicks++);
+      let laterClicks = 0;
+      b.querySelector('neu-button')!.addEventListener('click', () => laterClicks++);
+      expect(await enterIn(b)).toBe(1);
+      expect(imageBClicks).toBe(1);
+      expect(laterClicks).toBe(0);
+
+      const c = mountForm(
+        '<neu-text-field name="a" label="A"></neu-text-field>' +
+          '<input type="image" name="go" alt="Go" disabled>',
+      );
+      expect(await enterIn(c)).toBe(0);
+    });
+
     test('does nothing when the default button is disabled or loading', async () => {
       const forms = [
         '<button type="submit" disabled>Go</button>',
