@@ -3,10 +3,13 @@ import { hostTheme } from '../../core/styles.js';
 /**
  * Look and states shared by every button-like component; sizing is each component's own. A
  * neu-button-group turns the host into a flex box, and the base grows to fill it edge to edge.
+ * The group's --_neu-grp-* values reach only its direct children: its ::slotted rule beats this
+ * :host reset, while a button nested deeper (inside a wrapper the group slots) inherits nothing.
+ * `loading` is only a thing on neu-button; icon buttons ignore a stray attribute.
  */
-/** `loading` is only a thing on neu-button; icon buttons ignore a stray attribute. */
 const shared = (loading: boolean) => `${hostTheme}
 :host { display: inline-block; vertical-align: middle; cursor: pointer; user-select: none; }
+:host { --_neu-grp-shadow: initial; --_neu-grp-ss: initial; --_neu-grp-se: initial; --_neu-grp-es: initial; --_neu-grp-ee: initial; }
 :host(:disabled), :host([disabled])${loading ? ', :host([loading])' : ''} { cursor: not-allowed; }
 .base {
   display: inline-flex; flex: auto; align-items: center; justify-content: center;
