@@ -29,6 +29,8 @@ export class NeuRadioGroup extends FormControlElement {
   /** The selected radio as of the last sync, which the form value and validity read. */
   private picked: RadioLink | undefined;
   private observer: MutationObserver | undefined;
+  /** A resync microtask is pending, which covers every radio that connects before it runs. */
+  private resyncQueued = false;
 
   constructor() {
     super();
@@ -113,8 +115,19 @@ export class NeuRadioGroup extends FormControlElement {
     dispatch(this, 'change');
   }
 
+  /**
+   * Each radio calls this as it connects. The first of a batch syncs at once, so a lone inserted
+   * radio and the form value are right immediately; one sync in a microtask covers the rest of the
+   * batch, instead of a full O(N) sync per radio.
+   */
   [RESYNC](): void {
+    if (this.resyncQueued) return;
+    this.resyncQueued = true;
     this.sync();
+    queueMicrotask(() => {
+      this.resyncQueued = false;
+      if (this.isConnected) this.sync();
+    });
   }
 
   /**

@@ -7,7 +7,12 @@ export default defineConfig({
   integrations: [
     starlight({
       title: 'neumorphism-ui',
-      customCss: ['@neumorphism-ui/tokens/neu.css', './src/styles/docs.css'],
+      customCss: [
+        './src/styles/layers.css',
+        '@neumorphism-ui/tokens/neu.css',
+        './src/styles/docs.css',
+      ],
+      disable404Route: true,
       sidebar: [
         { label: 'Home', slug: '' },
         { label: 'Getting started', items: [{ slug: 'getting-started/installation' }] },

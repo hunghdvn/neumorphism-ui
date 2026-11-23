@@ -36,7 +36,10 @@ Use `orientation="vertical"` to stack buttons on top of each other.
 
 ## Icon buttons
 
-Icon buttons can also be included inside a button group.
+Icon buttons can also be included inside a button group. Next to a taller button, or in a vertical
+group, an icon button stretches to match; it never shrinks below its own size. Only direct
+`neu-button` and `neu-icon-button` children merge into the group: a button wrapped in another
+element keeps its own look.
 
 <Demo
   code={`<neu-button-group label="Document actions">

@@ -167,6 +167,22 @@ describe('neu-icon', () => {
     expect(fetchMock).not.toHaveBeenCalled();
   });
 
+  test('a prefixed svg:svg root renders, with or without a default namespace', async () => {
+    registerIconLibrary('t-prefixed', {
+      resolve: () =>
+        '<svg:svg xmlns:svg="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><svg:path d="M1 1h4"/></svg:svg>',
+    });
+    registerIconLibrary('t-prefixed-default', {
+      resolve: () =>
+        '<svg:svg xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><svg:path d="M1 1h4"/></svg:svg>',
+    });
+    for (const library of ['t-prefixed', 't-prefixed-default']) {
+      const el = mount<NeuIcon>(`<neu-icon library="${library}" name="a"></neu-icon>`);
+      await vi.waitFor(() => expect(svgOf(el)?.querySelector('path')).not.toBeNull());
+      expect(svgOf(el)!.getAttribute('part')).toBe('svg');
+    }
+  });
+
   test('style and non-local url() references are dropped; local url(#id) survives', async () => {
     const markup =
       `<svg ${NS} style="background:url(https://t.example/a)" filter="url(https://t.example/f.svg#a)">` +

@@ -204,6 +204,49 @@ describe('neu-button-group', () => {
     expect(rest).toEqual([first, first, first]);
   });
 
+  test('buttons nested inside a slotted wrapper keep their own shadow and corners', () => {
+    const el = mount<NeuButtonGroup>(
+      '<neu-button-group label="x"><neu-button>Save</neu-button><span>' +
+        '<neu-icon-button icon="x" label="More"></neu-icon-button><div><neu-button>Save as</neu-button></div>' +
+        '</span></neu-button-group>',
+    );
+    const look = (item: Element) => [style(item).boxShadow, ...corners(item)];
+    const solo = mount<NeuButton>('<neu-button>Solo</neu-button>');
+    const soloIcon = mount<NeuIconButton>(
+      '<neu-icon-button icon="x" label="Solo"></neu-icon-button>',
+    );
+    expect(look(el.querySelector('div > neu-button')!)).toEqual(look(solo));
+    expect(look(el.querySelector('span > neu-icon-button')!)).toEqual(look(soloIcon));
+    // The direct child still merges into the group.
+    const direct = el.children[0]!;
+    expect(style(direct).boxShadow).toContain(TRANSPARENT);
+    expect(corners(direct)[1]).toBe('0px');
+  });
+
+  test('icon buttons stretch with taller or wider neighbours and keep at least their own size', () => {
+    const rect = (item: Element) => item.getBoundingClientRect();
+    const row = mount<NeuButtonGroup>(
+      '<neu-button-group label="x"><neu-button size="lg">Save</neu-button><neu-icon-button icon="x" label="More"></neu-icon-button></neu-button-group>',
+    );
+    const [large, more] = row.children;
+    expect(rect(more!).height).toBeCloseTo(rect(large!).height, 1);
+    const column = mount<NeuButtonGroup>(
+      '<neu-button-group label="x" orientation="vertical"><neu-button>Delete permanently</neu-button><neu-icon-button icon="x" label="More"></neu-icon-button></neu-button-group>',
+    );
+    const [wide, below] = column.children;
+    expect(rect(below!).width).toBeCloseTo(rect(wide!).width, 1);
+    // A group of icon buttons alone keeps their 40px box in both directions.
+    const icons = '<neu-icon-button icon="x" label="A"></neu-icon-button>'.repeat(2);
+    for (const orientation of ['horizontal', 'vertical']) {
+      const group = mount<NeuButtonGroup>(
+        `<neu-button-group label="x" orientation="${orientation}">${icons}</neu-button-group>`,
+      );
+      for (const item of group.children) {
+        expect([rect(item).width, rect(item).height]).toEqual([40, 40]);
+      }
+    }
+  });
+
   test('SSR output is already merged', () => {
     const out = renderDSD('neu-button-group', { label: 'Align' });
     expect(out).toContain('::slotted(');

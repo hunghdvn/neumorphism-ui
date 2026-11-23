@@ -185,6 +185,27 @@ describe('undefined elements (§5.6)', () => {
     expect(el.getBoundingClientRect().height).toBe(rem * 2.75);
   });
 
+  test('a slotted label reserves the label row like the label attribute', () => {
+    const tags = [
+      'neu-text-field',
+      'neu-number-field',
+      'neu-textarea',
+      'neu-select',
+      'neu-radio-group',
+    ];
+    // [label attribute, slotted label] heights per tag, so a failure names the tag that shifts.
+    const heights = tags.map((tag) => {
+      const host = mount(
+        `<${tag} label="Name"></${tag}><${tag}><span slot="label">Name</span></${tag}>`,
+      );
+      return [
+        tag,
+        ...[...host.querySelectorAll(tag)].map((el) => el.getBoundingClientRect().height),
+      ];
+    });
+    expect(heights).toEqual(heights.map(([tag, attr]) => [tag, attr, attr]));
+  });
+
   test('an element that already has a shadow root can undo the hiding with :host', () => {
     const el = mount('<neu-switch></neu-switch>').querySelector('neu-switch')!;
     el.attachShadow({ mode: 'open' }).innerHTML =

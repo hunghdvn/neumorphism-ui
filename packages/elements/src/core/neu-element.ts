@@ -32,6 +32,10 @@ function sheetFor(def: ComponentDef): CSSStyleSheet {
   return sheet;
 }
 
+/** Whether a declarative root lacks one of the data-ref nodes the template renders. */
+const missingRef = (root: ShadowRoot, refs: readonly string[]) =>
+  refs.some((name) => !root.querySelector(`[data-ref="${name}"]`));
+
 export abstract class NeuElement extends ServerSafeHTMLElement {
   declare static def: ComponentDef;
   /** Own properties to re-apply after upgrade besides def.props (spec §6.2 step 3). */
@@ -253,7 +257,7 @@ export abstract class NeuElement extends ServerSafeHTMLElement {
     }
     // No root yet, or one still unfinished after the parser is done (a truncated response):
     // render the template, so rendered() and every update() find their nodes.
-    if (!root || this.parsing(root, refs)) {
+    if (!root || missingRef(root, refs)) {
       root ??= this.attachShadow({
         mode: 'open',
         delegatesFocus: this.def.delegatesFocus ?? false,
@@ -265,25 +269,29 @@ export abstract class NeuElement extends ServerSafeHTMLElement {
 
   /**
    * While the document loads, the parser may still be writing this element's declarative shadow
-   * root (spec §8.1). Before the root exists, that is only possible while nothing has been parsed
-   * inside or after the element; one created by script in the middle of the page renders at once.
-   * Once it exists, its contents may still be streaming in: it is unfinished while one of the
-   * `refs` data-ref nodes is missing, and adopting it then would run rendered() without them.
+   * root (spec §8.1). That is only possible while nothing has been parsed inside the element but
+   * whitespace, and nothing after it or after an ancestor (across shadow roots, through their
+   * hosts): the template comes first and is never inserted itself, so any other node follows
+   * `</template>`. Until then a root that has every data-ref node may still be short of text, and
+   * the parser would append the rest after update() wrote it. One created by script in the middle
+   * of the page renders at once. A root still missing a `refs` node is unfinished as well
+   * (streaming, truncated, or rendered by another version), whatever follows the element.
    */
   private parsing(root: ShadowRoot | null, refs: readonly string[]): boolean {
-    if (root) return refs.some((name) => !root.querySelector(`[data-ref="${name}"]`));
-    if (this.firstChild !== null || this.nextSibling !== null) return false;
-    for (let node = this.parentNode; node !== null; node = node.parentNode) {
+    if (root && missingRef(root, refs)) return true;
+    const content = (node: Node) => node.nodeType !== 3 || node.textContent!.trim();
+    if (this.nextSibling !== null || [...this.childNodes].some(content)) return false;
+    for (let node = this.parentNode; node; node = node.parentNode ?? (node as ShadowRoot).host) {
       if (node.nextSibling !== null) return false;
     }
     return true;
   }
 
   /**
-   * Without a root, watches the document until a child or a following node shows the parser has
-   * moved past the element; with an unfinished root, watches that root until it is complete. Then
-   * ensureRoot() decides again. DOMContentLoaded is the fallback, after which a root that is still
-   * unfinished is rendered afresh.
+   * Watches the document until a child or a following node shows the parser has moved past the
+   * element, and an unfinished root until its data-ref nodes are complete. Then ensureRoot()
+   * decides again. DOMContentLoaded is the fallback, after which a root that is still unfinished
+   * is rendered afresh.
    */
   private waitForParser(root: ShadowRoot | null, refs: readonly string[]): void {
     const resume = (loaded?: Event) => {
@@ -294,7 +302,9 @@ export abstract class NeuElement extends ServerSafeHTMLElement {
     const observer = new MutationObserver(() => {
       if (!this.parsing(root, refs)) resume();
     });
-    observer.observe(root ?? document, { childList: true, subtree: true });
+    const options = { childList: true, subtree: true };
+    observer.observe(document, options);
+    if (root) observer.observe(root, options);
     document.addEventListener('DOMContentLoaded', resume);
   }
 
